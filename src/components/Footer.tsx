@@ -1,0 +1,34 @@
+import React from 'react';
+import { MailIcon, ShieldCheckIcon } from 'lucide-react';
+
+interface FooterProps {
+  onOpenPrivacy: () => void;
+}
+
+export function Footer({ onOpenPrivacy }: FooterProps) {
+  return (
+    <footer className="mt-16 pt-8 border-t border-gray-200 pb-8">
+      <div className="flex flex-col items-center justify-center gap-4 text-sm text-gray-600">
+        <div className="flex items-center gap-2">
+          <MailIcon className="w-4 h-4" />
+          <span>Technical issues? Contact:</span>
+          <a href="mailto:waseemk1204@gmail.com?subject=SRT%20Merger%20—%20Technical%20Issue" className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
+            waseemk1204@gmail.com
+          </a>
+        </div>
+
+        <button
+          onClick={onOpenPrivacy}
+          className="flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors"
+        >
+          <ShieldCheckIcon className="w-4 h-4" />
+          Privacy Policy
+        </button>
+
+        <div className="text-xs text-gray-400 mt-2">
+          © {new Date().getFullYear()} SRT Merger. All rights reserved.
+        </div>
+      </div>
+    </footer>
+  );
+}
