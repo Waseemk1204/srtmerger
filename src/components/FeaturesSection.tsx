@@ -39,7 +39,7 @@ export function FeaturesSection() {
         <section className="mt-16 sm:mt-24 border-t border-gray-200 pt-12 sm:pt-16">
             <div className="text-center mb-12">
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-                    Why use SRT Merger?
+                    Why use our Free SRT Merger?
                 </h2>
                 <p className="text-gray-600 max-w-2xl mx-auto">
                     The most advanced online tool to combine subtitle files. Fast, free, and runs entirely in your browser.

@@ -15,9 +15,10 @@ export function Navbar({ onNavigate }: NavbarProps) {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
-                    <div
+                    <a
+                        href="/"
                         className="flex items-center gap-2 cursor-pointer"
-                        onClick={() => onNavigate('home')}
+                        onClick={(e) => { e.preventDefault(); onNavigate('home'); }}
                     >
                         <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center shadow-lg shadow-gray-900/20 overflow-hidden">
                             <img src="/favicon.svg" alt="Logo" className="w-5 h-5" />
@@ -25,45 +26,49 @@ export function Navbar({ onNavigate }: NavbarProps) {
                         <span className="font-mono font-bold text-lg tracking-tight text-gray-900">
                             SRT Merger
                         </span>
-                    </div>
+                    </a>
 
                     {/* Navigation Links */}
                     <div className="hidden md:flex items-center gap-8">
-                        <button
-                            onClick={() => onNavigate('how-it-works')}
+                        <a
+                            href="/?view=how-it-works"
+                            onClick={(e) => { e.preventDefault(); onNavigate('how-it-works'); }}
                             className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
                         >
                             How it works
-                        </button>
-                        <button
-                            className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                        </a>
+                        <span
+                            className="text-sm font-medium text-gray-600 cursor-not-allowed opacity-50"
                         >
                             Pricing
-                        </button>
-                        <button
-                            onClick={() => onNavigate('blog')}
+                        </span>
+                        <a
+                            href="/?view=blog"
+                            onClick={(e) => { e.preventDefault(); onNavigate('blog'); }}
                             className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
                         >
                             Blog
-                        </button>
+                        </a>
                     </div>
 
                     {/* Right side - Login/Dashboard */}
                     <div className="flex items-center gap-4">
                         {!isAuthenticated ? (
-                            <button
-                                onClick={() => onNavigate('login')}
+                            <a
+                                href="/?view=login"
+                                onClick={(e) => { e.preventDefault(); onNavigate('login'); }}
                                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
                             >
                                 Log In
-                            </button>
+                            </a>
                         ) : (
-                            <button
-                                onClick={() => onNavigate('dashboard')}
+                            <a
+                                href="/?view=dashboard"
+                                onClick={(e) => { e.preventDefault(); onNavigate('dashboard'); }}
                                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
                             >
                                 Dashboard
-                            </button>
+                            </a>
                         )}
                     </div>
                 </div>

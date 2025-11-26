@@ -15,7 +15,7 @@ export function Hero({ onNavigate }: HeroProps) {
         <section className="pt-32 pb-16 sm:pt-40 sm:pb-24 px-4 text-center">
             <div className="max-w-4xl mx-auto">
                 <h1 className="font-mono text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-6 tracking-tight leading-tight">
-                    Merge Subtitles.
+                    SRT Merger: Merge Subtitles.
                     <br />
                     <span className="text-blue-600 inline-block overflow-hidden whitespace-nowrap border-r-4 border-blue-600 animate-typewriter-cursor w-0">
                         Perfectly Timed.

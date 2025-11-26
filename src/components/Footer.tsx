@@ -17,13 +17,14 @@ export function Footer({ onOpenPrivacy }: FooterProps) {
           </a>
         </div>
 
-        <button
-          onClick={onOpenPrivacy}
+        <a
+          href="/?view=privacy"
+          onClick={(e) => { e.preventDefault(); onOpenPrivacy(); }}
           className="flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors"
         >
           <ShieldCheckIcon className="w-4 h-4" />
           Privacy Policy
-        </button>
+        </a>
 
         <div className="text-xs text-gray-400 mt-2">
           © {new Date().getFullYear()} SRT Merger. All rights reserved.
