@@ -28,8 +28,8 @@ export function Dashboard() {
                                     SRT Merger
                                 </span>
                             </div>
-                            <span className="text-sm text-gray-400">|</span>
-                            <span className="text-sm font-medium text-gray-600">Dashboard</span>
+                            <span className="text-sm text-gray-400 hidden xs:inline">|</span>
+                            <span className="text-sm font-medium text-gray-600 hidden xs:inline">Dashboard</span>
                         </div>
 
                         {/* User Info & Sign Out */}
