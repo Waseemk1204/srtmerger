@@ -17,9 +17,10 @@ interface FileWithContent extends TranscriptFile {
 
 interface MergerToolProps {
     onFileSaved?: () => void;
+    showDiagnostics?: boolean;
 }
 
-export function MergerTool({ onFileSaved }: MergerToolProps) {
+export function MergerTool({ onFileSaved, showDiagnostics = true }: MergerToolProps) {
     const [files, setFiles] = useState<FileWithContent[]>([]);
     const [isProcessing, setIsProcessing] = useState(false);
     const [mergeResult, setMergeResult] = useState<MergeResult | null>(null);
@@ -248,6 +249,16 @@ export function MergerTool({ onFileSaved }: MergerToolProps) {
         }
     };
 
+    const downloadFile = (content: string, filename: string, mimeType: string = 'text/plain') => {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
     const canMerge = files.length >= 1;
 
     return (
@@ -308,6 +319,15 @@ export function MergerTool({ onFileSaved }: MergerToolProps) {
                                     <>Merge</>
                                 )}
                             </button>
+                            {showDiagnostics && mergeResult && mergeResult.diagnostics && mergeResult.diagnostics.length > 0 && (
+                                <button
+                                    onClick={() => downloadFile(JSON.stringify(mergeResult.diagnostics, null, 2), 'merge_diagnostics.json', 'application/json')}
+                                    className="flex-1 px-6 py-3 bg-white text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all flex items-center justify-center gap-2 font-medium"
+                                >
+                                    <span>📊</span>
+                                    <span className="truncate">Download Diagnostics</span>
+                                </button>
+                            )}
                         </div>
                         {mergeResult && (
                             <div className="bg-zinc-50 rounded-xl border border-zinc-200 p-6 sm:p-8 animate-fade-in">

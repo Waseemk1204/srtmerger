@@ -113,7 +113,11 @@ function App() {
     if (isAuthenticated && (view === 'login' || view === 'signup')) {
       navigate('dashboard');
     }
-  }, [isAuthenticated, view]);
+    // Redirect to login if trying to access dashboard while logged out
+    if (!authLoading && !isAuthenticated && view === 'dashboard') {
+      navigate('home');
+    }
+  }, [isAuthenticated, authLoading, view]);
 
   const handleFilesSelected = async (selectedFiles: File[]) => {
     const newFiles: FileWithContent[] = [];
@@ -555,13 +559,6 @@ function App() {
                         <span>📄</span>
                         <span className="truncate">Download merged.srt</span>
                       </button>
-                      <button
-                        onClick={() => downloadFile(JSON.stringify(mergeResult.diagnostics, null, 2), 'merge_diagnostics.json', 'application/json')}
-                        className="flex-1 px-6 py-3 bg-white text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all flex items-center justify-center gap-2 font-medium"
-                      >
-                        <span>📊</span>
-                        <span className="truncate">Download Diagnostics</span>
-                      </button>
                     </div>
                   </div>
                 )}
@@ -569,7 +566,7 @@ function App() {
             </div>
           </div>
         </section>
-      </main>
+      </main >
     );
   };
 
