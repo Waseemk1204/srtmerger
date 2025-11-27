@@ -1,7 +1,7 @@
-const app = require('../server/index');
-const { connectDB } = require('../server/config/db');
+import app from '../server/index.js';
+import { connectDB } from '../server/config/db.js';
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
     try {
         // Ensure database is connected before handling request
         await connectDB();

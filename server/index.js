@@ -1,11 +1,13 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const { connectDB } = require('./config/db');
-const authRoutes = require('./routes/auth');
-const fileRoutes = require('./routes/files');
-const { apiLimiter } = require('./middleware/rateLimit');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import dotenv from 'dotenv';
+import { connectDB } from './config/db.js';
+import authRoutes from './routes/auth.js';
+import fileRoutes from './routes/files.js';
+import { apiLimiter } from './middleware/rateLimit.js';
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -66,9 +68,10 @@ process.on('SIGINT', async () => {
     process.exit(0);
 });
 
-// Start server if running directly
-if (require.main === module) {
+// Start server if running directly (ESM way)
+import { fileURLToPath } from 'url';
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
     startServer();
 }
 
-module.exports = app;
+export default app;

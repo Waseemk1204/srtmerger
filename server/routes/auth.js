@@ -1,10 +1,10 @@
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { ObjectId } = require('mongodb');
-const { getDB } = require('../config/db');
-const { loginLimiter, signupLimiter } = require('../middleware/rateLimit');
-const authMiddleware = require('../middleware/auth');
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { ObjectId } from 'mongodb';
+import { getDB } from '../config/db.js';
+import { loginLimiter, signupLimiter } from '../middleware/rateLimit.js';
+import authMiddleware from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -147,4 +147,4 @@ router.post('/logout', (req, res) => {
     res.json({ message: 'Logged out successfully' });
 });
 
-module.exports = router;
+export default router;

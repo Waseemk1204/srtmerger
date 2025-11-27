@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-function authMiddleware(req, res, next) {
+export default function authMiddleware(req, res, next) {
     try {
         // Get token from cookie or Authorization header
         const token = req.cookies?.token || req.headers.authorization?.split(' ')[1];
@@ -20,5 +20,3 @@ function authMiddleware(req, res, next) {
         return res.status(401).json({ error: 'Invalid token' });
     }
 }
-
-module.exports = authMiddleware;

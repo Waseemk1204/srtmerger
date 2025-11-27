@@ -1,10 +1,11 @@
-const { MongoClient } = require('mongodb');
-require('dotenv').config();
+import { MongoClient } from 'mongodb';
+import dotenv from 'dotenv';
+dotenv.config();
 
 let client;
 let db;
 
-async function connectDB() {
+export async function connectDB() {
     try {
         if (db) {
             return db;
@@ -51,14 +52,14 @@ async function createIndexes() {
     }
 }
 
-function getDB() {
+export function getDB() {
     if (!db) {
         throw new Error('Database not initialized. Call connectDB first.');
     }
     return db;
 }
 
-async function closeDB() {
+export async function closeDB() {
     if (client) {
         await client.close();
         console.log('MongoDB connection closed');
@@ -66,9 +67,3 @@ async function closeDB() {
         client = null;
     }
 }
-
-module.exports = {
-    connectDB,
-    getDB,
-    closeDB
-};

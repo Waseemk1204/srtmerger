@@ -1,7 +1,7 @@
-const express = require('express');
-const { ObjectId } = require('mongodb');
-const { getDB } = require('../config/db');
-const authMiddleware = require('../middleware/auth');
+import express from 'express';
+import { ObjectId } from 'mongodb';
+import { getDB } from '../config/db.js';
+import authMiddleware from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -148,4 +148,4 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
