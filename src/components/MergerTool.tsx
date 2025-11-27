@@ -230,7 +230,7 @@ export function MergerTool({ onFileSaved }: MergerToolProps) {
             setToastMessage('File saved successfully!');
             setShowToast(true);
             setTimeout(() => setShowToast(false), 3000);
-            setMergeResult(null);
+            // setMergeResult(null); // Kept result visible after auto-save
             if (onFileSaved) onFileSaved();
         } catch (error) {
             console.error('Save file error:', error);
