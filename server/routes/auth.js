@@ -103,10 +103,22 @@ router.post('/login', loginLimiter, async (req, res) => {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        // Update last login
+        // Initialize missing fields for existing users
+        const updates = { lastLogin: new Date() };
+
+        if (!user.subscription) {
+            updates.subscription = { plan: 'free', status: 'active' };
+        }
+
+        if (!user.usage) {
+            const today = new Date().toISOString().split('T')[0];
+            updates.usage = { date: today, uploadCount: 0 };
+        }
+
+        // Update user with last login and any missing fields
         await users.updateOne(
             { _id: user._id },
-            { $set: { lastLogin: new Date() } }
+            { $set: updates }
         );
 
         // Generate JWT
@@ -122,7 +134,8 @@ router.post('/login', loginLimiter, async (req, res) => {
                 id: user._id,
                 email: user.email,
                 name: user.name,
-                subscription: user.subscription || { plan: 'free', status: 'active' }
+                subscription: updates.subscription || user.subscription,
+                usage: updates.usage || user.usage
             }
         });
     } catch (error) {
