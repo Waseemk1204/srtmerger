@@ -232,6 +232,11 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             currentUsage = 0; // Treat as reset for this check
         }
 
+        // DEBUG: Temporary alert to diagnose why reset isn't working
+        if (currentUsage >= limit) {
+            alert(`Blocked! \nUsage Date: ${usageDate}\nToday: ${today}\nCount: ${user?.usage?.uploadCount}\nReset Logic: ${usageDate !== today ? 'SHOULD RESET' : 'SAME DAY'}`);
+        }
+
         if (currentUsage >= limit) {
             setUpgradeReason('limit');
             setUpgradeLimit(limit);
@@ -302,7 +307,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 console.log('Merge tracked successfully');
                 // Refresh user data to update usage count
                 await refreshUser();
-                
+
                 if (onFileSaved) {
                     await onFileSaved();
                 }
