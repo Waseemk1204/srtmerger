@@ -274,22 +274,11 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
 
             // Track merge operation (increment usage count)
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/usage/merge`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-
-                if (response.ok) {
-                    console.log('Merge tracked successfully');
-                    // Refresh user data to update usage count
-                    if (onFileSaved) {
-                        await onFileSaved();
-                    }
-                } else {
-                    console.error('Failed to track merge:', await response.text());
+                await api.trackMerge();
+                console.log('Merge tracked successfully');
+                // Refresh user data to update usage count
+                if (onFileSaved) {
+                    await onFileSaved();
                 }
             } catch (error) {
                 console.error('Failed to track merge:', error);

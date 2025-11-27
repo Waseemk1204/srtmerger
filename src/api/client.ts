@@ -111,6 +111,12 @@ export const api = {
             method: 'POST',
             body: JSON.stringify(data),
         }),
+
+    // Usage tracking
+    trackMerge: () =>
+        request('/usage/merge', {
+            method: 'POST',
+        }),
 };
 
 export { APIError };
