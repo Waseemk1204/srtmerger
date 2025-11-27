@@ -239,26 +239,28 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
     const handleMerge = async () => {
         if (files.length === 0) return;
 
-        // Check if user has exceeded daily merge limit
+        // Check if user has exceeded daily merge limit (rolling 24h window)
         const currentPlan = user?.subscription?.plan || 'free';
         const limit = PLAN_LIMITS[currentPlan];
-        let currentUsage = user?.usage?.uploadCount || 0;
-        const usageDate = user?.usage?.date;
-        const today = new Date().toISOString().split('T')[0];
+        const currentCount = user?.usage?.uploadCount || 0;
+        const firstMergeTime = user?.usage?.firstMergeTime;
 
-        // If the usage date is from a previous day, the count should be reset
-        // Refresh user data to get the latest (backend will handle reset on next merge)
-        if (usageDate && usageDate !== today) {
-            console.log('Detected old usage date, treating as reset day');
-            currentUsage = 0; // Treat as reset for this check
-        }
+        // Check if 24h window has passed
+        const isExpired = firstMergeTime && 
+            (Date.now() - new Date(firstMergeTime).getTime()) >= 24 * 60 * 60 * 1000;
+        
+        const effectiveCount = isExpired || !firstMergeTime ? 0 : currentCount;
 
-        // DEBUG: Temporary alert to diagnose why reset isn't working
-        if (currentUsage >= limit) {
-            alert(`Blocked! \nUsage Date: ${usageDate}\nToday: ${today}\nCount: ${user?.usage?.uploadCount}\nReset Logic: ${usageDate !== today ? 'SHOULD RESET' : 'SAME DAY'}`);
-        }
+        console.log('Merge check (24h window):', {
+            firstMergeTime,
+            isExpired,
+            currentCount,
+            effectiveCount,
+            limit,
+            willBlock: effectiveCount >= limit
+        });
 
-        if (currentUsage >= limit) {
+        if (effectiveCount >= limit) {
             setUpgradeReason('limit');
             setUpgradeLimit(limit);
             setShowUpgradeModal(true);

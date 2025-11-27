@@ -61,42 +61,46 @@ export const usageLimit = async (req, res, next) => {
 export const incrementUsage = async (userId, count = 1) => {
     const db = getDB();
     const users = db.collection('users');
-    const today = new Date().toISOString().split('T')[0];
-
-    // Get user to check if date reset is needed
     const user = await users.findOne({ _id: new ObjectId(userId) });
-
-    console.log('incrementUsage called:', {
+    
+    const now = new Date();
+    const firstMergeTime = user?.usage?.firstMergeTime ? new Date(user.usage.firstMergeTime) : null;
+    
+    // Calculate hours since first merge
+    const hoursSinceFirst = firstMergeTime 
+        ? (now - firstMergeTime) / (1000 * 60 * 60) 
+        : 25; // 25 hours = past the 24h window, will trigger reset
+    
+    console.log('incrementUsage - Rolling 24h window:', {
         userId,
         count,
-        currentDate: user?.usage?.date,
-        today,
-        currentCount: user?.usage?.uploadCount,
-        willReset: user?.usage?.date !== today
+        firstMergeTime: firstMergeTime?.toISOString() || 'none',
+        now: now.toISOString(),
+        hoursSinceFirst: hoursSinceFirst.toFixed(2),
+        currentCount: user?.usage?.uploadCount || 0,
+        willReset: hoursSinceFirst >= 24
     });
-
-    // Reset usage if it's a new day
-    if (user && user.usage?.date !== today) {
-        console.log('NEW DAY DETECTED - Resetting count to:', count);
+    
+    if (!firstMergeTime || hoursSinceFirst >= 24) {
+        // Start new 24h window
+        console.log('STARTING NEW 24H WINDOW - Setting count to:', count);
         await users.updateOne(
             { _id: new ObjectId(userId) },
             {
                 $set: {
-                    usage: {
-                        date: today,
-                        uploadCount: count  // Set to count instead of just 1
-                    }
+                    'usage.uploadCount': count,
+                    'usage.firstMergeTime': now.toISOString()
                 }
             }
         );
     } else {
-        // Same day, increment by count
-        console.log('SAME DAY - Adding', count, 'to existing count');
+        // Within 24h window, add to existing count
+        const newCount = (user?.usage?.uploadCount || 0) + count;
+        console.log('WITHIN 24H WINDOW - Adding', count, 'to existing. New total:', newCount);
         await users.updateOne(
             { _id: new ObjectId(userId) },
             {
-                $inc: { 'usage.uploadCount': count },
-                $set: { 'usage.date': today }
+                $inc: { 'usage.uploadCount': count }
             }
         );
     }
