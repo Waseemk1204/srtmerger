@@ -24,7 +24,7 @@ interface MergerToolProps {
 }
 
 export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles = [] }: MergerToolProps) {
-    const { user } = useAuth();
+    const { user, refreshUser } = useAuth();
     const [files, setFiles] = useState<FileWithContent[]>([]);
     const [isProcessing, setIsProcessing] = useState(false);
     const [mergeResult, setMergeResult] = useState<MergeResult | null>(null);
@@ -71,28 +71,26 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
     }, [initialFiles]);
 
     const handleFilesSelected = async (selectedFiles: File[]) => {
-        // Check Upload Limit
+        // Check Upload Limit with rolling 24h window
         const currentPlan = user?.subscription?.plan || 'free';
         const limit = PLAN_LIMITS[currentPlan];
-        let currentUsage = user?.usage?.uploadCount || 0;
-        const usageDate = user?.usage?.date;
-        const today = new Date().toISOString().split('T')[0];
+        const currentCount = user?.usage?.uploadCount || 0;
+        const firstMergeTime = user?.usage?.firstMergeTime;
 
-        // If the usage date is from a previous day, the count should be reset
-        if (usageDate && usageDate !== today) {
-            console.log('Upload check: Detected old usage date, treating as reset day');
-            currentUsage = 0; // Treat as reset for this check
-        }
+        // Check if 24h window has passed since first merge
+        const isExpired = firstMergeTime &&
+            (Date.now() - new Date(firstMergeTime).getTime()) >= 24 * 60 * 60 * 1000;
 
-        const remainingLimit = limit - currentUsage;
+        // If expired or no timestamp, count is effectively 0
+        const effectiveCount = isExpired || !firstMergeTime ? 0 : currentCount;
         const totalFilesAfterUpload = files.length + selectedFiles.length;
+        const remainingLimit = limit - effectiveCount;
 
-        // DEBUG: Log upload limit check
-        console.log('Upload Limit Check:', {
-            usageDate,
-            today,
-            originalCount: user?.usage?.uploadCount,
-            adjustedCount: currentUsage,
+        console.log('Upload Limit Check (24h window):', {
+            firstMergeTime,
+            isExpired,
+            currentCount,
+            effectiveCount,
             limit,
             remainingLimit,
             totalFilesAfterUpload,
@@ -246,9 +244,9 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
         const firstMergeTime = user?.usage?.firstMergeTime;
 
         // Check if 24h window has passed
-        const isExpired = firstMergeTime && 
+        const isExpired = firstMergeTime &&
             (Date.now() - new Date(firstMergeTime).getTime()) >= 24 * 60 * 60 * 1000;
-        
+
         const effectiveCount = isExpired || !firstMergeTime ? 0 : currentCount;
 
         console.log('Merge check (24h window):', {
