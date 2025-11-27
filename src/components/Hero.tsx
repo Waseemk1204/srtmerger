@@ -31,19 +31,21 @@ export function Hero({ onNavigate }: HeroProps) {
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <button
-                        onClick={scrollToTool}
+                    <a
+                        href="#merger-tool"
+                        onClick={(e) => { e.preventDefault(); scrollToTool(); }}
                         className="w-full sm:w-auto px-8 py-4 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
                     >
                         Start Merging
                         <ArrowDownIcon className="w-4 h-4" />
-                    </button>
-                    <button
-                        onClick={() => onNavigate?.('how-it-works')}
+                    </a>
+                    <a
+                        href="/?view=how-it-works"
+                        onClick={(e) => { e.preventDefault(); onNavigate?.('how-it-works'); }}
                         className="w-full sm:w-auto px-8 py-4 bg-white text-gray-700 border border-gray-200 rounded-xl font-medium hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
                     >
                         View Demo
-                    </button>
+                    </a>
                 </div>
 
                 <div className="mt-12 flex items-center justify-center gap-8 text-sm text-gray-400 font-mono">
