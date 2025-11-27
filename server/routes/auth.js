@@ -256,11 +256,10 @@ router.post('/google', async (req, res) => {
                 { $set: updates }
             );
 
-            // Update local user object with new fields
-            user = {
-                ...user,
-                ...updates
-            };
+            // Merge updates into user object for response
+            if (updates.subscription) user.subscription = updates.subscription;
+            if (updates.usage) user.usage = updates.usage;
+            if (updates.googleId) user.googleId = updates.googleId;
         }
 
         // Generate JWT
