@@ -234,16 +234,33 @@ router.post('/google', async (req, res) => {
                 subscription: { plan: 'free', status: 'active' }
             };
         } else {
-            // Update last login and googleId if missing
+            // Initialize missing fields for existing users
+            const updates = { lastLogin: new Date() };
+
+            if (googleId && !user.googleId) {
+                updates.googleId = googleId;
+            }
+
+            if (!user.subscription) {
+                updates.subscription = { plan: 'free', status: 'active' };
+            }
+
+            if (!user.usage) {
+                const today = new Date().toISOString().split('T')[0];
+                updates.usage = { date: today, uploadCount: 0 };
+            }
+
+            // Update user with last login and any missing fields
             await users.updateOne(
                 { _id: user._id },
-                {
-                    $set: {
-                        lastLogin: new Date(),
-                        ...(googleId && !user.googleId ? { googleId } : {})
-                    }
-                }
+                { $set: updates }
             );
+
+            // Update local user object with new fields
+            user = {
+                ...user,
+                ...updates
+            };
         }
 
         // Generate JWT
