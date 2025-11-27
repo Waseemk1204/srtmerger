@@ -19,7 +19,12 @@ export async function connectDB() {
         client = new MongoClient(uri, {
             maxPoolSize: 10,
             minPoolSize: 2,
-            maxIdleTimeMS: 30000
+            maxIdleTimeMS: 30000,
+            serverApi: {
+                version: '1',
+                strict: true,
+                deprecationErrors: true,
+            }
         });
 
         await client.connect();
