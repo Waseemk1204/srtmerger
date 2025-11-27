@@ -276,7 +276,8 @@ router.post('/google', async (req, res) => {
                 id: user._id,
                 email: user.email,
                 name: user.name,
-                subscription: user.subscription || { plan: 'free', status: 'active' }
+                subscription: user.subscription || { plan: 'free', status: 'active' },
+                usage: user.usage || { date: new Date().toISOString().split('T')[0], uploadCount: 0 }
             }
         });
     } catch (error) {
