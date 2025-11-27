@@ -96,8 +96,8 @@ export function PrivacyPolicy({ onBack }: PrivacyPolicyProps) {
                             <p>
                                 If you have any questions about this Privacy Policy or wish to exercise your data rights, please contact us at:
                                 <br />
-                                <a href="mailto:waseemk1204@gmail.com" className="text-blue-600 hover:underline font-medium mt-2 inline-block">
-                                    waseemk1204@gmail.com
+                                <a href="mailto:techcustomerreach@outlook.com" className="text-blue-600 hover:underline font-medium mt-2 inline-block">
+                                    techcustomerreach@outlook.com
                                 </a>
                             </p>
                         </section>

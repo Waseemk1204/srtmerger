@@ -12,8 +12,8 @@ export function Footer({ onOpenPrivacy }: FooterProps) {
         <div className="flex items-center gap-2">
           <MailIcon className="w-4 h-4" />
           <span>Technical issues? Contact:</span>
-          <a href="mailto:waseemk1204@gmail.com?subject=SRT%20Merger%20—%20Technical%20Issue" className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
-            waseemk1204@gmail.com
+          <a href="mailto:techcustomerreach@outlook.com?subject=SRT%20Merger%20—%20Technical%20Issue" className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
+            techcustomerreach@outlook.com
           </a>
         </div>
 
