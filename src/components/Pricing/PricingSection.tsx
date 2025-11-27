@@ -134,77 +134,79 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
                                         }`}
                                 >
                                     {period.charAt(0).toUpperCase() + period.slice(1)}
-                        ))}
-                                </div>
-                </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                            <PricingCard
-                                title="Free"
-                                price="Free"
-                                period="forever"
-                                planType="free"
-                                currentPlan={user?.subscription?.plan}
-                                onSelect={handleSubscribe}
-                                features={[
-                                    '4 uploads per day',
-                                    'Basic merging',
-                                    'no-Renaming',
-                                    'no-Timeline Alignment',
-                                    'no-Merge Preview',
-                                ]}
-                            />
-                            <PricingCard
-                                title="Basic"
-                                price={prices[billingPeriod].tier1}
-                                period={billingPeriod.slice(0, -2)} // week/month/year
-                                planType="tier1"
-                                currentPlan={user?.subscription?.plan}
-                                onSelect={handleSubscribe}
-                                loading={loading === 'tier1'}
-                                features={[
-                                    '20 uploads per day',
-                                    'Basic merging',
-                                    'Renaming',
-                                    'Timeline Alignment',
-                                    'no-Merge Preview',
-                                ]}
-                            />
-                            <PricingCard
-                                title="Pro"
-                                price={prices[billingPeriod].tier2}
-                                period={billingPeriod.slice(0, -2)}
-                                planType="tier2"
-                                currentPlan={user?.subscription?.plan}
-                                onSelect={handleSubscribe}
-                                isPopular
-                                loading={loading === 'tier2'}
-                                features={[
-                                    '100 uploads per day',
-                                    'Basic merging',
-                                    'Renaming',
-                                    'Timeline Alignment',
-                                    'Merge Preview',
-                                ]}
-                            />
-                            <PricingCard
-                                title="Unlimited"
-                                price={prices[billingPeriod].tier3}
-                                period={billingPeriod.slice(0, -2)}
-                                planType="tier3"
-                                currentPlan={user?.subscription?.plan}
-                                onSelect={handleSubscribe}
-                                loading={loading === 'tier3'}
-                                features={[
-                                    'Unlimited uploads',
-                                    'Priority Support',
-                                    'Renaming',
-                                    'Timeline Alignment',
-                                    'Merge Preview',
-                                ]}
-                            />
+                                </button>
+                            ))}
                         </div>
                     </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <PricingCard
+                        title="Free"
+                        price="Free"
+                        period="forever"
+                        planType="free"
+                        currentPlan={user?.subscription?.plan}
+                        onSelect={handleSubscribe}
+                        features={[
+                            '4 uploads per day',
+                            'Basic merging',
+                            'no-Renaming',
+                            'no-Timeline Alignment',
+                            'no-Merge Preview',
+                        ]}
+                    />
+                    <PricingCard
+                        title="Basic"
+                        price={prices[billingPeriod].tier1}
+                        period={billingPeriod.slice(0, -2)} // week/month/year
+                        planType="tier1"
+                        currentPlan={user?.subscription?.plan}
+                        onSelect={handleSubscribe}
+                        loading={loading === 'tier1'}
+                        features={[
+                            '20 uploads per day',
+                            'Basic merging',
+                            'Renaming',
+                            'Timeline Alignment',
+                            'no-Merge Preview',
+                        ]}
+                    />
+                    <PricingCard
+                        title="Pro"
+                        price={prices[billingPeriod].tier2}
+                        period={billingPeriod.slice(0, -2)}
+                        planType="tier2"
+                        currentPlan={user?.subscription?.plan}
+                        onSelect={handleSubscribe}
+                        isPopular
+                        loading={loading === 'tier2'}
+                        features={[
+                            '100 uploads per day',
+                            'Basic merging',
+                            'Renaming',
+                            'Timeline Alignment',
+                            'Merge Preview',
+                        ]}
+                    />
+                    <PricingCard
+                        title="Unlimited"
+                        price={prices[billingPeriod].tier3}
+                        period={billingPeriod.slice(0, -2)}
+                        planType="tier3"
+                        currentPlan={user?.subscription?.plan}
+                        onSelect={handleSubscribe}
+                        loading={loading === 'tier3'}
+                        features={[
+                            'Unlimited uploads',
+                            'Priority Support',
+                            'Renaming',
+                            'Timeline Alignment',
+                            'Merge Preview',
+                        ]}
+                    />
+                </div>
+            </div>
         </section>
     );
 }
