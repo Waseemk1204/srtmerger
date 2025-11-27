@@ -1,5 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { DownloadIcon, SparklesIcon } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -596,6 +598,8 @@ function AppWrapper() {
   return (
     <ErrorBoundary>
       <App />
+      <Analytics />
+      <SpeedInsights />
     </ErrorBoundary>
   );
 }
