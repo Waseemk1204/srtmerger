@@ -74,9 +74,30 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
         // Check Upload Limit
         const currentPlan = user?.subscription?.plan || 'free';
         const limit = PLAN_LIMITS[currentPlan];
-        const currentUsage = user?.usage?.uploadCount || 0;
+        let currentUsage = user?.usage?.uploadCount || 0;
+        const usageDate = user?.usage?.date;
+        const today = new Date().toISOString().split('T')[0];
+
+        // If the usage date is from a previous day, the count should be reset
+        if (usageDate && usageDate !== today) {
+            console.log('Upload check: Detected old usage date, treating as reset day');
+            currentUsage = 0; // Treat as reset for this check
+        }
+
         const remainingLimit = limit - currentUsage;
         const totalFilesAfterUpload = files.length + selectedFiles.length;
+
+        // DEBUG: Log upload limit check
+        console.log('Upload Limit Check:', {
+            usageDate,
+            today,
+            originalCount: user?.usage?.uploadCount,
+            adjustedCount: currentUsage,
+            limit,
+            remainingLimit,
+            totalFilesAfterUpload,
+            willBlock: totalFilesAfterUpload > remainingLimit
+        });
 
         // Check if total files (currently loaded + new) exceeds remaining limit
         if (totalFilesAfterUpload > remainingLimit) {
