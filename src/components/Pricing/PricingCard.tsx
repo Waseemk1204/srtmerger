@@ -1,4 +1,3 @@
-import React from 'react';
 import { CheckIcon, XIcon, ZapIcon } from 'lucide-react';
 import { PlanType } from '../../types';
 
@@ -30,8 +29,8 @@ export function PricingCard({
 
     return (
         <div className={`relative rounded-2xl p-6 sm:p-8 transition-all duration-300 ${isPopular
-                ? 'bg-white border-2 border-blue-500 shadow-xl scale-105 z-10'
-                : 'bg-white border border-gray-200 shadow-sm hover:shadow-md'
+            ? 'bg-white border-2 border-blue-500 shadow-xl scale-105 z-10'
+            : 'bg-white border border-gray-200 shadow-sm hover:shadow-md'
             }`}>
             {isPopular && (
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium flex items-center gap-1">
@@ -67,10 +66,10 @@ export function PricingCard({
                 onClick={() => onSelect(planType)}
                 disabled={isCurrent || loading}
                 className={`w-full py-3 px-4 rounded-xl font-medium transition-colors ${isCurrent
-                        ? 'bg-gray-100 text-gray-500 cursor-default'
-                        : isPopular
-                            ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200'
-                            : 'bg-gray-900 hover:bg-gray-800 text-white'
+                    ? 'bg-gray-100 text-gray-500 cursor-default'
+                    : isPopular
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200'
+                        : 'bg-gray-900 hover:bg-gray-800 text-white'
                     }`}
             >
                 {loading ? 'Processing...' : isCurrent ? 'Current Plan' : isFree ? 'Get Started' : 'Upgrade'}

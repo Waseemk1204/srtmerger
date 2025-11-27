@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { PricingCard } from './PricingCard';
 import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../api/client';
@@ -26,14 +26,22 @@ export function PricingSection() {
         };
     }, []);
 
-    const handleSubscribe = async (planId: string) => {
+    const handleSubscribe = async (planType: PlanType) => {
         if (!user) {
             // Redirect to login or show modal
             window.location.href = '/?view=login';
             return;
         }
 
-        setLoading(planId);
+        // Skip if free tier
+        if (planType === 'free') {
+            return;
+        }
+
+        // Construct plan ID with billing period (e.g., 'tier1-monthly')
+        const planId = `${planType}-${billingPeriod}`;
+
+        setLoading(planType);
         try {
             const order = await api.createOrder(planId) as any; // Cast to any to avoid unknown type error
 
@@ -42,7 +50,7 @@ export function PricingSection() {
                 amount: order.amount,
                 currency: order.currency,
                 name: "SRT Merger",
-                description: `${planId.toUpperCase()} Subscription`,
+                description: `${planType.toUpperCase()} Subscription - ${billingPeriod}`,
                 order_id: order.id,
                 handler: async function (response: any) {
                     try {

@@ -88,6 +88,11 @@ export function Dashboard() {
                 </div>
             </div>
 
+            {/* Merger Tool */}
+            <div className="pt-8">
+                <MergerTool onFileSaved={loadFiles} />
+            </div>
+
             {/* Saved Files Section */}
             <section className="px-4 pb-20 pt-8">
                 <div className="max-w-5xl mx-auto">
