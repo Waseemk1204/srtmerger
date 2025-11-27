@@ -216,6 +216,19 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
 
     const handleMerge = async () => {
         if (files.length === 0) return;
+
+        // Check if user has exceeded daily merge limit
+        const currentPlan = user?.subscription?.plan || 'free';
+        const limit = PLAN_LIMITS[currentPlan];
+        const currentUsage = user?.usage?.uploadCount || 0;
+
+        if (currentUsage >= limit) {
+            setUpgradeReason('limit');
+            setUpgradeLimit(limit);
+            setShowUpgradeModal(true);
+            return;
+        }
+
         setIsProcessing(true);
         setMergeResult(null);
         try {
