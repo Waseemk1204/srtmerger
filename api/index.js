@@ -1,4 +1,4 @@
-import app from '../server/index.js';
+import app from '../server/app.js';
 import { connectDB } from '../server/config/db.js';
 
 export default async (req, res) => {
