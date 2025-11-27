@@ -12,9 +12,9 @@ export function Hero({ onNavigate }: HeroProps) {
     };
 
     return (
-        <section className="pt-32 pb-16 sm:pt-40 sm:pb-24 px-4 text-center">
+        <section className="pt-20 pb-8 sm:pt-28 sm:pb-12 px-4 text-center">
             <div className="max-w-4xl mx-auto">
-                <h1 className="font-mono text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-6 tracking-tight leading-tight">
+                <h1 className="font-mono text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-4 tracking-tight leading-tight">
                     SRT Merger: Merge Subtitles.
                     <br />
                     <span className="text-blue-600 inline-block overflow-hidden whitespace-nowrap border-r-4 border-blue-600 animate-typewriter-cursor w-0">
@@ -22,7 +22,7 @@ export function Hero({ onNavigate }: HeroProps) {
                     </span>
                 </h1>
 
-                <p className="text-lg sm:text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+                <p className="text-lg sm:text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
                     The professional tool for combining SRT files.
                     <span className="font-semibold text-gray-900"> Private</span>,
                     <span className="font-semibold text-gray-900"> fast</span>, and
@@ -48,7 +48,7 @@ export function Hero({ onNavigate }: HeroProps) {
                     </a>
                 </div>
 
-                <div className="mt-12 flex items-center justify-center gap-8 text-sm text-gray-400 font-mono">
+                <div className="mt-8 flex items-center justify-center gap-8 text-sm text-gray-400 font-mono">
                     <span>// NO UPLOAD LIMIT</span>
                     <span>// 100% SECURE</span>
                     <span>// AUTO-SHIFT</span>
