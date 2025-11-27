@@ -58,7 +58,7 @@ export const usageLimit = async (req, res, next) => {
     }
 };
 
-export const incrementUsage = async (userId) => {
+export const incrementUsage = async (userId, count = 1) => {
     const db = getDB();
     const users = db.collection('users');
     const today = new Date().toISOString().split('T')[0];
@@ -74,19 +74,20 @@ export const incrementUsage = async (userId) => {
                 $set: {
                     usage: {
                         date: today,
-                        uploadCount: 1  // Set to 1 instead of incrementing
+                        uploadCount: count  // Set to count instead of just 1
                     }
                 }
             }
         );
     } else {
-        // Same day, just increment
+        // Same day, increment by count
         await users.updateOne(
             { _id: new ObjectId(userId) },
             {
-                $inc: { 'usage.uploadCount': 1 },
+                $inc: { 'usage.uploadCount': count },
                 $set: { 'usage.date': today }
             }
         );
     }
 };
+```

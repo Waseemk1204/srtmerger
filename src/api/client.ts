@@ -113,9 +113,10 @@ export const api = {
         }),
 
     // Usage tracking
-    trackMerge: () =>
+    trackMerge: (fileCount: number) =>
         request('/usage/merge', {
             method: 'POST',
+            body: JSON.stringify({ fileCount }),
         }),
 };
 

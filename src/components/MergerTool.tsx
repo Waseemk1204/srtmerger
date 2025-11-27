@@ -286,9 +286,9 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             setShowToast(true);
             setTimeout(() => setShowToast(false), 3000);
 
-            // Track merge operation (increment usage count)
+            // Track merge operation (increment usage count by number of files)
             try {
-                await api.trackMerge();
+                await api.trackMerge(files.length);
                 console.log('Merge tracked successfully');
                 // Refresh user data to update usage count
                 if (onFileSaved) {
