@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { XIcon, LockIcon, UploadCloudIcon } from 'lucide-react';
 import { PricingSection } from './PricingSection';
 
@@ -11,11 +11,30 @@ interface UpgradeModalProps {
 }
 
 export function UpgradeModal({ isOpen, onClose, reason, featureName, limit }: UpgradeModalProps) {
+    // Lock body scroll when modal is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm overflow-y-auto">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl my-8 relative">
+        <div
+            className="fixed inset-0 z-50 flex items-start justify-center p-4 bg-black/50 backdrop-blur-sm overflow-y-auto"
+            onClick={onClose}
+        >
+            <div
+                className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl my-8 relative"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors z-10"
@@ -44,8 +63,8 @@ export function UpgradeModal({ isOpen, onClose, reason, featureName, limit }: Up
                     </p>
                 </div>
 
-                <div className="p-4 bg-gray-50 rounded-b-2xl">
-                    <PricingSection />
+                <div className="p-8">
+                    <PricingSection compact />
                 </div>
             </div>
         </div>
