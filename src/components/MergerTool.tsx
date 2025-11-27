@@ -393,9 +393,44 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
     const canMerge = files.length >= 1;
 
     return (
-        <section id="merger-tool" className="px-4 pb-8">
-            <div className="max-w-5xl mx-auto">
-                <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+        <section id="merger-tool" className="py-16 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-6xl mx-auto">
+                <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-gray-100 p-6 sm:p-10 lg:p-12">
+                    {/* Usage Stats Display */}
+                    {user && (
+                        <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h3 className="text-sm font-semibold text-gray-700">Daily Usage</h3>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Usage Date: <span className="font-mono">{user.usage?.date || 'N/A'}</span>
+                                    </p>
+                                    <p className="text-xs text-gray-500">
+                                        Today: <span className="font-mono">{new Date().toISOString().split('T')[0]}</span>
+                                    </p>
+                                </div>
+                                <div className="text-right">
+                                    <div className="text-2xl font-bold text-blue-600">
+                                        {user.usage?.uploadCount || 0} / {PLAN_LIMITS[user.subscription?.plan || 'free']}
+                                    </div>
+                                    <div className="text-xs text-gray-500 mt-1">
+                                        {user.subscription?.plan || 'free'} plan
+                                    </div>
+                                </div>
+                            </div>
+                            {user.usage?.date && user.usage.date !== new Date().toISOString().split('T')[0] && (
+                                <div className="mt-3 px-3 py-2 bg-green-100 border border-green-300 rounded-lg">
+                                    <p className="text-xs text-green-700 font-medium">
+                                        ✓ New day detected! Your usage will reset on the next merge.
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-2 sm:mb-3 text-center">
+                        Merge SRT Files
+                    </h2>
                     <div className="bg-gray-50 border-b border-gray-200 px-6 py-4 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full bg-red-400"></div>
