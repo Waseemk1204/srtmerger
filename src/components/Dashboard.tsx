@@ -5,11 +5,15 @@ import { SavedFilesSection } from './SavedFilesSection';
 import { MergerTool } from './MergerTool';
 
 export function Dashboard() {
-    const { user, logout } = useAuth();
+    const { user, logout, refreshUser } = useAuth();
     const [refreshKey, setRefreshKey] = useState(0);
 
-    const loadFiles = () => {
+    const loadFiles = async () => {
         setRefreshKey(prev => prev + 1);
+        // Refresh user data to get updated usage stats
+        if (refreshUser) {
+            await refreshUser();
+        }
     };
 
     return (
@@ -49,44 +53,47 @@ export function Dashboard() {
                 </div>
             </header>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Plan & Usage</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                        <div>
-                            <div className="text-sm text-gray-500 mb-1">Current Plan</div>
-                            <div className="font-medium text-gray-900 capitalize flex items-center gap-2">
-                                {user?.subscription?.plan || 'free'}
-                                {(user?.subscription?.plan === 'free' || !user?.subscription?.plan) && (
-                                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Basic</span>
-                                )}
+            {/* Plan & Usage */}
+            <section className="px-4 pt-8">
+                <div className="max-w-5xl mx-auto">
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h2 className="text-lg font-semibold text-gray-900 mb-4">Plan & Usage</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                            <div>
+                                <div className="text-sm text-gray-500 mb-1">Current Plan</div>
+                                <div className="font-medium text-gray-900 capitalize flex items-center gap-2">
+                                    {user?.subscription?.plan || 'free'}
+                                    {(user?.subscription?.plan === 'free' || !user?.subscription?.plan) && (
+                                        <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Basic</span>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <div className="text-sm text-gray-500 mb-1">Daily Uploads</div>
-                            <div className="font-medium text-gray-900">
-                                {user?.usage?.uploadCount || 0} / {
-                                    (user?.subscription?.plan === 'tier3' ? '∞' :
-                                        (user?.subscription?.plan === 'tier2' ? 100 :
-                                            (user?.subscription?.plan === 'tier1' ? 20 : 4)))
-                                }
+                            <div>
+                                <div className="text-sm text-gray-500 mb-1">Daily Uploads</div>
+                                <div className="font-medium text-gray-900">
+                                    {user?.usage?.uploadCount || 0} / {
+                                        (user?.subscription?.plan === 'tier3' ? '∞' :
+                                            (user?.subscription?.plan === 'tier2' ? 100 :
+                                                (user?.subscription?.plan === 'tier1' ? 20 : 4)))
+                                    }
+                                </div>
+                                <div className="w-full bg-gray-100 rounded-full h-1.5 mt-2 max-w-[200px]">
+                                    <div
+                                        className="bg-blue-600 h-1.5 rounded-full transition-all duration-500"
+                                        style={{
+                                            width: `${Math.min(100, ((user?.usage?.uploadCount || 0) / (user?.subscription?.plan === 'tier3' ? 1000 : (user?.subscription?.plan === 'tier2' ? 100 : (user?.subscription?.plan === 'tier1' ? 20 : 4)))) * 100)}%`
+                                        }}
+                                    ></div>
+                                </div>
                             </div>
-                            <div className="w-full bg-gray-100 rounded-full h-1.5 mt-2 max-w-[200px]">
-                                <div
-                                    className="bg-blue-600 h-1.5 rounded-full transition-all duration-500"
-                                    style={{
-                                        width: `${Math.min(100, ((user?.usage?.uploadCount || 0) / (user?.subscription?.plan === 'tier3' ? 1000 : (user?.subscription?.plan === 'tier2' ? 100 : (user?.subscription?.plan === 'tier1' ? 20 : 4)))) * 100)}%`
-                                    }}
-                                ></div>
+                            <div>
+                                <div className="text-sm text-gray-500 mb-1">Resets In</div>
+                                <div className="font-medium text-gray-900">24 Hours</div>
                             </div>
-                        </div>
-                        <div>
-                            <div className="text-sm text-gray-500 mb-1">Resets In</div>
-                            <div className="font-medium text-gray-900">24 Hours</div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             {/* Merger Tool */}
             <div className="pt-8">

@@ -10,6 +10,7 @@ interface AuthContextType {
     signup: (email: string, password: string, name: string) => Promise<void>;
     googleLogin: (credential: string) => Promise<void>;
     logout: () => void;
+    refreshUser: () => Promise<void>;
     isAuthenticated: boolean;
 }
 
@@ -82,6 +83,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         api.logout().catch(() => { }); // Fire and forget
     };
 
+    const refreshUser = async () => {
+        if (token) {
+            try {
+                const response: any = await api.getMe();
+                setUser(response.user);
+            } catch (error) {
+                console.error('Failed to refresh user data:', error);
+            }
+        }
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -92,6 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 signup,
                 googleLogin,
                 logout,
+                refreshUser,
                 isAuthenticated: !!user,
             }}
         >
