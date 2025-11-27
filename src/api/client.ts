@@ -22,9 +22,8 @@ async function request<T>(
 ): Promise<T> {
     const token = localStorage.getItem('token');
 
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
         'Content-Type': 'application/json',
-        ...options.headers,
     };
 
     if (token) {
@@ -98,6 +97,19 @@ export const api = {
     deleteFile: (id: string) =>
         request(`/files/${id}`, {
             method: 'DELETE',
+        }),
+
+    // Payment
+    createOrder: (planId: string) =>
+        request('/payment/create-order', {
+            method: 'POST',
+            body: JSON.stringify({ planId }),
+        }),
+
+    verifyPayment: (data: any) =>
+        request('/payment/verify-payment', {
+            method: 'POST',
+            body: JSON.stringify(data),
         }),
 };
 

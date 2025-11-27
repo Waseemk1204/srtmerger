@@ -44,6 +44,15 @@ router.post('/signup', signupLimiter, async (req, res) => {
             email: email.toLowerCase(),
             passwordHash,
             name,
+            subscription: {
+                plan: 'free',
+                status: 'active',
+                expiryDate: null
+            },
+            usage: {
+                date: new Date().toISOString().split('T')[0],
+                uploadCount: 0
+            },
             createdAt: new Date(),
             lastLogin: new Date()
         });
@@ -60,7 +69,8 @@ router.post('/signup', signupLimiter, async (req, res) => {
             user: {
                 id: result.insertedId,
                 email: email.toLowerCase(),
-                name
+                name,
+                subscription: { plan: 'free', status: 'active' }
             }
         });
     } catch (error) {
@@ -111,7 +121,8 @@ router.post('/login', loginLimiter, async (req, res) => {
             user: {
                 id: user._id,
                 email: user.email,
-                name: user.name
+                name: user.name,
+                subscription: user.subscription || { plan: 'free', status: 'active' }
             }
         });
     } catch (error) {
@@ -190,6 +201,15 @@ router.post('/google', async (req, res) => {
                 passwordHash,
                 name: name || 'Google User',
                 googleId,
+                subscription: {
+                    plan: 'free',
+                    status: 'active',
+                    expiryDate: null
+                },
+                usage: {
+                    date: new Date().toISOString().split('T')[0],
+                    uploadCount: 0
+                },
                 createdAt: new Date(),
                 lastLogin: new Date()
             });
@@ -197,7 +217,8 @@ router.post('/google', async (req, res) => {
             user = {
                 _id: result.insertedId,
                 email: email.toLowerCase(),
-                name: name || 'Google User'
+                name: name || 'Google User',
+                subscription: { plan: 'free', status: 'active' }
             };
         } else {
             // Update last login and googleId if missing
@@ -224,7 +245,8 @@ router.post('/google', async (req, res) => {
             user: {
                 id: user._id,
                 email: user.email,
-                name: user.name
+                name: user.name,
+                subscription: user.subscription || { plan: 'free', status: 'active' }
             }
         });
     } catch (error) {

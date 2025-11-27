@@ -1,11 +1,5 @@
-import React from 'react';
-import {
-  FileTextIcon,
-  XIcon,
-  ClockIcon,
-  GripVerticalIcon,
-  StarIcon
-} from 'lucide-react';
+import React, { useState } from 'react';
+import { FileTextIcon, GripVerticalIcon, Trash2Icon, StarIcon, EyeIcon, Edit2Icon } from 'lucide-react';
 import { TranscriptFile } from '../types';
 
 interface FileCardProps {
@@ -13,75 +7,136 @@ interface FileCardProps {
   onSetPrimary: (id: string) => void;
   onRemove: (id: string) => void;
   onPreview?: (id: string) => void;
+  onRename?: (id: string, newName: string) => void;
 }
 
-export function FileCard({ file, onRemove }: FileCardProps) {
+export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: FileCardProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState(file.name);
+
+  const handleSaveRename = () => {
+    if (editName.trim() && editName !== file.name && onRename) {
+      onRename(file.id, editName.trim());
+    }
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSaveRename();
+    } else if (e.key === 'Escape') {
+      setEditName(file.name);
+      setIsEditing(false);
+    }
+  };
+
   return (
     <div className={`
-      group relative bg-white border rounded-xl p-4 sm:p-5 transition-all duration-200
-      ${file.isPrimary
-        ? 'border-blue-200 shadow-sm ring-1 ring-blue-100'
-        : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
+            group relative flex items-center gap-4 p-4 rounded-xl border transition-all duration-200
+            ${file.isPrimary
+        ? 'bg-blue-50/50 border-blue-200 shadow-sm'
+        : 'bg-white border-gray-100 hover:border-gray-200 hover:shadow-sm'
       }
-    `}>
-      <div className="flex items-start gap-4">
-        {/* Drag Handle */}
-        <div className="mt-1 text-gray-300 cursor-grab active:cursor-grabbing hover:text-gray-500 transition-colors">
-          <GripVerticalIcon className="w-5 h-5" />
-        </div>
-
-        {/* File Icon */}
-        <div className={`
-          p-2.5 rounded-lg flex-shrink-0
-          ${file.isPrimary ? 'bg-blue-50 text-blue-600' : 'bg-gray-50 text-gray-500'}
         `}>
-          <FileTextIcon className="w-6 h-6" />
-        </div>
+      {/* Drag Handle */}
+      <div className="cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500 transition-colors">
+        <GripVerticalIcon className="w-5 h-5" />
+      </div>
 
-        {/* Content */}
-        <div className="flex-1 min-w-0 pt-0.5">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h3 className="font-medium text-gray-900 truncate pr-2 text-base" title={file.name}>
-                {file.name}
-              </h3>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1.5 text-sm text-gray-500">
-                <span className="font-mono text-xs text-gray-400 uppercase tracking-wider">
-                  {(file.size / 1024).toFixed(1)} KB
-                </span>
-                {file.duration && (
-                  <div className="flex items-center gap-1.5 text-gray-600 bg-gray-50 px-2 py-0.5 rounded text-xs font-medium">
-                    <ClockIcon className="w-3 h-3" />
-                    <span className="font-mono">{file.duration}</span>
-                  </div>
-                )}
-              </div>
+      {/* File Icon */}
+      <div className={`
+                p-3 rounded-lg transition-colors
+                ${file.isPrimary ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-500 group-hover:bg-gray-200'}
+            `}>
+        <FileTextIcon className="w-6 h-6" />
+      </div>
+
+      {/* File Info */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-1">
+          {isEditing ? (
+            <div className="flex items-center gap-2 w-full max-w-[200px]">
+              <input
+                type="text"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                onBlur={handleSaveRename}
+                onKeyDown={handleKeyDown}
+                className="w-full px-2 py-1 text-sm border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                autoFocus
+              />
             </div>
-
-            <button
-              onClick={() => onRemove(file.id)}
-              className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
-              title="Remove file"
+          ) : (
+            <h3
+              className="font-medium text-gray-900 truncate cursor-pointer hover:text-blue-600"
+              onClick={() => onRename && setIsEditing(true)}
+              title="Click to rename"
             >
-              <XIcon className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Primary Badge */}
-          {file.isPrimary && (
-            <div className="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-medium border border-blue-100">
-              <StarIcon className="w-3 h-3 fill-current" />
-              Timeline Start
-            </div>
+              {file.name}
+            </h3>
           )}
 
-          {/* Error Message */}
-          {file.errors && file.errors.length > 0 && (
-            <div className="mt-3 text-xs text-red-600 bg-red-50 p-2 rounded border border-red-100">
-              {file.errors.join(', ')}
-            </div>
+          {file.isPrimary && (
+            <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-100 rounded-full">
+              Primary
+            </span>
           )}
         </div>
+        <div className="flex items-center gap-3 text-xs text-gray-500 font-mono">
+          <span>{(file.size / 1024).toFixed(1)} KB</span>
+          {file.duration && (
+            <>
+              <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+              <span>{file.duration}</span>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        {onPreview && (
+          <button
+            onClick={() => onPreview(file.id)}
+            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            title="Preview content"
+          >
+            <EyeIcon className="w-4 h-4" />
+          </button>
+        )}
+
+        {onRename && !isEditing && (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            title="Rename file"
+          >
+            <Edit2Icon className="w-4 h-4" />
+          </button>
+        )}
+
+        <button
+          onClick={() => onSetPrimary(file.id)}
+          disabled={file.isPrimary}
+          className={`
+                        p-2 rounded-lg transition-colors
+                        ${file.isPrimary
+              ? 'text-blue-500 bg-blue-50'
+              : 'text-gray-400 hover:text-yellow-500 hover:bg-yellow-50'
+            }
+                    `}
+          title={file.isPrimary ? 'Primary file' : 'Set as primary'}
+        >
+          <StarIcon className={`w-4 h-4 ${file.isPrimary ? 'fill-current' : ''}`} />
+        </button>
+
+        <button
+          onClick={() => onRemove(file.id)}
+          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+          title="Remove file"
+        >
+          <Trash2Icon className="w-4 h-4" />
+        </button>
       </div>
     </div>
   );

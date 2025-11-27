@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { SparklesIcon } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { SparklesIcon, LockIcon } from 'lucide-react';
 import { UploadArea } from './UploadArea';
 import { FileList } from './FileList';
 import { TimelineAlignmentCard, SecondaryFile, ComputedOffset } from './TimelineAlignmentCard';
@@ -10,6 +10,8 @@ import { parseTimestampToMs, formatMsToTimestamp } from '../utils/timestampUtils
 import { permissiveParseSrt } from '../utils/srt-merge';
 import { shiftTimestampLine } from '../utils/timestamp-arith';
 import { api } from '../api/client';
+import { useAuth } from '../contexts/AuthContext';
+import { UpgradeModal } from './Pricing/UpgradeModal';
 
 interface FileWithContent extends TranscriptFile {
     fileContent: string;
@@ -18,9 +20,11 @@ interface FileWithContent extends TranscriptFile {
 interface MergerToolProps {
     onFileSaved?: () => void;
     showDiagnostics?: boolean;
+    initialFiles?: any[];
 }
 
-export function MergerTool({ onFileSaved, showDiagnostics = true }: MergerToolProps) {
+export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles = [] }: MergerToolProps) {
+    const { user } = useAuth();
     const [files, setFiles] = useState<FileWithContent[]>([]);
     const [isProcessing, setIsProcessing] = useState(false);
     const [mergeResult, setMergeResult] = useState<MergeResult | null>(null);
@@ -29,7 +33,55 @@ export function MergerTool({ onFileSaved, showDiagnostics = true }: MergerToolPr
     const [toastMessage, setToastMessage] = useState('');
     const [isSaving, setIsSaving] = useState(false);
 
+    // Upgrade Modal State
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+    const [upgradeReason, setUpgradeReason] = useState<'limit' | 'feature'>('feature');
+    const [upgradeFeature, setUpgradeFeature] = useState('');
+    const [upgradeLimit, setUpgradeLimit] = useState(0);
+
+    // Feature Access Helpers
+    const canRename = user?.subscription?.plan !== 'free';
+    const canAlign = user?.subscription?.plan !== 'free';
+    const canPreview = ['tier2', 'tier3'].includes(user?.subscription?.plan || 'free');
+
+    const PLAN_LIMITS = {
+        free: 4,
+        tier1: 20,
+        tier2: 100,
+        tier3: Infinity
+    };
+
+    useEffect(() => {
+        if (initialFiles.length > 0) {
+            const mappedFiles: FileWithContent[] = initialFiles.map(f => ({
+                id: f._id,
+                name: f.filename,
+                type: '.' + f.filename.split('.').pop()?.toLowerCase() || '.txt',
+                size: f.filesize || 0,
+                duration: null, // Content not loaded initially for history items
+                isPrimary: false, // Will be set by the component logic
+                offset: '00:00:00,000',
+                content: [],
+                errors: [],
+                fileContent: ''
+            }));
+            setFiles(mappedFiles.map((f, idx) => ({ ...f, isPrimary: idx === 0 })));
+        }
+    }, [initialFiles]);
+
     const handleFilesSelected = async (selectedFiles: File[]) => {
+        // Check Upload Limit
+        const currentPlan = user?.subscription?.plan || 'free';
+        const limit = PLAN_LIMITS[currentPlan];
+        const currentUsage = user?.usage?.uploadCount || 0;
+
+        if (currentUsage + selectedFiles.length > limit) {
+            setUpgradeReason('limit');
+            setUpgradeLimit(limit);
+            setShowUpgradeModal(true);
+            return;
+        }
+
         const newFiles: FileWithContent[] = [];
         for (const file of selectedFiles) {
             try {
@@ -46,7 +98,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true }: MergerToolPr
                         }
                     }
                 } catch (e) { }
-                const hasPrimary = files.some(f => f.isPrimary);
+                const hasPrimary = files.some(f => f.isPrimary) || newFiles.some(f => f.isPrimary);
                 newFiles.push({
                     id: `file-${Date.now()}-${Math.random()}`,
                     name: file.name,
@@ -108,6 +160,19 @@ export function MergerTool({ onFileSaved, showDiagnostics = true }: MergerToolPr
         setFiles([]);
         setMergeResult(null);
         setComputedOffsets([]);
+    };
+
+    const handleRename = async (id: string, newName: string) => {
+        if (!canRename) {
+            setUpgradeReason('feature');
+            setUpgradeFeature('File Renaming');
+            setShowUpgradeModal(true);
+            return;
+        }
+
+        setFiles(prev => prev.map(f =>
+            f.id === id ? { ...f, name: newName } : f
+        ));
     };
 
     const primaryFile = useMemo(() => files.find(f => f.isPrimary), [files]);
@@ -286,17 +351,65 @@ export function MergerTool({ onFileSaved, showDiagnostics = true }: MergerToolPr
                                     onRemove={handleRemove}
                                     onReorder={handleReorder}
                                     onClear={handleClearFiles}
+                                    onRename={handleRename}
                                 />
                             </div>
                         )}
                         {files.length > 0 && (
                             <div className="flex flex-col gap-8 mb-10 animate-fade-in">
-                                <TimelineAlignmentCard
-                                    primaryEnd={primaryEnd}
-                                    secondaryFiles={secondaryFiles}
-                                    onChange={handleTimelineAlignmentChange}
-                                />
-                                <MergePreview files={files} computedOffsets={computedOffsets} />
+                                {/* Timeline Alignment - Locked for Free Tier */}
+                                {files.length >= 2 && (
+                                    <div className="relative">
+                                        <TimelineAlignmentCard
+                                            primaryEnd={primaryEnd}
+                                            secondaryFiles={secondaryFiles}
+                                            onChange={handleTimelineAlignmentChange}
+                                        />
+                                        {!canAlign && (
+                                            <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-center justify-center z-10 rounded-xl border border-gray-200">
+                                                <div className="text-center p-6 bg-white rounded-xl shadow-lg border border-gray-100">
+                                                    <LockIcon className="w-8 h-8 text-blue-600 mx-auto mb-3" />
+                                                    <h3 className="text-lg font-semibold text-gray-900 mb-1">Timeline Alignment Locked</h3>
+                                                    <p className="text-gray-500 text-sm mb-4">Upgrade to Basic plan to align subtitles.</p>
+                                                    <button
+                                                        onClick={() => {
+                                                            setUpgradeReason('feature');
+                                                            setUpgradeFeature('Timeline Alignment');
+                                                            setShowUpgradeModal(true);
+                                                        }}
+                                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700"
+                                                    >
+                                                        Unlock Feature
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* Merge Preview - Locked for Free/Basic Tier */}
+                                <div className="relative">
+                                    <MergePreview files={files} computedOffsets={computedOffsets} />
+                                    {!canPreview && (
+                                        <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-center justify-center z-10 rounded-xl border border-gray-200">
+                                            <div className="text-center p-6 bg-white rounded-xl shadow-lg border border-gray-100">
+                                                <LockIcon className="w-8 h-8 text-blue-600 mx-auto mb-3" />
+                                                <h3 className="text-lg font-semibold text-gray-900 mb-1">Preview Locked</h3>
+                                                <p className="text-gray-500 text-sm mb-4">Upgrade to Pro plan to preview merges.</p>
+                                                <button
+                                                    onClick={() => {
+                                                        setUpgradeReason('feature');
+                                                        setUpgradeFeature('Merge Preview');
+                                                        setShowUpgradeModal(true);
+                                                    }}
+                                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700"
+                                                >
+                                                    Unlock Feature
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         )}
                         <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
@@ -366,6 +479,14 @@ export function MergerTool({ onFileSaved, showDiagnostics = true }: MergerToolPr
                     {toastMessage}
                 </div>
             )}
+
+            <UpgradeModal
+                isOpen={showUpgradeModal}
+                onClose={() => setShowUpgradeModal(false)}
+                reason={upgradeReason}
+                featureName={upgradeFeature}
+                limit={upgradeLimit}
+            />
         </section>
     );
 }

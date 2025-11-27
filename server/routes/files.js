@@ -3,13 +3,15 @@ import { ObjectId } from 'mongodb';
 import { getDB } from '../config/db.js';
 import authMiddleware from '../middleware/auth.js';
 
+import { usageLimit, incrementUsage } from '../middleware/usageLimit.js';
+
 const router = express.Router();
 
 // All routes require authentication
 router.use(authMiddleware);
 
 // Save file
-router.post('/', async (req, res) => {
+router.post('/', usageLimit, async (req, res) => {
     try {
         const { filename, content, filesize } = req.body;
 
@@ -35,6 +37,8 @@ router.post('/', async (req, res) => {
             createdAt: new Date(),
             updatedAt: new Date()
         });
+
+        await incrementUsage(req.user.userId);
 
         res.json({
             id: result.insertedId,

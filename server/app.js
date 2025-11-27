@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import { connectDB } from './config/db.js';
 import authRoutes from './routes/auth.js';
 import fileRoutes from './routes/files.js';
+import paymentRoutes from './routes/payment.js';
 import { apiLimiter } from './middleware/rateLimit.js';
 
 const app = express();
@@ -36,6 +37,7 @@ app.get('/health', (req, res) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/files', fileRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {

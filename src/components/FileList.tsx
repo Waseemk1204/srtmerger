@@ -7,6 +7,7 @@ interface FileListProps {
   onRemove: (id: string) => void;
   onReorder: (fromIndex: number, toIndex: number) => void;
   onPreview?: (id: string) => void;
+  onRename?: (id: string, newName: string) => void;
   onClear?: () => void;
 }
 
@@ -16,6 +17,7 @@ export function FileList({
   onRemove,
   onReorder,
   onPreview,
+  onRename,
   onClear
 }: FileListProps) {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
@@ -92,7 +94,13 @@ export function FileList({
               {String(index + 1).padStart(2, '0')}
             </div>
             <div className="flex-1 min-w-0">
-              <FileCard file={file} onSetPrimary={onSetPrimary} onRemove={onRemove} onPreview={onPreview} />
+              <FileCard
+                file={file}
+                onSetPrimary={onSetPrimary}
+                onRemove={onRemove}
+                onPreview={onPreview}
+                onRename={onRename}
+              />
             </div>
           </div>
         ))}
