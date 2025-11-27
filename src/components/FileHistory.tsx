@@ -69,16 +69,19 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
     };
 
     const startEditing = (file: SavedFile) => {
-        if (!canRename) {
-            setShowUpgradeModal(true);
-            return;
-        }
         setEditingId(file._id);
         setEditName(file.filename);
     };
 
     const saveRename = async () => {
         if (!editingId || !editName.trim()) return;
+
+        // Check feature access before saving
+        if (!canRename) {
+            setShowUpgradeModal(true);
+            return;
+        }
+
         try {
             await api.renameFile(editingId, editName);
             onFileRenamed(editingId, editName);
