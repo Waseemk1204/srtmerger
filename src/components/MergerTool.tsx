@@ -75,9 +75,10 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
         const limit = PLAN_LIMITS[currentPlan];
         const currentUsage = user?.usage?.uploadCount || 0;
         const remainingLimit = limit - currentUsage;
+        const totalFilesAfterUpload = files.length + selectedFiles.length;
 
-        // Check if user can upload this many files
-        if (selectedFiles.length > remainingLimit) {
+        // Check if total files (currently loaded + new) exceeds remaining limit
+        if (totalFilesAfterUpload > remainingLimit) {
             setUpgradeReason('limit');
             setUpgradeLimit(limit);
             setShowUpgradeModal(true);
