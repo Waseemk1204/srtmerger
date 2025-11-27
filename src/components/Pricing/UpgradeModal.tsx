@@ -64,7 +64,7 @@ export function UpgradeModal({ isOpen, onClose, reason, featureName, limit }: Up
                 </div>
 
                 <div className="p-8">
-                    <PricingSection compact />
+                    <PricingSection compact hideHeader />
                 </div>
             </div>
         </div>
