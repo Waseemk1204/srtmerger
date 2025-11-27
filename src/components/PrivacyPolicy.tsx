@@ -24,48 +24,77 @@ export function PrivacyPolicy({ onBack }: PrivacyPolicyProps) {
                             <h1 className="text-2xl sm:text-3xl font-bold">Privacy Policy</h1>
                         </div>
                         <p className="text-blue-100 text-lg">
-                            Your privacy is our top priority. We believe your data belongs to you.
+                            We are transparent about how we handle your data.
                         </p>
                     </div>
 
                     <div className="p-6 sm:p-10 space-y-8 text-gray-700 leading-relaxed">
                         <section>
                             <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <ServerIcon className="w-5 h-5 text-blue-600" />
+                                1. Information We Collect
+                            </h2>
+                            <p className="mb-4">
+                                To provide our services, we collect the following types of information:
+                            </p>
+                            <ul className="list-disc pl-5 space-y-2">
+                                <li><strong>Account Information:</strong> When you sign up, we collect your name, email address, and a hashed version of your password.</li>
+                                <li><strong>User Content:</strong> If you use our "Save to History" feature, we store your merged SRT files and their metadata (filename, size, creation date) in our secure database so you can access them later.</li>
+                                <li><strong>Usage Data:</strong> We use privacy-focused analytics to understand website traffic and performance. This data is aggregated and does not identify individual users.</li>
+                            </ul>
+                        </section>
+
+                        <section>
+                            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                                 <LockIcon className="w-5 h-5 text-blue-600" />
-                                1. Client-Side Processing
+                                2. How We Use Your Data
+                            </h2>
+                            <p className="mb-4">
+                                We use your information solely for the purpose of providing and improving the SRT Merger service:
+                            </p>
+                            <ul className="list-disc pl-5 space-y-2">
+                                <li>To create and manage your user account.</li>
+                                <li>To store and retrieve your saved files upon your request.</li>
+                                <li>To ensure the security and performance of our platform.</li>
+                            </ul>
+                            <p className="mt-4">
+                                <strong>We do not sell, rent, or share your personal data with third parties for marketing purposes.</strong>
+                            </p>
+                        </section>
+
+                        <section>
+                            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <ShieldIcon className="w-5 h-5 text-blue-600" />
+                                3. Data Security
                             </h2>
                             <p>
-                                SRT Merger operates <strong>entirely in your web browser</strong>. When you upload files, they are processed locally on your device using JavaScript.
-                                <strong> No files are ever uploaded to any server.</strong> Your transcripts, subtitles, and metadata never leave your computer.
+                                We implement industry-standard security measures to protect your data:
                             </p>
+                            <ul className="list-disc pl-5 space-y-2 mt-2">
+                                <li><strong>Encryption:</strong> All data transmission occurs over secure HTTPS connections. Passwords are hashed using strong cryptographic algorithms (bcrypt) before storage.</li>
+                                <li><strong>Access Control:</strong> Your saved files are private and accessible only by you through your authenticated account.</li>
+                                <li><strong>Database Security:</strong> We use a secure, managed MongoDB database with strict access controls.</li>
+                            </ul>
                         </section>
 
                         <section>
                             <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                                 <EyeOffIcon className="w-5 h-5 text-blue-600" />
-                                2. No Data Collection
+                                4. Your Rights
                             </h2>
                             <p>
-                                We do not collect, store, or share any personal information. We do not use cookies for tracking purposes.
-                                Since we don't have a backend database, we literally cannot store your data even if we wanted to.
+                                You have full control over your data. You can:
                             </p>
+                            <ul className="list-disc pl-5 space-y-2 mt-2">
+                                <li><strong>Access:</strong> View your saved files and account details at any time via the Dashboard.</li>
+                                <li><strong>Delete:</strong> You can delete individual files from your history. You may also request the complete deletion of your account and all associated data by contacting us.</li>
+                            </ul>
                         </section>
 
                         <section>
-                            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <ServerIcon className="w-5 h-5 text-blue-600" />
-                                3. Hosting & Analytics
-                            </h2>
+                            <h2 className="text-xl font-bold text-gray-900 mb-4">5. Contact Us</h2>
                             <p>
-                                This website is hosted on a static file server. We may use basic, privacy-focused analytics (like simple page view counters)
-                                that do not track individual users or collect personally identifiable information (PII).
-                            </p>
-                        </section>
-
-                        <section>
-                            <h2 className="text-xl font-bold text-gray-900 mb-4">4. Contact Us</h2>
-                            <p>
-                                If you have any questions about this Privacy Policy or technical issues with the site, please contact us at:
+                                If you have any questions about this Privacy Policy or wish to exercise your data rights, please contact us at:
                                 <br />
                                 <a href="mailto:waseemk1204@gmail.com" className="text-blue-600 hover:underline font-medium mt-2 inline-block">
                                     waseemk1204@gmail.com
