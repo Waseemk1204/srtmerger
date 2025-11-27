@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { FileTextIcon, DownloadIcon, Trash2Icon, Edit2Icon, CheckIcon, XIcon, FileJsonIcon } from 'lucide-react';
 import { api } from '../api/client';
+import { useAuth } from '../contexts/AuthContext';
+import { UpgradeModal } from './Pricing/UpgradeModal';
 
 interface SavedFile {
     _id: string;
@@ -17,11 +19,19 @@ interface FileHistoryProps {
 }
 
 export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merged Files" }: FileHistoryProps) {
+    const { user } = useAuth();
     const [downloadingId, setDownloadingId] = useState<string | null>(null);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editName, setEditName] = useState('');
     const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
+
+    // Upgrade Modal State
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+    // Feature Access
+    const currentPlan = user?.subscription?.plan || 'free';
+    const canRename = ['tier1', 'tier2', 'tier3'].includes(currentPlan);
 
     const handleDownload = async (file: SavedFile) => {
         setDownloadingId(file._id);
@@ -59,6 +69,10 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
     };
 
     const startEditing = (file: SavedFile) => {
+        if (!canRename) {
+            setShowUpgradeModal(true);
+            return;
+        }
         setEditingId(file._id);
         setEditName(file.filename);
     };
@@ -190,6 +204,16 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
                         </div>
                     </div>
                 </div>
+            )}
+
+            {/* Upgrade Modal */}
+            {showUpgradeModal && (
+                <UpgradeModal
+                    show={showUpgradeModal}
+                    onClose={() => setShowUpgradeModal(false)}
+                    reason="feature"
+                    feature="File Renaming"
+                />
             )}
         </div>
     );
