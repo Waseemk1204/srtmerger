@@ -63,11 +63,30 @@ export const incrementUsage = async (userId) => {
     const users = db.collection('users');
     const today = new Date().toISOString().split('T')[0];
 
-    await users.updateOne(
-        { _id: new ObjectId(userId) },
-        {
-            $inc: { 'usage.uploadCount': 1 },
-            $set: { 'usage.date': today }
-        }
-    );
+    // Get user to check if date reset is needed
+    const user = await users.findOne({ _id: new ObjectId(userId) });
+
+    // Reset usage if it's a new day
+    if (user && user.usage?.date !== today) {
+        await users.updateOne(
+            { _id: new ObjectId(userId) },
+            {
+                $set: {
+                    usage: {
+                        date: today,
+                        uploadCount: 1  // Set to 1 instead of incrementing
+                    }
+                }
+            }
+        );
+    } else {
+        // Same day, just increment
+        await users.updateOne(
+            { _id: new ObjectId(userId) },
+            {
+                $inc: { 'usage.uploadCount': 1 },
+                $set: { 'usage.date': today }
+            }
+        );
+    }
 };
