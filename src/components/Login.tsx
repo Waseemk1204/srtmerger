@@ -149,7 +149,6 @@ export function Login({ onSwitchToSignup, onBackToHome }: LoginProps) {
                                 onError={() => {
                                     setError('Google login failed');
                                 }}
-                                useOneTap
                             />
                         </div>
                     </form>
