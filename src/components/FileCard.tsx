@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileTextIcon, GripVerticalIcon, Trash2Icon, StarIcon, EyeIcon, Edit2Icon } from 'lucide-react';
+import { FileTextIcon, GripVerticalIcon, Trash2Icon, EyeIcon, Edit2Icon, CheckIcon, XIcon } from 'lucide-react';
 import { TranscriptFile } from '../types';
 
 interface FileCardProps {
@@ -55,16 +55,32 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
           {isEditing ? (
-            <div className="flex items-center gap-2 w-full max-w-[200px]">
+            <div className="flex items-center gap-2">
               <input
                 type="text"
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
-                onBlur={handleSaveRename}
                 onKeyDown={handleKeyDown}
-                className="w-full px-2 py-1 text-sm border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-2 py-1 text-sm border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 max-w-[200px]"
                 autoFocus
               />
+              <button
+                onClick={handleSaveRename}
+                className="p-1.5 text-green-600 hover:bg-green-50 rounded transition-colors"
+                title="Save"
+              >
+                <CheckIcon className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => {
+                  setEditName(file.name);
+                  setIsEditing(false);
+                }}
+                className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
+                title="Cancel"
+              >
+                <XIcon className="w-4 h-4" />
+              </button>
             </div>
           ) : (
             <h3
@@ -115,20 +131,7 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
           </button>
         )}
 
-        <button
-          onClick={() => onSetPrimary(file.id)}
-          disabled={file.isPrimary}
-          className={`
-                        p-2 rounded-lg transition-colors
-                        ${file.isPrimary
-              ? 'text-blue-500 bg-blue-50'
-              : 'text-gray-400 hover:text-yellow-500 hover:bg-yellow-50'
-            }
-                    `}
-          title={file.isPrimary ? 'Primary file' : 'Set as primary'}
-        >
-          <StarIcon className={`w-4 h-4 ${file.isPrimary ? 'fill-current' : ''}`} />
-        </button>
+
 
         <button
           onClick={() => onRemove(file.id)}
