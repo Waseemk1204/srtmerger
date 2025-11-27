@@ -66,8 +66,18 @@ export const incrementUsage = async (userId, count = 1) => {
     // Get user to check if date reset is needed
     const user = await users.findOne({ _id: new ObjectId(userId) });
 
+    console.log('incrementUsage called:', {
+        userId,
+        count,
+        currentDate: user?.usage?.date,
+        today,
+        currentCount: user?.usage?.uploadCount,
+        willReset: user?.usage?.date !== today
+    });
+
     // Reset usage if it's a new day
     if (user && user.usage?.date !== today) {
+        console.log('NEW DAY DETECTED - Resetting count to:', count);
         await users.updateOne(
             { _id: new ObjectId(userId) },
             {
@@ -81,6 +91,7 @@ export const incrementUsage = async (userId, count = 1) => {
         );
     } else {
         // Same day, increment by count
+        console.log('SAME DAY - Adding', count, 'to existing count');
         await users.updateOne(
             { _id: new ObjectId(userId) },
             {
