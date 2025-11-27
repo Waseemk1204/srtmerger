@@ -103,6 +103,12 @@ export function MergerTool({ onFileSaved }: MergerToolProps) {
         setComputedOffsets([]);
     };
 
+    const handleClearFiles = () => {
+        setFiles([]);
+        setMergeResult(null);
+        setComputedOffsets([]);
+    };
+
     const primaryFile = useMemo(() => files.find(f => f.isPrimary), [files]);
 
     const primaryEnd = useMemo(() => {
@@ -268,6 +274,7 @@ export function MergerTool({ onFileSaved }: MergerToolProps) {
                                     onSetPrimary={handleSetPrimary}
                                     onRemove={handleRemove}
                                     onReorder={handleReorder}
+                                    onClear={handleClearFiles}
                                 />
                             </div>
                         )}

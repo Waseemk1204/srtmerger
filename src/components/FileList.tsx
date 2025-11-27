@@ -7,13 +7,16 @@ interface FileListProps {
   onRemove: (id: string) => void;
   onReorder: (fromIndex: number, toIndex: number) => void;
   onPreview?: (id: string) => void;
+  onClear?: () => void;
 }
+
 export function FileList({
   files,
   onSetPrimary,
   onRemove,
   onReorder,
-  onPreview
+  onPreview,
+  onClear
 }: FileListProps) {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -51,6 +54,7 @@ export function FileList({
   if (files.length === 0) {
     return null;
   }
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -58,6 +62,14 @@ export function FileList({
           <span className="w-2 h-2 rounded-full bg-blue-500"></span>
           Uploaded Files ({files.length})
         </h2>
+        {onClear && (
+          <button
+            onClick={onClear}
+            className="text-sm font-medium text-red-500 hover:text-red-600 transition-colors self-end sm:self-auto"
+          >
+            Clear files
+          </button>
+        )}
       </div>
 
       <div className="space-y-3">
