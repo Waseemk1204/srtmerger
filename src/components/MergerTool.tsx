@@ -317,7 +317,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             setShowToast(true);
             setTimeout(() => setShowToast(false), 3000);
             // setMergeResult(null); // Kept result visible after auto-save
-            if (onFileSaved) onFileSaved();
+            // onFileSaved() removed - already called after trackMerge
         } catch (error) {
             console.error('Save file error:', error);
             setToastMessage(`Failed to save file: ${error instanceof Error ? error.message : 'Unknown error'}`);
