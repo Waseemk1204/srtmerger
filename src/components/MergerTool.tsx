@@ -40,9 +40,10 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
     const [upgradeLimit, setUpgradeLimit] = useState(0);
 
     // Feature Access Helpers
-    const canRename = user?.subscription?.plan !== 'free';
-    const canAlign = user?.subscription?.plan !== 'free';
-    const canPreview = ['tier2', 'tier3'].includes(user?.subscription?.plan || 'free');
+    const currentPlan = user?.subscription?.plan || 'free';
+    const canRename = ['tier1', 'tier2', 'tier3'].includes(currentPlan);
+    const canAlign = ['tier1', 'tier2', 'tier3'].includes(currentPlan);
+    const canPreview = ['tier2', 'tier3'].includes(currentPlan);
 
     const PLAN_LIMITS = {
         free: 4,
