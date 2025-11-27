@@ -10,6 +10,10 @@ import { apiLimiter } from './middleware/rateLimit.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust proxy is required when running behind a proxy like Vercel
+// This allows express-rate-limit to correctly identify users via X-Forwarded-For
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet());
 app.use(cors({
