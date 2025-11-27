@@ -301,6 +301,8 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 await api.trackMerge(files.length);
                 console.log('Merge tracked successfully');
                 // Refresh user data to update usage count
+                await refreshUser();
+                
                 if (onFileSaved) {
                     await onFileSaved();
                 }
