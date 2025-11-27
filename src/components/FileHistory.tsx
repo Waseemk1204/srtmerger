@@ -215,10 +215,10 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
             {/* Upgrade Modal */}
             {showUpgradeModal && (
                 <UpgradeModal
-                    show={showUpgradeModal}
+                    isOpen={showUpgradeModal}
                     onClose={() => setShowUpgradeModal(false)}
                     reason="feature"
-                    feature="File Renaming"
+                    featureName="File Renaming"
                 />
             )}
         </div>
