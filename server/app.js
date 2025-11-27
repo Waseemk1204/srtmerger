@@ -6,6 +6,7 @@ import { connectDB } from './config/db.js';
 import authRoutes from './routes/auth.js';
 import fileRoutes from './routes/files.js';
 import paymentRoutes from './routes/payment.js';
+import usageRoutes from './routes/usage.js';
 import { apiLimiter } from './middleware/rateLimit.js';
 
 const app = express();
@@ -38,6 +39,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/files', fileRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/usage', usageRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {

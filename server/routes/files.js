@@ -3,15 +3,13 @@ import { ObjectId } from 'mongodb';
 import { getDB } from '../config/db.js';
 import authMiddleware from '../middleware/auth.js';
 
-import { usageLimit, incrementUsage } from '../middleware/usageLimit.js';
-
 const router = express.Router();
 
 // All routes require authentication
 router.use(authMiddleware);
 
 // Save file
-router.post('/', usageLimit, async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const { filename, content, filesize } = req.body;
 
@@ -38,15 +36,13 @@ router.post('/', usageLimit, async (req, res) => {
             updatedAt: new Date()
         });
 
-        await incrementUsage(req.user.userId);
-
         res.json({
             id: result.insertedId,
             filename,
             createdAt: new Date()
         });
     } catch (error) {
-        console.error('Save file error:', error);
+        console.error('Save file error', error);
         res.status(500).json({ error: 'Failed to save file' });
     }
 });

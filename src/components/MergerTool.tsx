@@ -74,8 +74,10 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
         const currentPlan = user?.subscription?.plan || 'free';
         const limit = PLAN_LIMITS[currentPlan];
         const currentUsage = user?.usage?.uploadCount || 0;
+        const remainingLimit = limit - currentUsage;
 
-        if (currentUsage + selectedFiles.length > limit) {
+        // Check if user can upload this many files
+        if (selectedFiles.length > remainingLimit) {
             setUpgradeReason('limit');
             setUpgradeLimit(limit);
             setShowUpgradeModal(true);
@@ -269,6 +271,23 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             setToastMessage('Merge completed successfully!');
             setShowToast(true);
             setTimeout(() => setShowToast(false), 3000);
+
+            // Track merge operation (increment usage count)
+            try {
+                await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/usage/merge`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                // Refresh user data to update usage count
+                if (onFileSaved) {
+                    await onFileSaved();
+                }
+            } catch (error) {
+                console.error('Failed to track merge:', error);
+            }
 
             // Auto-save the file immediately with the result
             await saveFile(result);
