@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { UserPlusIcon, ArrowLeftIcon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { APIError } from '../api/client';
+import { GoogleLogin } from '@react-oauth/google';
 
 interface SignupProps {
     onSwitchToLogin: () => void;
@@ -9,7 +10,7 @@ interface SignupProps {
 }
 
 export function Signup({ onSwitchToLogin, onBackToHome }: SignupProps) {
-    const { signup } = useAuth();
+    const { signup, googleLogin } = useAuth();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -162,6 +163,39 @@ export function Signup({ onSwitchToLogin, onBackToHome }: SignupProps) {
                             >
                                 Log in
                             </button>
+                        </div>
+                        <div className="relative my-6">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-gray-200"></div>
+                            </div>
+                            <div className="relative flex justify-center text-sm">
+                                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-center">
+                            <GoogleLogin
+                                onSuccess={async (credentialResponse) => {
+                                    if (credentialResponse.credential) {
+                                        try {
+                                            setLoading(true);
+                                            await googleLogin(credentialResponse.credential);
+                                        } catch (err) {
+                                            if (err instanceof APIError) {
+                                                setError(err.message);
+                                            } else {
+                                                setError('Google login failed');
+                                            }
+                                        } finally {
+                                            setLoading(false);
+                                        }
+                                    }
+                                }}
+                                onError={() => {
+                                    setError('Google login failed');
+                                }}
+                                useOneTap
+                            />
                         </div>
                     </form>
                 </div>

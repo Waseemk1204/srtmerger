@@ -147,4 +147,90 @@ router.post('/logout', (req, res) => {
     res.json({ message: 'Logged out successfully' });
 });
 
+// Google Login
+import { OAuth2Client } from 'google-auth-library';
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+router.post('/google', async (req, res) => {
+    try {
+        const { credential } = req.body;
+
+        if (!credential) {
+            return res.status(400).json({ error: 'Google credential is required' });
+        }
+
+        // Verify Google Token
+        const ticket = await client.verifyIdToken({
+            idToken: credential,
+            audience: process.env.VITE_GOOGLE_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        const { email, name, sub: googleId } = payload;
+
+        if (!email) {
+            return res.status(400).json({ error: 'Email not provided by Google' });
+        }
+
+        const db = getDB();
+        const users = db.collection('users');
+
+        // Check if user exists
+        let user = await users.findOne({ email: email.toLowerCase() });
+
+        if (!user) {
+            // Create new user if not exists
+            // We set a random password hash since they use Google to login
+            // This prevents password login unless they reset it, which is fine
+            const randomPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+            const passwordHash = await bcrypt.hash(randomPassword, 12);
+
+            const result = await users.insertOne({
+                email: email.toLowerCase(),
+                passwordHash,
+                name: name || 'Google User',
+                googleId,
+                createdAt: new Date(),
+                lastLogin: new Date()
+            });
+
+            user = {
+                _id: result.insertedId,
+                email: email.toLowerCase(),
+                name: name || 'Google User'
+            };
+        } else {
+            // Update last login and googleId if missing
+            await users.updateOne(
+                { _id: user._id },
+                {
+                    $set: {
+                        lastLogin: new Date(),
+                        ...(googleId && !user.googleId ? { googleId } : {})
+                    }
+                }
+            );
+        }
+
+        // Generate JWT
+        const token = jwt.sign(
+            { userId: user._id.toString(), email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        res.json({
+            token,
+            user: {
+                id: user._id,
+                email: user.email,
+                name: user.name
+            }
+        });
+    } catch (error) {
+        console.error('Google login error:', error);
+        res.status(500).json({ error: 'Google authentication failed' });
+    }
+});
+
 export default router;

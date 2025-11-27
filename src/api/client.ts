@@ -59,6 +59,12 @@ export const api = {
             body: JSON.stringify({ email, password }),
         }),
 
+    googleLogin: (credential: string) =>
+        request('/auth/google', {
+            method: 'POST',
+            body: JSON.stringify({ credential }),
+        }),
+
     logout: () =>
         request('/auth/logout', {
             method: 'POST',
