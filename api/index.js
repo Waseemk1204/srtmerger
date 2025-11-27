@@ -5,7 +5,16 @@ export default async (req, res) => {
     try {
         // Ensure database is connected before handling request
         await connectDB();
-        return app(req, res);
+
+        console.log('App type:', typeof app);
+        // Handle potential ESM default export wrapping
+        const handler = typeof app === 'function' ? app : app.default;
+
+        if (typeof handler !== 'function') {
+            throw new Error(`Exported app is not a function. Received: ${typeof handler}`);
+        }
+
+        return handler(req, res);
     } catch (error) {
         console.error('Vercel Function Error:', error);
         res.status(500).json({
