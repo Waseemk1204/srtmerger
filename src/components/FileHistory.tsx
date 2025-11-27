@@ -76,8 +76,11 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
     const saveRename = async () => {
         if (!editingId || !editName.trim()) return;
 
+        console.log('SaveRename - currentPlan:', currentPlan, 'canRename:', canRename);
+
         // Check feature access before saving
         if (!canRename) {
+            console.log('Showing upgrade modal for rename');
             setShowUpgradeModal(true);
             return;
         }
