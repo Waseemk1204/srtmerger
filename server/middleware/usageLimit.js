@@ -90,4 +90,3 @@ export const incrementUsage = async (userId, count = 1) => {
         );
     }
 };
-```
