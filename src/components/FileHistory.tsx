@@ -171,16 +171,23 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
                                         >
                                             <Trash2Icon className="w-4 h-4" />
                                         </button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
 
-                                        {/* Upgrade Modal */}
-                                        {showUpgradeModal && (
-                                            <UpgradeModal
-                                                isOpen={showUpgradeModal}
-                                                onClose={() => setShowUpgradeModal(false)}
-                                                reason="feature"
-                                                featureName="File Renaming"
-                                            />
-                                        )}
-                                    </div>
-                                );
+            {/* Upgrade Modal */}
+            {showUpgradeModal && (
+                <UpgradeModal
+                    isOpen={showUpgradeModal}
+                    onClose={() => setShowUpgradeModal(false)}
+                    reason="feature"
+                    featureName="File Renaming"
+                />
+            )}
+        </div>
+    );
 }
