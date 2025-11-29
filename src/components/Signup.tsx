@@ -200,11 +200,7 @@ export function Signup({ onSwitchToLogin, onBackToHome }: SignupProps) {
                 </div>
 
                 {/* Privacy Note */}
-                <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <p className="text-xs text-blue-800">
-                        🔒 <strong>Your Privacy:</strong> All files are encrypted in your browser before upload. We never see your file content.
-                    </p>
-                </div>
+
             </div>
         </div>
     );

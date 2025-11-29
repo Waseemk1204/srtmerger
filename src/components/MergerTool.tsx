@@ -440,9 +440,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
         <section id="merger-tool" className="px-4 pb-8">
             <div className="max-w-5xl mx-auto">
                 <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-2 sm:mb-3 text-center">
-                        Merge SRT Files
-                    </h2>
+                    <h2 className="sr-only">Merge SRT Files</h2>
                     <div className="bg-gray-50 border-b border-gray-200 px-6 py-4 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full bg-red-400"></div>
