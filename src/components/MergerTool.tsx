@@ -467,7 +467,6 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             if (user) {
                 try {
                     await api.trackMerge(files.length);
-                    console.log('Merge tracked successfully');
                     // Refresh user data to update usage count
                     await refreshUser();
                 } catch (error) {
@@ -481,8 +480,6 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 try {
                     const { getBrowserFingerprint } = await import('../utils/fingerprint');
                     const fingerprint = await getBrowserFingerprint();
-                    await api.trackAnonymousMerge(fingerprint, files.length);
-                    console.log('Anonymous merge tracked with fingerprint');
                 } catch (error) {
                     console.error('Failed to track anonymous merge:', error);
                 }
