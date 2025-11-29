@@ -42,6 +42,37 @@ export function TimelineAlignmentCard({
   const [customOffset, setCustomOffset] = useState<string>(defaultCustomOffset);
   const [customOffsetError, setCustomOffsetError] = useState<string>('');
 
+  // Restore mode and customOffset from localStorage on mount
+  useEffect(() => {
+    try {
+      const savedSettings = localStorage.getItem('timeline-alignment-settings');
+      if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        if (settings.mode) {
+          setMode(settings.mode);
+        }
+        if (settings.customOffset) {
+          setCustomOffset(settings.customOffset);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to restore timeline settings:', e);
+    }
+  }, []);
+
+  // Save mode and customOffset to localStorage when they change
+  useEffect(() => {
+    try {
+      const settings = {
+        mode,
+        customOffset
+      };
+      localStorage.setItem('timeline-alignment-settings', JSON.stringify(settings));
+    } catch (e) {
+      console.error('Failed to save timeline settings:', e);
+    }
+  }, [mode, customOffset]);
+
   // Parse primary end time
   const primaryEndMs = parseTimestampToMs(primaryEnd) ?? 0;
 

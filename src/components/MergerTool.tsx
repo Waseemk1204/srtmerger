@@ -303,18 +303,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
         localStorage.removeItem('dashboard-merger-state');
     };
 
-    const handleRename = async (id: string, newName: string) => {
-        if (!canRename) {
-            setUpgradeReason('feature');
-            setUpgradeFeature('File Renaming');
-            setShowUpgradeModal(true);
-            return;
-        }
 
-        setFiles(prev => prev.map(f =>
-            f.id === id ? { ...f, name: newName } : f
-        ));
-    };
 
     const primaryFile = useMemo(() => files.find(f => f.isPrimary), [files]);
 
@@ -536,8 +525,11 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             setToastMessage('File saved successfully!');
             setShowToast(true);
             setTimeout(() => setShowToast(false), 3000);
-            // setMergeResult(null); // Kept result visible after auto-save
-            // onFileSaved() removed - already called after trackMerge
+
+            // Refresh saved files list
+            if (onFileSaved) {
+                await onFileSaved();
+            }
         } catch (error) {
             console.error('Save file error:', error);
             setToastMessage(`Failed to save file: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -594,17 +586,15 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                                 <UploadArea onFilesSelected={handleFilesSelected} />
                             )}
                         </div>
-                        {files.length > 0 && (
-                            <div className="mb-10 animate-fade-in">
-                                <FileList
-                                    files={files.map((f, idx) => ({ ...f, isPrimary: idx === 0 }))}
-                                    onSetPrimary={handleSetPrimary}
-                                    onRemove={handleRemove}
-                                    onReorder={handleReorder}
-                                    onClear={handleClearFiles}
-                                    onRename={handleRename}
-                                />
-                            </div>
+                        <div className="mb-10 animate-fade-in">
+                            <FileList
+                                files={files}
+                                onSetPrimary={handleSetPrimary}
+                                onRemove={handleRemove}
+                                onReorder={handleReorder}
+                                onClear={handleClearFiles}
+                            />
+                        </div>
                         )}
                         {files.length > 0 && (
                             <div className="flex flex-col gap-8 mb-10 animate-fade-in">

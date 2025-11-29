@@ -1,18 +1,15 @@
-import React, { useState } from 'react';
-import { FileTextIcon, GripVerticalIcon, Trash2Icon, EyeIcon, Edit2Icon } from 'lucide-react';
+import React from 'react';
+import { FileTextIcon, GripVerticalIcon, Trash2Icon, EyeIcon } from 'lucide-react';
 import { TranscriptFile } from '../types';
-import { RenameModal } from './RenameModal';
 
 interface FileCardProps {
   file: TranscriptFile;
   onSetPrimary: (id: string) => void;
   onRemove: (id: string) => void;
   onPreview?: (id: string) => void;
-  onRename?: (id: string, newName: string) => void;
 }
 
-export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: FileCardProps) {
-  const [showRenameModal, setShowRenameModal] = useState(false);
+export function FileCard({ file, onSetPrimary, onRemove, onPreview }: FileCardProps) {
 
   return (
     <div className={`
@@ -38,11 +35,7 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
       {/* File Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <h3
-            className="font-medium text-gray-900 truncate cursor-pointer hover:text-blue-600 text-sm sm:text-base"
-            onClick={() => onRename && setShowRenameModal(true)}
-            title="Click to rename"
-          >
+          <h3 className="font-medium text-gray-900 truncate text-sm sm:text-base">
             {file.name}
           </h3>
 
@@ -75,16 +68,6 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
           </button>
         )}
 
-        {onRename && (
-          <button
-            onClick={() => setShowRenameModal(true)}
-            className="p-1.5 sm:p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-            title="Rename file"
-          >
-            <Edit2Icon className="w-4 h-4" />
-          </button>
-        )}
-
         <button
           onClick={() => onRemove(file.id)}
           className="p-1.5 sm:p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
@@ -93,16 +76,6 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
           <Trash2Icon className="w-4 h-4" />
         </button>
       </div>
-
-      {/* Rename Modal */}
-      {onRename && (
-        <RenameModal
-          isOpen={showRenameModal}
-          currentName={file.name}
-          onClose={() => setShowRenameModal(false)}
-          onRename={(newName) => onRename(file.id, newName)}
-        />
-      )}
     </div>
   );
 }
