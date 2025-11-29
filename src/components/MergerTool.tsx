@@ -586,15 +586,16 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                                 <UploadArea onFilesSelected={handleFilesSelected} />
                             )}
                         </div>
-                        <div className="mb-10 animate-fade-in">
-                            <FileList
-                                files={files}
-                                onSetPrimary={handleSetPrimary}
-                                onRemove={handleRemove}
-                                onReorder={handleReorder}
-                                onClear={handleClearFiles}
-                            />
-                        </div>
+                        {files.length > 0 && (
+                            <div className="mb-10 animate-fade-in">
+                                <FileList
+                                    files={files}
+                                    onSetPrimary={handleSetPrimary}
+                                    onRemove={handleRemove}
+                                    onReorder={handleReorder}
+                                    onClear={handleClearFiles}
+                                />
+                            </div>
                         )}
                         {files.length > 0 && (
                             <div className="flex flex-col gap-8 mb-10 animate-fade-in">
