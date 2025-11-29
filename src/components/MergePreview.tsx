@@ -337,31 +337,36 @@ export function MergePreview({
                           )}
                           <div className="text-xs text-gray-400 mt-1 break-all px-1">{entry.sourceFile}</div>
                         </div>
+
+                        {/* Inline Add Cue Button */}
+                        {canEdit && onAdd && (
+                          <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={() => {
+                                // Calculate timestamp for new cue (1 second after current cue's end)
+                                const endMs = parseTimestampToMs(currentEnd) || 0;
+                                const newStartMs = endMs + 1000; // 1 second after
+                                const newEndMs = newStartMs + 1000; // 1 second duration
+
+                                const newCue: AddedCue = {
+                                  id: `added-${Date.now()}`,
+                                  start: formatMsToTimestamp(newStartMs),
+                                  end: formatMsToTimestamp(newEndMs),
+                                  text: '[New cue]'
+                                };
+                                onAdd(newCue);
+                              }}
+                              className="p-1.5 hover:bg-blue-50 rounded text-blue-600 hover:text-blue-700 transition-colors"
+                              title="Add cue after this"
+                            >
+                              <PlusIcon className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
                 </div>
-
-                {/* Add Cue Button */}
-                {canEdit && onAdd && (
-                  <div className="mt-3 pt-3 border-t border-gray-200">
-                    <button
-                      onClick={() => {
-                        const newCue: AddedCue = {
-                          id: `added-${Date.now()}`,
-                          start: '00:00:00,000',
-                          end: '00:00:01,000',
-                          text: '[New cue]'
-                        };
-                        onAdd(newCue);
-                      }}
-                      className="flex items-center gap-2 px-3 py-2 text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
-                    >
-                      <PlusIcon className="w-4 h-4" />
-                      Add Cue
-                    </button>
-                  </div>
-                )}
               </div>
 
               {/* Load More / Show Less */}
