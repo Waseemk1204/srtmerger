@@ -21,9 +21,10 @@ interface MergerToolProps {
     onFileSaved?: () => void;
     showDiagnostics?: boolean;
     initialFiles?: any[];
+    onShowToast?: (message: string) => void;
 }
 
-export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles = [] }: MergerToolProps) {
+export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles = [], onShowToast }: MergerToolProps) {
     const { user, refreshUser } = useAuth();
     const [files, setFiles] = useState<FileWithContent[]>([]);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -33,7 +34,17 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
     const [toastMessage, setToastMessage] = useState('');
     const [edits, setEdits] = useState<Record<string, { text?: string; start?: string; end?: string }>>({}); // Key: fileId-blockIndex
 
+    const [edits, setEdits] = useState<Record<string, { text?: string; start?: string; end?: string }>>({}); // Key: fileId-blockIndex
 
+    const handleShowToast = (message: string) => {
+        if (onShowToast) {
+            onShowToast(message);
+        } else {
+            setToastMessage(message);
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
+        }
+    };
     // Prefetch fingerprint on mount to speed up subsequent checks
     useEffect(() => {
         const prefetchFingerprint = async () => {
@@ -490,9 +501,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 anonymousUsage.increment(files.length);
             }
         } catch (error) {
-            setToastMessage(`Merge failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-            setShowToast(true);
-            setTimeout(() => setShowToast(false), 3000);
+            handleShowToast(`Merge failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
         } finally {
             setIsProcessing(false);
         }
@@ -512,9 +521,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 filesize
             );
 
-            setToastMessage('File saved successfully!');
-            setShowToast(true);
-            setTimeout(() => setShowToast(false), 3000);
+            handleShowToast('File saved successfully!');
 
             // Refresh saved files list
             if (onFileSaved) {
@@ -522,9 +529,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             }
         } catch (error) {
             console.error('Save file error:', error);
-            setToastMessage(`Failed to save file: ${error instanceof Error ? error.message : 'Unknown error'}`);
-            setShowToast(true);
-            setTimeout(() => setShowToast(false), 5000);
+            handleShowToast(`Failed to save file: ${error instanceof Error ? error.message : 'Unknown error'}`);
         } finally {
             setIsSaving(false);
         }
@@ -730,7 +735,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 </div>
             </div>
             {
-                showToast && (
+                (!onShowToast && showToast) && (
                     <div className="fixed bottom-4 right-4 bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg text-sm animate-fade-in z-[10000] font-medium flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-green-400"></div>
                         {toastMessage}
