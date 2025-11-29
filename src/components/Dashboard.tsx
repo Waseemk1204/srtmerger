@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LogOutIcon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { SavedFilesSection } from './SavedFilesSection';
@@ -7,6 +7,38 @@ import { MergerTool } from './MergerTool';
 export function Dashboard() {
     const { user, logout, refreshUser } = useAuth();
     const [refreshKey, setRefreshKey] = useState(0);
+    const [timeUntilReset, setTimeUntilReset] = useState<string>('');
+
+    // Calculate time until reset
+    useEffect(() => {
+        const calculateTimeRemaining = () => {
+            const firstMergeTime = user?.usage?.firstMergeTime;
+
+            if (!firstMergeTime) {
+                setTimeUntilReset('No usage yet');
+                return;
+            }
+
+            const resetTime = new Date(firstMergeTime).getTime() + (24 * 60 * 60 * 1000); // +24 hours
+            const now = Date.now();
+            const msRemaining = resetTime - now;
+
+            if (msRemaining <= 0) {
+                setTimeUntilReset('Ready to reset');
+                return;
+            }
+
+            const hours = Math.floor(msRemaining / (1000 * 60 * 60));
+            const minutes = Math.floor((msRemaining % (1000 * 60 * 60)) / (1000 * 60));
+
+            setTimeUntilReset(`${hours}h ${minutes}m`);
+        };
+
+        calculateTimeRemaining();
+        const interval = setInterval(calculateTimeRemaining, 60000); // Update every minute
+
+        return () => clearInterval(interval);
+    }, [user?.usage?.firstMergeTime]);
 
     const loadFiles = async () => {
         setRefreshKey(prev => prev + 1);
@@ -101,19 +133,11 @@ export function Dashboard() {
             </div>
 
             {/* Saved Files Section */}
-            {files.length > 0 && (
-                <section className="px-4 pb-20 pt-8">
-                    <div className="max-w-5xl mx-auto">
-                        <FileHistory
-                            files={files}
-                            onFileDeleted={handleFileDeleted}
-                            onFileRenamed={handleFileRenamed}
-                            title="Saved Files"
-                        />
-                    </div>
-                </section>
-            )}
+            <section className="px-4 pb-20 pt-8">
+                <div className="max-w-5xl mx-auto">
+                    <SavedFilesSection key={refreshKey} />
+                </div>
+            </section>
         </div>
     );
 }
-```
