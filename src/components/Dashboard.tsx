@@ -88,7 +88,7 @@ export function Dashboard() {
                             </div>
                             <div>
                                 <div className="text-sm text-gray-500 mb-1">Resets In</div>
-                                <div className="font-medium text-gray-900">24 Hours</div>
+                                <div className="font-medium text-gray-900">{timeUntilReset}</div>
                             </div>
                         </div>
                     </div>
@@ -101,11 +101,19 @@ export function Dashboard() {
             </div>
 
             {/* Saved Files Section */}
-            <section className="px-4 pb-20 pt-8">
-                <div className="max-w-5xl mx-auto">
-                    <SavedFilesSection key={refreshKey} />
-                </div>
-            </section>
+            {files.length > 0 && (
+                <section className="px-4 pb-20 pt-8">
+                    <div className="max-w-5xl mx-auto">
+                        <FileHistory
+                            files={files}
+                            onFileDeleted={handleFileDeleted}
+                            onFileRenamed={handleFileRenamed}
+                            title="Saved Files"
+                        />
+                    </div>
+                </section>
+            )}
         </div>
     );
 }
+```
