@@ -15,6 +15,7 @@ import { BlogPost } from './components/BlogPost';
 import { Login } from './components/Login';
 import { Signup } from './components/Signup';
 import { Dashboard } from './components/Dashboard';
+import { FAQ } from './components/FAQ';
 import { useAuth } from './contexts/AuthContext';
 import { blogPosts } from './data/blogPosts';
 
@@ -198,6 +199,8 @@ function App() {
 
         <PricingSection />
 
+        {/* FAQ Section */}
+        <FAQ />
 
       </main >
     );
