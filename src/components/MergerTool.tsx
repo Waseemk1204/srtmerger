@@ -31,6 +31,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
     const [computedOffsets, setComputedOffsets] = useState<ComputedOffset[]>([]);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
+    const [edits, setEdits] = useState<Record<string, { text?: string; start?: string; end?: string }>>({}); // Key: fileId-blockIndex
 
 
     // Prefetch fingerprint on mount to speed up subsequent checks
@@ -58,6 +59,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
     const canRename = ['tier1', 'tier2', 'tier3'].includes(currentPlan);
     const canAlign = ['tier1', 'tier2', 'tier3'].includes(currentPlan);
     const canPreview = ['tier2', 'tier3'].includes(currentPlan);
+    const canEdit = currentPlan === 'tier3';
 
     const PLAN_LIMITS = {
         free: 4,
@@ -303,6 +305,17 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
         setComputedOffsets(payload.computedOffsets);
     };
 
+    const handleEdit = (fileId: string, blockIndex: number, field: 'text' | 'start' | 'end', value: string) => {
+        setEdits(prev => {
+            const key = `${fileId}-${blockIndex}`;
+            const current = prev[key] || {};
+            return {
+                ...prev,
+                [key]: { ...current, [field]: value }
+            };
+        });
+    };
+
     const handleMerge = async () => {
         if (files.length === 0) return;
 
@@ -360,10 +373,14 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 for (const block of primaryBlocks) {
                     const shifted = shiftTimestampLine(block.tsRaw, 0);
                     if (shifted) {
+                        const edit = edits[`${primaryFile.id}-${block.index}`];
                         allBlocks.push({
                             index: globalIndex++,
-                            timestamp: shifted,
-                            texts: block.texts.length > 0 ? block.texts : ['[No text]']
+                            timestamp: (edit?.start && edit?.end)
+                                ? `${edit.start} --> ${edit.end}`
+                                : (edit?.start ? `${edit.start} --> ${shifted.split('-->')[1].trim()}`
+                                    : (edit?.end ? `${shifted.split('-->')[0].trim()} --> ${edit.end}` : shifted)),
+                            texts: edit?.text ? [edit.text] : (block.texts.length > 0 ? block.texts : ['[No text]'])
                         });
                     }
                 }
@@ -375,10 +392,14 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                     for (const block of blocks) {
                         const shifted = shiftTimestampLine(block.tsRaw, offsetMs);
                         if (shifted) {
+                            const edit = edits[`${file.id}-${block.index}`];
                             allBlocks.push({
                                 index: globalIndex++,
-                                timestamp: shifted,
-                                texts: block.texts.length > 0 ? block.texts : ['[No text]']
+                                timestamp: (edit?.start && edit?.end)
+                                    ? `${edit.start} --> ${edit.end}`
+                                    : (edit?.start ? `${edit.start} --> ${shifted.split('-->')[1].trim()}`
+                                        : (edit?.end ? `${shifted.split('-->')[0].trim()} --> ${edit.end}` : shifted)),
+                                texts: edit?.text ? [edit.text] : (block.texts.length > 0 ? block.texts : ['[No text]'])
                             });
                         }
                     }
@@ -572,7 +593,13 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
 
                                 {/* Merge Preview - Locked for Free/Basic Tier */}
                                 <div className="relative">
-                                    <MergePreview files={files} computedOffsets={computedOffsets} />
+                                    <MergePreview
+                                        files={files}
+                                        computedOffsets={computedOffsets}
+                                        edits={edits}
+                                        onEdit={handleEdit}
+                                        canEdit={canEdit}
+                                    />
                                     {!canPreview && (
                                         <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-center justify-center z-10 rounded-xl border border-gray-200">
                                             <div className="text-center p-6 bg-white rounded-xl shadow-lg border border-gray-100">
@@ -673,12 +700,14 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                     </div>
                 </div>
             </div>
-            {showToast && (
-                <div className="fixed bottom-4 right-4 bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg text-sm animate-fade-in z-50 font-medium flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-green-400"></div>
-                    {toastMessage}
-                </div>
-            )}
+            {
+                showToast && (
+                    <div className="fixed bottom-4 right-4 bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg text-sm animate-fade-in z-50 font-medium flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                        {toastMessage}
+                    </div>
+                )
+            }
 
             <UpgradeModal
                 isOpen={showUpgradeModal}
@@ -687,6 +716,6 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 featureName={upgradeFeature}
                 limit={upgradeLimit}
             />
-        </section>
+        </section >
     );
 }

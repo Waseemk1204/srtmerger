@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronDownIcon, ChevronUpIcon, EyeIcon, FileTextIcon } from 'lucide-react';
+import { ChevronDownIcon, ChevronUpIcon, EyeIcon, FileTextIcon, LockIcon } from 'lucide-react';
 import { permissiveParseSrt } from '../utils/srt-merge';
 import { shiftTimestampLine } from '../utils/timestamp-arith';
 import { parseTimestampToMs, formatMsToTimestamp } from '../utils/timestampUtils';
@@ -10,14 +10,19 @@ interface PreviewEntry {
   end: string;
   text: string;
   sourceFile: string;
+  fileId: string;
+  blockIndex: number;
 }
 
 interface MergePreviewProps {
   files: Array<{ id: string; name: string; fileContent: string; isPrimary?: boolean }>;
   computedOffsets?: Array<{ id: string; offsetMs: number }>;
+  edits?: Record<string, { text?: string; start?: string; end?: string }>;
+  onEdit?: (fileId: string, blockIndex: number, field: 'text' | 'start' | 'end', value: string) => void;
+  canEdit?: boolean;
 }
 
-export function MergePreview({ files, computedOffsets = [] }: MergePreviewProps) {
+export function MergePreview({ files, computedOffsets = [], edits = {}, onEdit, canEdit = false }: MergePreviewProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [visibleCount, setVisibleCount] = useState(500);
 
@@ -43,7 +48,9 @@ export function MergePreview({ files, computedOffsets = [] }: MergePreviewProps)
           start,
           end,
           text: block.texts.join(' ') || '[No text]',
-          sourceFile: primaryFile.name
+          sourceFile: primaryFile.name,
+          fileId: primaryFile.id,
+          blockIndex: block.index
         });
       }
     }
@@ -63,7 +70,9 @@ export function MergePreview({ files, computedOffsets = [] }: MergePreviewProps)
             start,
             end,
             text: block.texts.join(' ') || '[No text]',
-            sourceFile: file.name
+            sourceFile: file.name,
+            fileId: file.id,
+            blockIndex: block.index
           });
         }
       }
@@ -200,27 +209,67 @@ export function MergePreview({ files, computedOffsets = [] }: MergePreviewProps)
             <>
               <div className="max-h-96 overflow-y-auto p-3 sm:p-4">
                 <div className="space-y-3">
-                  {displayEntries.map((entry) => (
-                    <div
-                      key={entry.index}
-                      className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs sm:text-sm border-b border-gray-100 pb-3 last:border-0 select-none"
-                    >
-                      <div className="flex items-start gap-2 sm:gap-4 flex-shrink-0">
-                        <div className="flex-shrink-0">
-                          <div className="font-mono text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded">
-                            #{entry.index}
+                  {displayEntries.map((entry) => {
+                    const editKey = `${entry.fileId}-${entry.blockIndex}`;
+                    const edit = edits[editKey];
+                    const currentText = edit?.text ?? entry.text;
+                    const currentStart = edit?.start ?? entry.start;
+                    const currentEnd = edit?.end ?? entry.end;
+
+                    return (
+                      <div
+                        key={entry.index}
+                        className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs sm:text-sm border-b border-gray-100 pb-3 last:border-0 select-none group"
+                      >
+                        <div className="flex items-start gap-2 sm:gap-4 flex-shrink-0">
+                          <div className="flex-shrink-0">
+                            <div className="font-mono text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded">
+                              #{entry.index}
+                            </div>
+                          </div>
+                          <div className="flex-shrink-0 font-mono text-xs text-gray-500 pt-1 min-w-[120px] sm:min-w-[140px] break-all flex flex-col gap-1">
+                            {canEdit && onEdit ? (
+                              <div className="flex items-center gap-1">
+                                <input
+                                  type="text"
+                                  value={currentStart}
+                                  onChange={(e) => onEdit(entry.fileId, entry.blockIndex, 'start', e.target.value)}
+                                  className="w-20 bg-transparent border-b border-dashed border-gray-300 focus:border-blue-500 focus:outline-none text-gray-700"
+                                />
+                                <span>→</span>
+                                <input
+                                  type="text"
+                                  value={currentEnd}
+                                  onChange={(e) => onEdit(entry.fileId, entry.blockIndex, 'end', e.target.value)}
+                                  className="w-20 bg-transparent border-b border-dashed border-gray-300 focus:border-blue-500 focus:outline-none text-gray-700"
+                                />
+                              </div>
+                            ) : (
+                              <span>{entry.start} → {entry.end}</span>
+                            )}
                           </div>
                         </div>
-                        <div className="flex-shrink-0 font-mono text-xs text-gray-500 pt-1 min-w-[120px] sm:min-w-[140px] break-all">
-                          {entry.start} → {entry.end}
+                        <div className="flex-1 text-gray-900 min-w-0 relative">
+                          {canEdit && onEdit ? (
+                            <textarea
+                              value={currentText}
+                              onChange={(e) => onEdit(entry.fileId, entry.blockIndex, 'text', e.target.value)}
+                              className="w-full bg-transparent border border-transparent hover:border-gray-200 focus:border-blue-300 focus:ring-2 focus:ring-blue-100 rounded p-1 -ml-1 resize-y min-h-[1.5em]"
+                              rows={Math.max(1, currentText.split('\n').length)}
+                            />
+                          ) : (
+                            <div className="break-words group-hover:bg-gray-50/50 rounded p-1 -ml-1 transition-colors">
+                              {entry.text}
+                              {!canEdit && (
+                                <LockIcon className="w-3 h-3 text-gray-300 absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+                              )}
+                            </div>
+                          )}
+                          <div className="text-xs text-gray-400 mt-1 break-all px-1">{entry.sourceFile}</div>
                         </div>
                       </div>
-                      <div className="flex-1 text-gray-900 min-w-0">
-                        <div className="break-words">{entry.text}</div>
-                        <div className="text-xs text-gray-400 mt-1 break-all">{entry.sourceFile}</div>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
