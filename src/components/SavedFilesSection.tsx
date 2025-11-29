@@ -2,15 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { FileHistory } from './FileHistory';
 import { api } from '../api/client';
 
-export function SavedFilesSection() {
+interface SavedFilesSectionProps {
+    key?: number;
+}
+
+export function SavedFilesSection({ key }: SavedFilesSectionProps) {
     const [savedFiles, setSavedFiles] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         loadFiles();
-    }, []);
+    }, [key]); // Reload when key changes
 
     const loadFiles = async () => {
+        setLoading(true);
         try {
             const response = await api.listFiles();
             setSavedFiles(response.files);
