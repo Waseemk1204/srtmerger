@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { FileTextIcon, GripVerticalIcon, Trash2Icon, EyeIcon, Edit2Icon, CheckIcon, XIcon } from 'lucide-react';
+import { FileTextIcon, GripVerticalIcon, Trash2Icon, EyeIcon, Edit2Icon } from 'lucide-react';
 import { TranscriptFile } from '../types';
+import { RenameModal } from './RenameModal';
 
 interface FileCardProps {
   file: TranscriptFile;
@@ -11,24 +12,7 @@ interface FileCardProps {
 }
 
 export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: FileCardProps) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editName, setEditName] = useState(file.name);
-
-  const handleSaveRename = () => {
-    if (editName.trim() && editName !== file.name && onRename) {
-      onRename(file.id, editName.trim());
-    }
-    setIsEditing(false);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSaveRename();
-    } else if (e.key === 'Escape') {
-      setEditName(file.name);
-      setIsEditing(false);
-    }
-  };
+  const [showRenameModal, setShowRenameModal] = useState(false);
 
   return (
     <div className={`
@@ -54,43 +38,13 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
       {/* File Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          {isEditing ? (
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="w-full px-2 py-1 text-sm border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 max-w-[150px] sm:max-w-[200px]"
-                autoFocus
-              />
-              <button
-                onClick={handleSaveRename}
-                className="p-1.5 text-green-600 hover:bg-green-50 rounded transition-colors"
-                title="Save"
-              >
-                <CheckIcon className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => {
-                  setEditName(file.name);
-                  setIsEditing(false);
-                }}
-                className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
-                title="Cancel"
-              >
-                <XIcon className="w-4 h-4" />
-              </button>
-            </div>
-          ) : (
-            <h3
-              className="font-medium text-gray-900 truncate cursor-pointer hover:text-blue-600 text-sm sm:text-base"
-              onClick={() => onRename && setIsEditing(true)}
-              title="Click to rename"
-            >
-              {file.name}
-            </h3>
-          )}
+          <h3
+            className="font-medium text-gray-900 truncate cursor-pointer hover:text-blue-600 text-sm sm:text-base"
+            onClick={() => onRename && setShowRenameModal(true)}
+            title="Click to rename"
+          >
+            {file.name}
+          </h3>
 
           {file.isPrimary && (
             <span className="px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-100 rounded-full flex-shrink-0">
@@ -121,9 +75,9 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
           </button>
         )}
 
-        {onRename && !isEditing && (
+        {onRename && (
           <button
-            onClick={() => setIsEditing(true)}
+            onClick={() => setShowRenameModal(true)}
             className="p-1.5 sm:p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
             title="Rename file"
           >
@@ -139,6 +93,16 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
           <Trash2Icon className="w-4 h-4" />
         </button>
       </div>
+
+      {/* Rename Modal */}
+      {onRename && (
+        <RenameModal
+          isOpen={showRenameModal}
+          currentName={file.name}
+          onClose={() => setShowRenameModal(false)}
+          onRename={(newName) => onRename(file.id, newName)}
+        />
+      )}
     </div>
   );
 }
