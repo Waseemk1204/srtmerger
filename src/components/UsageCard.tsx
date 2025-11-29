@@ -9,13 +9,18 @@ export function UsageCard() {
 
     // Calculate time until reset
     useEffect(() => {
-        if (!user?.usage?.firstMergeTime) {
+        if (!user || !user.usage || !user.usage.firstMergeTime) {
             setTimeUntilReset('No usage yet');
             return;
         }
 
         const calculateTimeRemaining = () => {
-            const firstMergeTime = user.usage.firstMergeTime;
+            const firstMergeTime = user.usage?.firstMergeTime;
+            if (!firstMergeTime) {
+                setTimeUntilReset('No usage yet');
+                return;
+            }
+
             const resetTime = new Date(firstMergeTime).getTime() + (24 * 60 * 60 * 1000);
             const now = Date.now();
             const msRemaining = resetTime - now;
@@ -35,7 +40,7 @@ export function UsageCard() {
         const interval = setInterval(calculateTimeRemaining, 60000);
 
         return () => clearInterval(interval);
-    }, [user?.usage?.firstMergeTime]);
+    }, [user, user?.usage?.firstMergeTime]);
 
     // Calculate effective count
     const firstMergeTime = user?.usage?.firstMergeTime;
