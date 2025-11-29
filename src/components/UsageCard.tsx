@@ -108,7 +108,8 @@ export function UsageCard() {
                             </div>
                             <div className="w-full bg-gray-100 rounded-full h-1.5 mt-2 max-w-[200px]">
                                 <div
-                                    className="bg-blue-600 h-1.5 rounded-full transition-all duration-500"
+                                    className={`h-1.5 rounded-full transition-all duration-500 ${effectiveCount >= limit ? 'bg-red-600' : 'bg-blue-600'
+                                        }`}
                                     style={{
                                         width: `${Math.min(100, (effectiveCount / limit) * 100)}%`
                                     }}
