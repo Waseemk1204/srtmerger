@@ -23,8 +23,7 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
     const [downloadingId, setDownloadingId] = useState<string | null>(null);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editName, setEditName] = useState('');
-    const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
-    const [isDeleting, setIsDeleting] = useState(false);
+    const [confirmingDeleteId, setConfirmingDeleteId] = useState<string | null>(null);
 
     // Upgrade Modal State
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -53,6 +52,16 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
         }
     };
 
+    const handleDelete = async (fileId: string) => {
+        try {
+            await api.deleteFile(fileId);
+            onFileDeleted(fileId);
+            setConfirmingDeleteId(null);
+        } catch (err) {
+            console.error('Failed to delete file:', err);
+            alert('Failed to delete file');
+        }
+    };
 
 
     const startEditing = (file: SavedFile) => {
@@ -156,13 +165,31 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
                                                 <DownloadIcon className="w-4 h-4" />
                                             )}
                                         </button>
-                                        <button
-                                            onClick={() => setDeleteConfirmId(file._id)}
-                                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                            title="Delete"
-                                        >
-                                            <Trash2Icon className="w-4 h-4" />
-                                        </button>
+                                        {confirmingDeleteId === file._id ? (
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs text-red-600">Delete?</span>
+                                                <button
+                                                    onClick={() => handleDelete(file._id)}
+                                                    className="px-2 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700"
+                                                >
+                                                    Yes
+                                                </button>
+                                                <button
+                                                    onClick={() => setConfirmingDeleteId(null)}
+                                                    className="px-2 py-1 text-xs bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                                                >
+                                                    No
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={() => setConfirmingDeleteId(file._id)}
+                                                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                title="Delete"
+                                            >
+                                                <Trash2Icon className="w-4 h-4" />
+                                            </button>
+                                        )}
                                     </>
                                 )}
                             </div>
@@ -170,34 +197,6 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
                     </div>
                 ))}
             </div>
-
-            {/* Delete Confirmation Modal */}
-            {deleteConfirmId && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999] p-4">
-                    <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl animate-fade-in">
-                        <h3 className="text-lg font-bold text-gray-900 mb-2">Delete File?</h3>
-                        <p className="text-sm text-gray-600 mb-6">
-                            Are you sure you want to delete this file? This action cannot be undone.
-                        </p>
-                        <div className="flex gap-3 justify-end">
-                            <button
-                                onClick={() => setDeleteConfirmId(null)}
-                                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                                disabled={isDeleting}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={confirmDelete}
-                                disabled={isDeleting}
-                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                            >
-                                {isDeleting ? 'Deleting...' : 'Delete'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
 
             {/* Upgrade Modal */}
             {showUpgradeModal && (
