@@ -31,11 +31,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     const response: any = await api.getMe();
                     setUser(response.user);
                     setToken(storedToken);
-                } catch (error) {
-                    // Token invalid, clear it
-                    localStorage.removeItem('token');
-                    setToken(null);
-                    setUser(null);
+                } catch (error: any) {
+                    // Only clear token if it's actually invalid (401 Unauthorized)
+                    // Don't clear on network errors, timeouts, or server issues
+                    if (error?.status === 401) {
+                        console.log('Token expired or invalid, clearing auth');
+                        localStorage.removeItem('token');
+                        setToken(null);
+                        setUser(null);
+                    } else {
+                        // Network error or server issue - keep token, retry will happen on next interaction
+                        console.warn('Failed to verify auth, but keeping token:', error);
+                        setToken(storedToken); // Keep the token
+                    }
                 }
             }
             setLoading(false);
