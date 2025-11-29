@@ -91,11 +91,11 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
     };
 
     return (
-        <section className={compact ? "" : "py-16 px-4 sm:px-6 lg:px-8 bg-gray-50"} id={compact ? undefined : "pricing"}>
+        <section className={compact ? "" : "py-8 sm:py-16 px-4 sm:px-6 lg:px-8 bg-gray-50"} id={compact ? undefined : "pricing"}>
             <div className="max-w-7xl mx-auto">
                 {!hideHeader && (
                     <div className="text-center mb-12">
-                        <h2 className={`font-bold text-gray-900 mb-4 ${compact ? 'text-2xl' : 'text-3xl sm:text-4xl'}`}>
+                        <h2 className={`font-bold text-gray-900 mb-4 ${compact ? 'text-2xl' : 'text-2xl sm:text-3xl sm:text-4xl'}`}>
                             Simple, Transparent Pricing
                         </h2>
                         <p className={`text-gray-600 mb-8 ${compact ? 'text-base' : 'text-lg'}`}>

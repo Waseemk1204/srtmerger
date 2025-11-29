@@ -95,7 +95,7 @@ export function FileList({
             onDrop={(e) => handleDrop(e, index)}
             onDragEnd={handleDragEnd}
           >
-            <div className="flex-shrink-0 pt-4 font-mono text-xs sm:text-sm font-medium text-gray-400 w-8 text-right">
+            <div className="flex-shrink-0 pt-4 font-mono text-xs sm:text-sm font-medium text-gray-400 w-6 sm:w-8 text-right">
               {String(index + 1).padStart(2, '0')}
             </div>
             <div className="flex-1 min-w-0">

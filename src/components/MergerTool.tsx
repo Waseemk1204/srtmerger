@@ -626,7 +626,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                             <button
                                 onClick={handleMerge}
                                 disabled={!canMerge || isProcessing || isSaving}
-                                className={`flex items-center justify-center px-8 py-4 rounded-xl text-lg font-bold text-white shadow-lg transition-all ${!canMerge || isProcessing || isSaving ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/30'}`}
+                                className={`flex items-center justify-center px-6 py-3 text-base sm:px-8 sm:py-4 sm:text-lg font-bold text-white shadow-lg transition-all ${!canMerge || isProcessing || isSaving ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/30'}`}
                             >
                                 {isProcessing ? (
                                     <>

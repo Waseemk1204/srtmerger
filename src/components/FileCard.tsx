@@ -32,7 +32,7 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
 
   return (
     <div className={`
-            group relative flex items-center gap-2 sm:gap-4 p-3 sm:p-4 rounded-xl border transition-all duration-200
+            group relative flex items-center gap-2 sm:gap-4 p-2.5 sm:p-4 rounded-xl border transition-all duration-200
             ${file.isPrimary
         ? 'bg-blue-50/50 border-blue-200 shadow-sm'
         : 'bg-white border-gray-100 hover:border-gray-200 hover:shadow-sm'
@@ -48,7 +48,7 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
                 p-2 sm:p-3 rounded-lg transition-colors
                 ${file.isPrimary ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-500 group-hover:bg-gray-200'}
             `}>
-        <FileTextIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+        <FileTextIcon className="w-4 h-4 sm:w-6 sm:h-6" />
       </div>
 
       {/* File Info */}
