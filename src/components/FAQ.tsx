@@ -12,24 +12,16 @@ const faqs: FAQItem[] = [
         answer: "Our tool is optimized for SRT (SubRip) files, which are the most common subtitle format. We also provide basic support for other text-based subtitle formats like VTT and TXT files."
     },
     {
-        question: "Is my data private and secure?",
-        answer: "Yes! For anonymous users, all processing happens directly in your browser - your files never leave your device. For registered users, we use end-to-end encryption for cloud storage, and you have full control over your saved files."
-    },
-    {
         question: "How many files can I merge at once?",
         answer: "You can merge multiple SRT files in a single operation. The exact number depends on your plan: Free users get 4 uploads per day, Basic gets 20, Pro gets 100, and Unlimited plan has no restrictions."
     },
     {
         question: "Do I need to create an account to use the tool?",
-        answer: "No! You can use the basic merging features without an account. However, creating a free account gives you access to additional features like cloud storage, merge history, timeline alignment, and higher daily upload limits."
+        answer: "No! You can use the basic merging features without an account. However, creating a free account gives you access to additional features like cloud storage and merge history."
     },
     {
         question: "How does the 24-hour rolling window work?",
         answer: "Your daily upload limit resets 24 hours after your first merge of the day. For example, if you make your first merge at 2 PM, your limit will reset at 2 PM the next day. This is a rolling window, not a fixed daily reset."
-    },
-    {
-        question: "Can I use this tool offline?",
-        answer: "The merging process happens in your browser, so once the page is loaded, basic merging works without an internet connection. However, features like cloud saving, authentication, and usage tracking require an active internet connection."
     },
     {
         question: "What's the difference between free and paid plans?",
@@ -95,19 +87,6 @@ export function FAQ() {
                             )}
                         </div>
                     ))}
-                </div>
-
-                {/* Contact CTA */}
-                <div className="mt-12 text-center">
-                    <p className="text-gray-600 mb-4">
-                        Still have questions?
-                    </p>
-                    <a
-                        href="mailto:support@srtmerger.com"
-                        className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                    >
-                        Contact Support
-                    </a>
                 </div>
             </div>
         </section>
