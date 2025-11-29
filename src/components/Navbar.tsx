@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { MenuIcon, XIcon } from 'lucide-react';
 
@@ -44,11 +44,17 @@ export function Navbar({ onNavigate }: NavbarProps) {
                         >
                             How it works
                         </a>
-                        <span
-                            className="text-sm font-medium text-gray-600 cursor-not-allowed opacity-50"
+                        <button
+                            onClick={() => {
+                                const pricingSection = document.getElementById('pricing');
+                                if (pricingSection) {
+                                    pricingSection.scrollIntoView({ behavior: 'smooth' });
+                                }
+                            }}
+                            className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
                         >
                             Pricing
-                        </span>
+                        </button>
                         <a
                             href="/?view=blog"
                             onClick={(e) => { e.preventDefault(); handleNavigate('blog'); }}
@@ -102,11 +108,18 @@ export function Navbar({ onNavigate }: NavbarProps) {
                         >
                             How it works
                         </a>
-                        <span
-                            className="block px-3 py-3 rounded-lg text-base font-medium text-gray-400 cursor-not-allowed"
+                        <button
+                            onClick={() => {
+                                const pricingSection = document.getElementById('pricing');
+                                if (pricingSection) {
+                                    pricingSection.scrollIntoView({ behavior: 'smooth' });
+                                }
+                                setIsMenuOpen(false);
+                            }}
+                            className="block w-full text-left px-3 py-3 rounded-lg text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 cursor-pointer"
                         >
                             Pricing
-                        </span>
+                        </button>
                         <a
                             href="/?view=blog"
                             onClick={(e) => { e.preventDefault(); handleNavigate('blog'); }}
