@@ -59,7 +59,8 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
                         await api.verifyPayment({
                             razorpay_order_id: response.razorpay_order_id,
                             razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_signature: response.razorpay_signature
+                            razorpay_signature: response.razorpay_signature,
+                            planId: planId // Required for server-side verification logic
                         });
                         alert('Payment successful! Subscription activated.');
                         window.location.reload();
