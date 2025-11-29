@@ -15,18 +15,18 @@ export function FeaturesSection() {
         },
         {
             icon: <ShieldIcon className="w-6 h-6 text-green-600" />,
-            title: "100% Private & Secure",
-            description: "All processing happens in your browser. Your files never leave your device."
+            title: "Secure Processing",
+            description: "Processing happens in your browser. Cloud save available for registered users."
         },
         {
             icon: <LayersIcon className="w-6 h-6 text-purple-600" />,
             title: "Bulk Merging",
-            description: "Merge unlimited SRT files at once. Perfect for combining episodic content or multi-part videos."
+            description: "Merge multiple SRT files at once. Perfect for combining episodic content or multi-part videos."
         },
         {
             icon: <FileTextIcon className="w-6 h-6 text-indigo-600" />,
             title: "Multi-Format Support",
-            description: "Compatible with SRT, VTT, and TXT formats. Seamlessly handle various subtitle types."
+            description: "Optimized for SRT files. Basic support for text-based formats."
         },
         {
             icon: <MoveIcon className="w-6 h-6 text-rose-600" />,
@@ -39,10 +39,10 @@ export function FeaturesSection() {
         <section className="mt-16 sm:mt-24 border-t border-gray-200 pt-12 sm:pt-16">
             <div className="text-center mb-12">
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-                    Why use our Free SRT Merger?
+                    Why use our SRT Merger?
                 </h2>
                 <p className="text-gray-600 max-w-2xl mx-auto">
-                    The most advanced online tool to combine subtitle files. Fast, free, and runs entirely in your browser.
+                    The most advanced online tool to combine subtitle files. Fast, secure, and runs in your browser.
                 </p>
             </div>
 

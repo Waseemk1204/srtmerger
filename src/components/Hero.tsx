@@ -26,8 +26,8 @@ export function Hero({ onNavigate }: HeroProps) {
                     The professional tool for combining SRT files.
                     <span className="font-semibold text-gray-900"> Private</span>,
                     <span className="font-semibold text-gray-900"> fast</span>, and
-                    <span className="font-semibold text-gray-900"> free</span>.
-                    Run entirely in your browser.
+                    <span className="font-semibold text-gray-900"> easy</span>.
+                    Processed in your browser.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -49,8 +49,8 @@ export function Hero({ onNavigate }: HeroProps) {
                 </div>
 
                 <div className="mt-8 flex items-center justify-center gap-8 text-sm text-gray-400 font-mono">
-                    <span>// NO UPLOAD LIMIT</span>
-                    <span>// 100% SECURE</span>
+                    <span>// EASY TO USE</span>
+                    <span>// SECURE</span>
                     <span>// AUTO-SHIFT</span>
                 </div>
             </div>

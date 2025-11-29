@@ -36,8 +36,8 @@ export function HowItWorks({ onBack, onStartMerging }: HowItWorksProps) {
                             </div>
                             <h2 className="text-2xl font-bold text-gray-900 mb-4">Upload your files</h2>
                             <p className="text-gray-600 leading-relaxed">
-                                Drag and drop your SRT, VTT, or TXT files directly into the browser.
-                                We support bulk uploading, so feel free to add as many as you need.
+                                Drag and drop your SRT files (and text-based formats) directly into the browser.
+                                We support bulk uploading, so feel free to add multiple files.
                             </p>
                         </div>
                         <div className="flex-1 w-full max-w-sm bg-white rounded-2xl shadow-lg border border-gray-200 p-8 aspect-square flex items-center justify-center relative overflow-hidden group">
