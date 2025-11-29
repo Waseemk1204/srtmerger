@@ -79,7 +79,7 @@ export function UsageCard() {
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
             >
-                <h3 className="text-lg font-semibold text-gray-900">Usage & Limits</h3>
+                <h2 className="text-lg font-semibold text-gray-900">Usage & Limits</h2>
                 {isExpanded ? (
                     <ChevronUpIcon className="w-5 h-5 text-gray-400" />
                 ) : (
