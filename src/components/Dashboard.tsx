@@ -9,7 +9,7 @@ export function Dashboard() {
     const [refreshKey, setRefreshKey] = useState(0);
     const [timeUntilReset, setTimeUntilReset] = useState<string>('');
 
-    // Calculate time until reset
+    // Calculate time until reset and effective count
     useEffect(() => {
         const calculateTimeRemaining = () => {
             const firstMergeTime = user?.usage?.firstMergeTime;
@@ -47,6 +47,15 @@ export function Dashboard() {
             await refreshUser();
         }
     };
+
+    // Calculate effective count (0 if expired)
+    const firstMergeTime = user?.usage?.firstMergeTime;
+    const isExpired = firstMergeTime &&
+        (Date.now() - new Date(firstMergeTime).getTime()) >= 24 * 60 * 60 * 1000;
+    const effectiveCount = isExpired || !firstMergeTime ? 0 : (user?.usage?.uploadCount || 0);
+    const limit = user?.subscription?.plan === 'tier3' ? 1000 :
+        user?.subscription?.plan === 'tier2' ? 100 :
+            user?.subscription?.plan === 'tier1' ? 20 : 4;
 
     return (
         <div className="min-h-screen bg-zinc-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
@@ -103,7 +112,7 @@ export function Dashboard() {
                             <div>
                                 <div className="text-sm text-gray-500 mb-1">Daily Uploads</div>
                                 <div className="font-medium text-gray-900">
-                                    {user?.usage?.uploadCount || 0} / {
+                                    {effectiveCount} / {
                                         (user?.subscription?.plan === 'tier3' ? '∞' :
                                             (user?.subscription?.plan === 'tier2' ? 100 :
                                                 (user?.subscription?.plan === 'tier1' ? 20 : 4)))
@@ -113,7 +122,7 @@ export function Dashboard() {
                                     <div
                                         className="bg-blue-600 h-1.5 rounded-full transition-all duration-500"
                                         style={{
-                                            width: `${Math.min(100, ((user?.usage?.uploadCount || 0) / (user?.subscription?.plan === 'tier3' ? 1000 : (user?.subscription?.plan === 'tier2' ? 100 : (user?.subscription?.plan === 'tier1' ? 20 : 4)))) * 100)}%`
+                                            width: `${Math.min(100, (effectiveCount / limit) * 100)}%`
                                         }}
                                     ></div>
                                 </div>
