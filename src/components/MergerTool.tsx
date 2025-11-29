@@ -470,10 +470,6 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                     console.log('Merge tracked successfully');
                     // Refresh user data to update usage count
                     await refreshUser();
-
-                    if (onFileSaved) {
-                        await onFileSaved();
-                    }
                 } catch (error) {
                     console.error('Failed to track merge:', error);
                 }
