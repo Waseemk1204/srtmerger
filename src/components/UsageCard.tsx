@@ -66,9 +66,12 @@ export function UsageCard() {
         plan === 'tier2' ? 100 :
             plan === 'tier1' ? 20 : 4;
 
-    // Don't show card if user hasn't merged anything yet
+    // Don't show card if user hasn't merged anything yet (unless they are Tier 3)
     const hasUsage = user?.usage?.firstMergeTime || anonUsage?.firstMergeTime;
-    if (!hasUsage) {
+
+    console.log('UsageCard Debug:', { plan, hasUsage, user: user?.email });
+
+    if (!hasUsage && plan !== 'tier3') {
         return null;
     }
 
