@@ -3,19 +3,19 @@ import { FileHistory } from './FileHistory';
 import { api } from '../api/client';
 
 interface SavedFilesSectionProps {
-    key?: number;
+    refreshTrigger?: number;
 }
 
-export function SavedFilesSection({ key }: SavedFilesSectionProps) {
+export function SavedFilesSection({ refreshTrigger }: SavedFilesSectionProps) {
     const [savedFiles, setSavedFiles] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        loadFiles();
-    }, [key]); // Reload when key changes
+        loadFiles(savedFiles.length === 0);
+    }, [refreshTrigger]);
 
-    const loadFiles = async () => {
-        setLoading(true);
+    const loadFiles = async (showLoading = false) => {
+        if (showLoading) setLoading(true);
         try {
             const response = await api.listFiles();
             setSavedFiles(response.files);
@@ -26,7 +26,7 @@ export function SavedFilesSection({ key }: SavedFilesSectionProps) {
         }
     };
 
-    if (loading) {
+    if (loading && savedFiles.length === 0) {
         return (
             <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
