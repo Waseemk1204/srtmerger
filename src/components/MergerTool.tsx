@@ -385,9 +385,14 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 const allBlocks: Array<{ index: number; timestamp: string; texts: string[] }> = [];
                 let globalIndex = 1;
                 for (const block of primaryBlocks) {
+                    const editKey = `${primaryFile.id}-${block.index}`;
+                    // Skip deleted cues
+                    if (deletedCues.has(editKey)) {
+                        continue;
+                    }
                     const shifted = shiftTimestampLine(block.tsRaw, 0);
                     if (shifted) {
-                        const edit = edits[`${primaryFile.id}-${block.index}`];
+                        const edit = edits[editKey];
                         allBlocks.push({
                             index: globalIndex++,
                             timestamp: (edit?.start && edit?.end)
@@ -404,9 +409,14 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                     const offsetMs = offset?.offsetMs ?? 0;
                     const blocks = permissiveParseSrt(file.fileContent);
                     for (const block of blocks) {
+                        const editKey = `${file.id}-${block.index}`;
+                        // Skip deleted cues
+                        if (deletedCues.has(editKey)) {
+                            continue;
+                        }
                         const shifted = shiftTimestampLine(block.tsRaw, offsetMs);
                         if (shifted) {
-                            const edit = edits[`${file.id}-${block.index}`];
+                            const edit = edits[editKey];
                             allBlocks.push({
                                 index: globalIndex++,
                                 timestamp: (edit?.start && edit?.end)
@@ -418,6 +428,31 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                         }
                     }
                 }
+
+                // Add the added cues
+                for (const cue of addedCues) {
+                    const edit = edits[`${cue.id}--1`]; // Check if added cue was edited
+                    allBlocks.push({
+                        index: globalIndex++,
+                        timestamp: edit?.start && edit?.end
+                            ? `${edit.start} --> ${edit.end}`
+                            : `${cue.start} --> ${cue.end}`,
+                        texts: edit?.text ? [edit.text] : [cue.text]
+                    });
+                }
+
+                // Sort by timestamp
+                allBlocks.sort((a, b) => {
+                    const aMs = parseTimestampToMs(a.timestamp.split('-->')[0].trim()) || 0;
+                    const bMs = parseTimestampToMs(b.timestamp.split('-->')[0].trim()) || 0;
+                    return aMs - bMs;
+                });
+
+                // Renumber sequentially
+                allBlocks.forEach((block, idx) => {
+                    block.index = idx + 1;
+                });
+
                 const mergedSrt = allBlocks.map(block => {
                     return `${block.index}\n${block.timestamp}\n${block.texts.join('\n')}\n`;
                 }).join('\n');

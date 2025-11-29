@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { ChevronDownIcon, ChevronUpIcon, EyeIcon, FileTextIcon, LockIcon, XIcon, PlusIcon } from 'lucide-react';
 import { permissiveParseSrt } from '../utils/srt-merge';
 import { shiftTimestampLine } from '../utils/timestamp-arith';
@@ -324,7 +324,7 @@ export function MergePreview({
                                   onEdit(entry.fileId, entry.blockIndex, 'text', e.target.value);
                                 }
                               }}
-                              className="w-full bg-transparent border border-transparent hover:border-gray-200 focus:border-blue-300 focus:ring-2 focus:ring-blue-100 rounded p-1 -ml-1 resize-y min-h-[1.5em]"
+                              className="w-full bg-transparent border border-transparent hover:border-gray-200 focus:border-blue-300 focus:ring-2 focus:ring-blue-100 rounded p-1 -ml-1 resize-none min-h-[1.5em]"
                               rows={Math.max(1, currentText.split('\n').length)}
                             />
                           ) : (
