@@ -86,6 +86,50 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
         }
     }, [initialFiles]);
 
+    // Save dashboard state to localStorage
+    useEffect(() => {
+        // Only save if we have files (don't save empty state on initial mount)
+        if (files.length > 0) {
+            const state = {
+                files,
+                computedOffsets,
+                edits,
+                timestamp: Date.now()
+            };
+            try {
+                localStorage.setItem('dashboard-merger-state', JSON.stringify(state));
+            } catch (e) {
+                console.error('Failed to save dashboard state:', e);
+            }
+        }
+    }, [files, computedOffsets, edits]);
+
+    // Restore dashboard state from localStorage on mount
+    useEffect(() => {
+        // Only restore if we don't have initial files and not already loaded
+        if (initialFiles.length === 0 && files.length === 0) {
+            try {
+                const savedState = localStorage.getItem('dashboard-merger-state');
+                if (savedState) {
+                    const state = JSON.parse(savedState);
+                    // Check if state is not too old (24 hours)
+                    const age = Date.now() - (state.timestamp || 0);
+                    if (age < 24 * 60 * 60 * 1000) {
+                        setFiles(state.files || []);
+                        setComputedOffsets(state.computedOffsets || []);
+                        setEdits(state.edits || {});
+                    } else {
+                        // Clear old state
+                        localStorage.removeItem('dashboard-merger-state');
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to restore dashboard state:', e);
+                localStorage.removeItem('dashboard-merger-state');
+            }
+        }
+    }, []); // Only run on mount
+
     const handleFilesSelected = async (selectedFiles: File[]) => {
         setIsProcessing(true);
         try {
@@ -254,6 +298,9 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
         setFiles([]);
         setMergeResult(null);
         setComputedOffsets([]);
+        setEdits({});
+        // Clear saved state from localStorage
+        localStorage.removeItem('dashboard-merger-state');
     };
 
     const handleRename = async (id: string, newName: string) => {
@@ -680,21 +727,22 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                                 </div>
 
                                 {/* Download Button */}
-                                <div className="mt-6 flex justify-center">
-                                    <button
-                                        onClick={() => {
-                                            const timestamp = new Date().toISOString().slice(0, 16).replace('T', '_').replace(/:/g, '-');
-                                            const filename = `merged_${timestamp}.srt`;
-                                            downloadFile(mergeResult.mergedSrt, filename, 'text/plain');
-                                        }}
-                                        className="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-lg transition-all flex items-center gap-2"
-                                    >
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                        </svg>
-                                        Download SRT
-                                    </button>
-                                </div>
+                                {/* Download button hidden - files auto-save to Saved Files section */}
+                                {/* <div className="mt-6 flex justify-center">
+                                     <button
+                                         onClick={() => {
+                                             const timestamp = new Date().toISOString().slice(0, 16).replace('T', '_').replace(/:/g, '-');
+                                             const filename = `merged_${timestamp}.srt`;
+                                             downloadFile(mergeResult.mergedSrt, filename, 'text/plain');
+                                         }}
+                                         className="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-lg transition-all flex items-center gap-2"
+                                     >
+                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                         </svg>
+                                         Download SRT
+                                     </button>
+                                 </div> */}
                             </div>
                         )}
                     </div>

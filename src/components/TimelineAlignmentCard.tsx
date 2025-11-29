@@ -266,7 +266,7 @@ export function TimelineAlignmentCard({
                 <span className="text-sm text-gray-700 flex-1">No shift</span>
                 <div className="relative group/tooltip">
                   <InfoIcon className="w-4 h-4 text-gray-400 hover:text-blue-600 cursor-help" />
-                  <div className="absolute left-0 bottom-full mb-2 w-64 p-2 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-opacity z-10">
+                  <div className="absolute right-0 bottom-full mb-2 w-64 p-2 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-opacity z-10">
                     Simple merge without any timeline changes. Files keep their original timestamps.
                   </div>
                 </div>
@@ -285,7 +285,7 @@ export function TimelineAlignmentCard({
                 <span className="text-sm text-gray-700 flex-1">Custom offset</span>
                 <div className="relative group/tooltip">
                   <InfoIcon className="w-4 h-4 text-gray-400 hover:text-blue-600 cursor-help" />
-                  <div className="absolute left-0 bottom-full mb-2 w-64 p-2 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-opacity z-10">
+                  <div className="absolute right-0 bottom-full mb-2 w-64 p-2 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-opacity z-10">
                     Shifts all files by the same custom offset. Use this to apply a uniform time adjustment.
                   </div>
                 </div>
