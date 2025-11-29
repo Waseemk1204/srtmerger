@@ -423,8 +423,15 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
         const a = document.createElement('a');
         a.href = url;
         a.download = filename;
+        a.style.display = 'none';
+        document.body.appendChild(a);
         a.click();
-        URL.revokeObjectURL(url);
+
+        // Cleanup after a short delay to ensure download starts
+        setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 100);
     };
 
     const canMerge = files.length >= 1;
