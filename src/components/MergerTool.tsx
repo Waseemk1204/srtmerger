@@ -74,12 +74,26 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
         // Check Upload Limit with rolling 24h window
         const currentPlan = user?.subscription?.plan || 'free';
         const limit = PLAN_LIMITS[currentPlan];
-        const currentCount = user?.usage?.uploadCount || 0;
-        const firstMergeTime = user?.usage?.firstMergeTime;
+
+        let currentCount = 0;
+        let firstMergeTime: string | undefined;
+        let isExpired = false;
+
+        if (user) {
+            // Logged-in user: use server data
+            currentCount = user.usage?.uploadCount || 0;
+            firstMergeTime = user.usage?.firstMergeTime;
+        } else {
+            // Anonymous user: use localStorage
+            const { anonymousUsage } = await import('../utils/anonymousUsage');
+            const anonUsage = anonymousUsage.get();
+            currentCount = anonUsage?.uploadCount || 0;
+            firstMergeTime = anonUsage?.firstMergeTime;
+        }
 
         // Check if 24h window has passed since first merge
-        const isExpired = firstMergeTime &&
-            (Date.now() - new Date(firstMergeTime).getTime()) >= 24 * 60 * 60 * 1000;
+        isExpired = firstMergeTime ?
+            (Date.now() - new Date(firstMergeTime).getTime()) >= 24 * 60 * 60 * 1000 : false;
 
         // If expired or no timestamp, count is effectively 0
         const effectiveCount = isExpired || !firstMergeTime ? 0 : currentCount;
@@ -87,6 +101,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
         const remainingLimit = limit - effectiveCount;
 
         console.log('Upload Limit Check (24h window):', {
+            userType: user ? 'authenticated' : 'anonymous',
             firstMergeTime,
             isExpired,
             currentCount,
@@ -240,16 +255,31 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
         // Check if user has exceeded daily merge limit (rolling 24h window)
         const currentPlan = user?.subscription?.plan || 'free';
         const limit = PLAN_LIMITS[currentPlan];
-        const currentCount = user?.usage?.uploadCount || 0;
-        const firstMergeTime = user?.usage?.firstMergeTime;
+
+        let currentCount = 0;
+        let firstMergeTime: string | undefined;
+        let isExpired = false;
+
+        if (user) {
+            // Logged-in user
+            currentCount = user.usage?.uploadCount || 0;
+            firstMergeTime = user.usage?.firstMergeTime;
+        } else {
+            // Anonymous user
+            const { anonymousUsage } = await import('../utils/anonymousUsage');
+            const anonUsage = anonymousUsage.get();
+            currentCount = anonUsage?.uploadCount || 0;
+            firstMergeTime = anonUsage?.firstMergeTime;
+        }
 
         // Check if 24h window has passed
-        const isExpired = firstMergeTime &&
-            (Date.now() - new Date(firstMergeTime).getTime()) >= 24 * 60 * 60 * 1000;
+        isExpired = firstMergeTime ?
+            (Date.now() - new Date(firstMergeTime).getTime()) >= 24 * 60 * 60 * 1000 : false;
 
         const effectiveCount = isExpired || !firstMergeTime ? 0 : currentCount;
 
         console.log('Merge check (24h window):', {
+            userType: user ? 'authenticated' : 'anonymous',
             firstMergeTime,
             isExpired,
             currentCount,
@@ -340,7 +370,10 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 // Auto-save the file (only if authenticated)
                 await saveFile(result);
             } else {
-                console.log('Anonymous user - skipping usage tracking and file save');
+                // Anonymous user: track in localStorage
+                const { anonymousUsage } = await import('../utils/anonymousUsage');
+                anonymousUsage.increment(files.length);
+                console.log('Anonymous user - usage tracked in localStorage');
             }
         } catch (error) {
             setToastMessage(`Merge failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
