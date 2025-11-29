@@ -32,6 +32,8 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [edits, setEdits] = useState<Record<string, { text?: string; start?: string; end?: string }>>({}); // Key: fileId-blockIndex
+    const [deletedCues, setDeletedCues] = useState<Set<string>>(new Set()); // Track deleted cues by editKey
+    const [addedCues, setAddedCues] = useState<Array<{ id: string; start: string; end: string; text: string }>>([]);
 
 
     // Prefetch fingerprint on mount to speed up subsequent checks
@@ -316,6 +318,18 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
         });
     };
 
+    const handleDeleteCue = (fileId: string, blockIndex: number) => {
+        setDeletedCues(prev => {
+            const newSet = new Set(prev);
+            newSet.add(`${fileId}-${blockIndex}`);
+            return newSet;
+        });
+    };
+
+    const handleAddCue = (cue: { id: string; start: string; end: string; text: string }) => {
+        setAddedCues(prev => [...prev, cue]);
+    };
+
     const handleMerge = async () => {
         if (files.length === 0) return;
 
@@ -598,6 +612,10 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                                         computedOffsets={computedOffsets}
                                         edits={edits}
                                         onEdit={handleEdit}
+                                        onDelete={handleDeleteCue}
+                                        onAdd={handleAddCue}
+                                        deletedCues={deletedCues}
+                                        addedCues={addedCues}
                                         canEdit={canEdit}
                                     />
                                     {!canPreview && (

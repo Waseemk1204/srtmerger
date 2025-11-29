@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronDownIcon, ChevronUpIcon, EyeIcon, FileTextIcon, LockIcon } from 'lucide-react';
+import { ChevronDownIcon, ChevronUpIcon, EyeIcon, FileTextIcon, LockIcon, XIcon, PlusIcon } from 'lucide-react';
 import { permissiveParseSrt } from '../utils/srt-merge';
 import { shiftTimestampLine } from '../utils/timestamp-arith';
 import { parseTimestampToMs, formatMsToTimestamp } from '../utils/timestampUtils';
@@ -14,15 +14,36 @@ interface PreviewEntry {
   blockIndex: number;
 }
 
+interface AddedCue {
+  id: string;
+  start: string;
+  end: string;
+  text: string;
+}
+
 interface MergePreviewProps {
   files: Array<{ id: string; name: string; fileContent: string; isPrimary?: boolean }>;
   computedOffsets?: Array<{ id: string; offsetMs: number }>;
   edits?: Record<string, { text?: string; start?: string; end?: string }>;
   onEdit?: (fileId: string, blockIndex: number, field: 'text' | 'start' | 'end', value: string) => void;
+  onDelete?: (fileId: string, blockIndex: number) => void;
+  onAdd?: (cue: AddedCue) => void;
+  deletedCues?: Set<string>;
+  addedCues?: AddedCue[];
   canEdit?: boolean;
 }
 
-export function MergePreview({ files, computedOffsets = [], edits = {}, onEdit, canEdit = false }: MergePreviewProps) {
+export function MergePreview({
+  files,
+  computedOffsets = [],
+  edits = {},
+  onEdit,
+  onDelete,
+  onAdd,
+  deletedCues = new Set(),
+  addedCues = [],
+  canEdit = false
+}: MergePreviewProps) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [visibleCount, setVisibleCount] = useState(500);
 
@@ -146,10 +167,43 @@ export function MergePreview({ files, computedOffsets = [], edits = {}, onEdit, 
     return null;
   }
 
+  // Filter out deleted cues and merge in added cues, then renumber
+  const filteredAndMergedEntries = useMemo(() => {
+    // Filter out deleted entries
+    const filtered = previewEntries.filter(entry => {
+      const editKey = `${entry.fileId}-${entry.blockIndex}`;
+      return !deletedCues.has(editKey);
+    });
+
+    // Add the added cues
+    const added: PreviewEntry[] = addedCues.map((cue) => ({
+      index: 0, // Will be renumbered below
+      start: cue.start,
+      end: cue.end,
+      text: cue.text,
+      sourceFile: '[Added]',
+      fileId: cue.id,
+      blockIndex: -1 // Indicator for added cues
+    }));
+
+    // Merge and sort by timestamp
+    const merged = [...filtered, ...added].sort((a, b) => {
+      const aMs = parseTimestampToMs(a.start) || 0;
+      const bMs = parseTimestampToMs(b.start) || 0;
+      return aMs - bMs;
+    });
+
+    // Renumber sequentially
+    return merged.map((entry, idx) => ({
+      ...entry,
+      index: idx + 1
+    }));
+  }, [previewEntries, deletedCues, addedCues]);
+
   // Display only up to visibleCount entries for performance
-  const displayEntries = previewEntries.slice(0, visibleCount);
-  const hasMore = previewEntries.length > visibleCount;
-  const showingAll = visibleCount >= previewEntries.length;
+  const displayEntries = filteredAndMergedEntries.slice(0, visibleCount);
+  const hasMore = filteredAndMergedEntries.length > visibleCount;
+  const showingAll = visibleCount >= filteredAndMergedEntries.length;
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
@@ -218,14 +272,23 @@ export function MergePreview({ files, computedOffsets = [], edits = {}, onEdit, 
 
                     return (
                       <div
-                        key={entry.index}
+                        key={`${entry.fileId}-${entry.blockIndex}-${entry.index}`}
                         className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs sm:text-sm border-b border-gray-100 pb-3 last:border-0 select-none group"
                       >
                         <div className="flex items-start gap-2 sm:gap-4 flex-shrink-0">
-                          <div className="flex-shrink-0">
+                          <div className="flex-shrink-0 flex items-center gap-1">
                             <div className="font-mono text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded">
                               #{entry.index}
                             </div>
+                            {canEdit && onDelete && entry.blockIndex !== -1 && (
+                              <button
+                                onClick={() => onDelete(entry.fileId, entry.blockIndex)}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-50 rounded text-red-600 hover:text-red-700"
+                                title="Delete cue"
+                              >
+                                <XIcon className="w-3 h-3" />
+                              </button>
+                            )}
                           </div>
                           <div className="flex-shrink-0 font-mono text-xs text-gray-500 pt-1 min-w-[120px] sm:min-w-[140px] break-all flex flex-col gap-1">
                             {canEdit && onEdit ? (
@@ -253,7 +316,14 @@ export function MergePreview({ files, computedOffsets = [], edits = {}, onEdit, 
                           {canEdit && onEdit ? (
                             <textarea
                               value={currentText}
-                              onChange={(e) => onEdit(entry.fileId, entry.blockIndex, 'text', e.target.value)}
+                              onChange={(e) => {
+                                if (entry.blockIndex === -1) {
+                                  // For added cues, update via onEdit with a special fileId pattern
+                                  onEdit(entry.fileId, entry.blockIndex, 'text', e.target.value);
+                                } else {
+                                  onEdit(entry.fileId, entry.blockIndex, 'text', e.target.value);
+                                }
+                              }}
                               className="w-full bg-transparent border border-transparent hover:border-gray-200 focus:border-blue-300 focus:ring-2 focus:ring-blue-100 rounded p-1 -ml-1 resize-y min-h-[1.5em]"
                               rows={Math.max(1, currentText.split('\n').length)}
                             />
@@ -271,6 +341,27 @@ export function MergePreview({ files, computedOffsets = [], edits = {}, onEdit, 
                     );
                   })}
                 </div>
+
+                {/* Add Cue Button */}
+                {canEdit && onAdd && (
+                  <div className="mt-3 pt-3 border-t border-gray-200">
+                    <button
+                      onClick={() => {
+                        const newCue: AddedCue = {
+                          id: `added-${Date.now()}`,
+                          start: '00:00:00,000',
+                          end: '00:00:01,000',
+                          text: '[New cue]'
+                        };
+                        onAdd(newCue);
+                      }}
+                      className="flex items-center gap-2 px-3 py-2 text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                    >
+                      <PlusIcon className="w-4 h-4" />
+                      Add Cue
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Load More / Show Less */}
