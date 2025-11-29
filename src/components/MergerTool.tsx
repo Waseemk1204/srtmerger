@@ -731,7 +731,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             </div>
             {
                 showToast && (
-                    <div className="fixed bottom-4 right-4 bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg text-sm animate-fade-in z-50 font-medium flex items-center gap-2">
+                    <div className="fixed bottom-4 right-4 bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg text-sm animate-fade-in z-[10000] font-medium flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-green-400"></div>
                         {toastMessage}
                     </div>
