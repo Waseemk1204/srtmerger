@@ -66,12 +66,9 @@ export function UsageCard() {
         plan === 'tier2' ? 100 :
             plan === 'tier1' ? 20 : 4;
 
-    // Don't show card if user hasn't merged anything yet (unless they are Tier 3)
+    // Don't show card if user hasn't merged anything yet
     const hasUsage = user?.usage?.firstMergeTime || anonUsage?.firstMergeTime;
-
-    console.log('UsageCard Debug:', { plan, hasUsage, user: user?.email });
-
-    if (!hasUsage && plan !== 'tier3') {
+    if (!hasUsage) {
         return null;
     }
 
@@ -94,88 +91,36 @@ export function UsageCard() {
             {isExpanded && (
                 <div className="px-6 pb-6 border-t border-gray-100">
                     {/* Usage stats (shown for all users) */}
-                    {plan === 'tier3' ? (
-                        /* Premium Unlimited UI */
-                        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 p-6 text-white shadow-lg animate-breathe border border-blue-500/30">
-                            {/* Background Glow Effect */}
-                            <div className="absolute inset-0 bg-blue-500/10 blur-3xl"></div>
-
-                            <div className="relative z-10 flex items-center justify-between">
-                                <div>
-                                    <div className="text-sm text-blue-200 mb-1 font-medium tracking-wide uppercase">Current Plan</div>
-                                    <div className="text-2xl font-bold text-white flex items-center gap-2">
-                                        UNLIMITED
-                                        <span className="text-xs bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold px-2 py-0.5 rounded shadow-sm">PRO</span>
-                                    </div>
-                                    <div className="mt-2 text-sm text-blue-300/80">
-                                        No limits. No boundaries.
-                                    </div>
-                                </div>
-
-                                {/* Infinity Animation */}
-                                <div className="w-32 h-16 flex items-center justify-center">
-                                    <svg viewBox="0 0 100 50" className="w-full h-full drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]">
-                                        <defs>
-                                            <linearGradient id="infinityGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                                <stop offset="0%" stopColor="#3b82f6" />
-                                                <stop offset="50%" stopColor="#60a5fa" />
-                                                <stop offset="100%" stopColor="#3b82f6" />
-                                            </linearGradient>
-                                        </defs>
-                                        {/* Background Path (dimmed) */}
-                                        <path
-                                            d="M25,25 C25,35 15,35 10,25 C5,15 15,15 25,25 C35,35 65,35 75,25 C85,15 95,15 90,25 C85,35 75,35 65,25 C55,15 35,15 25,25 Z"
-                                            fill="none"
-                                            stroke="#1e3a8a"
-                                            strokeWidth="4"
-                                            opacity="0.3"
-                                        />
-                                        {/* Animated Foreground Path */}
-                                        <path
-                                            d="M25,25 C25,35 15,35 10,25 C5,15 15,15 25,25 C35,35 65,35 75,25 C85,15 95,15 90,25 C85,35 75,35 65,25 C55,15 35,15 25,25 Z"
-                                            fill="none"
-                                            stroke="url(#infinityGradient)"
-                                            strokeWidth="3"
-                                            strokeLinecap="round"
-                                            className="infinity-path animate-dash"
-                                        />
-                                    </svg>
-                                </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
+                        <div>
+                            <div className="text-sm text-gray-500 mb-1">Current Plan</div>
+                            <div className="font-medium text-gray-900 capitalize flex items-center gap-2">
+                                {plan}
+                                {plan === 'free' && (
+                                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Basic</span>
+                                )}
                             </div>
                         </div>
-                    ) : (
-                        /* Standard UI for Free/Tier 1/Tier 2 */
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
-                            <div>
-                                <div className="text-sm text-gray-500 mb-1">Current Plan</div>
-                                <div className="font-medium text-gray-900 capitalize flex items-center gap-2">
-                                    {plan}
-                                    {plan === 'free' && (
-                                        <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Basic</span>
-                                    )}
-                                </div>
+                        <div>
+                            <div className="text-sm text-gray-500 mb-1">Daily Uploads</div>
+                            <div className="font-medium text-gray-900">
+                                {effectiveCount} / {plan === 'tier3' ? '∞' : limit}
                             </div>
-                            <div>
-                                <div className="text-sm text-gray-500 mb-1">Daily Uploads</div>
-                                <div className="font-medium text-gray-900">
-                                    {effectiveCount} / {limit}
-                                </div>
-                                <div className="w-full bg-gray-100 rounded-full h-1.5 mt-2 max-w-[200px]">
-                                    <div
-                                        className={`h-1.5 rounded-full transition-all duration-500 ${effectiveCount >= limit ? 'bg-red-600' : 'bg-blue-600'
-                                            }`}
-                                        style={{
-                                            width: `${Math.min(100, (effectiveCount / limit) * 100)}%`
-                                        }}
-                                    ></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div className="text-sm text-gray-500 mb-1">Resets In</div>
-                                <div className="font-medium text-gray-900">{timeUntilReset}</div>
+                            <div className="w-full bg-gray-100 rounded-full h-1.5 mt-2 max-w-[200px]">
+                                <div
+                                    className={`h-1.5 rounded-full transition-all duration-500 ${effectiveCount >= limit ? 'bg-red-600' : 'bg-blue-600'
+                                        }`}
+                                    style={{
+                                        width: `${Math.min(100, (effectiveCount / limit) * 100)}%`
+                                    }}
+                                ></div>
                             </div>
                         </div>
-                    )}
+                        <div>
+                            <div className="text-sm text-gray-500 mb-1">Resets In</div>
+                            <div className="font-medium text-gray-900">{timeUntilReset}</div>
+                        </div>
+                    </div>
 
                     {/* Message for anonymous users */}
                     {!user && (
