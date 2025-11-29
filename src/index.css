@@ -18,3 +18,36 @@
 .animate-slide-up {
   animation: slide-up 0.3s ease-out;
 }
+
+/* Custom Animations for Unlimited Plan UI */
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes breathe {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.8));
+  }
+}
+
+.animate-dash {
+  animation: dash 3s linear infinite;
+}
+
+.animate-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+.infinity-path {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 1000;
+}
