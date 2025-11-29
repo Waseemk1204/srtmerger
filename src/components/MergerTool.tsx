@@ -480,6 +480,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 try {
                     const { getBrowserFingerprint } = await import('../utils/fingerprint');
                     const fingerprint = await getBrowserFingerprint();
+                    await api.trackAnonymousMerge(fingerprint, files.length);
                 } catch (error) {
                     console.error('Failed to track anonymous merge:', error);
                 }
