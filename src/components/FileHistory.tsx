@@ -24,6 +24,7 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editName, setEditName] = useState('');
     const [confirmingDeleteId, setConfirmingDeleteId] = useState<string | null>(null);
+    const [isSavingRename, setIsSavingRename] = useState(false);
 
     // Upgrade Modal State
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -70,23 +71,24 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
     };
 
     const saveRename = async () => {
-        if (!editingId || !editName.trim()) return;
-
-        console.log('SaveRename - currentPlan:', currentPlan, 'canRename:', canRename);
+        if (!editingId || !editName.trim() || isSavingRename) return;
 
         // Check feature access before saving
         if (!canRename) {
-            console.log('Showing upgrade modal for rename');
             setShowUpgradeModal(true);
             return;
         }
 
+        setIsSavingRename(true);
         try {
             await api.renameFile(editingId, editName);
             onFileRenamed(editingId, editName);
             setEditingId(null);
         } catch (err) {
             console.error('Failed to rename file');
+            alert('Failed to rename file. Please try again.');
+        } finally {
+            setIsSavingRename(false);
         }
     };
 
@@ -133,10 +135,22 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
                                             className="flex-1 px-2 py-1 text-sm border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             autoFocus
                                         />
-                                        <button onClick={saveRename} className="p-1 text-green-600 hover:bg-green-50 rounded">
+                                        <button
+                                            type="button"
+                                            onClick={saveRename}
+                                            disabled={isSavingRename}
+                                            className="p-1 text-green-600 hover:bg-green-50 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                                            title="Save"
+                                        >
                                             <CheckIcon className="w-4 h-4" />
                                         </button>
-                                        <button onClick={() => setEditingId(null)} className="p-1 text-red-600 hover:bg-red-50 rounded">
+                                        <button
+                                            type="button"
+                                            onClick={() => setEditingId(null)}
+                                            disabled={isSavingRename}
+                                            className="p-1 text-red-600 hover:bg-red-50 rounded disabled:opacity-50"
+                                            title="Cancel"
+                                        >
                                             <XIcon className="w-4 h-4" />
                                         </button>
                                     </div>
