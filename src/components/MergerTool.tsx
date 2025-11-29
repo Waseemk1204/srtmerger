@@ -322,22 +322,26 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             setShowToast(true);
             setTimeout(() => setShowToast(false), 3000);
 
-            // Track merge operation (increment usage count by number of files)
-            try {
-                await api.trackMerge(files.length);
-                console.log('Merge tracked successfully');
-                // Refresh user data to update usage count
-                await refreshUser();
+            // Track merge operation (only if authenticated)
+            if (user) {
+                try {
+                    await api.trackMerge(files.length);
+                    console.log('Merge tracked successfully');
+                    // Refresh user data to update usage count
+                    await refreshUser();
 
-                if (onFileSaved) {
-                    await onFileSaved();
+                    if (onFileSaved) {
+                        await onFileSaved();
+                    }
+                } catch (error) {
+                    console.error('Failed to track merge:', error);
                 }
-            } catch (error) {
-                console.error('Failed to track merge:', error);
-            }
 
-            // Auto-save the file immediately with the result
-            await saveFile(result);
+                // Auto-save the file (only if authenticated)
+                await saveFile(result);
+            } else {
+                console.log('Anonymous user - skipping usage tracking and file save');
+            }
         } catch (error) {
             setToastMessage(`Merge failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
             setShowToast(true);
