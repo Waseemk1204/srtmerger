@@ -25,8 +25,9 @@ export interface Subscription {
 }
 
 export interface Usage {
-  date: string;
+  date?: string; // Legacy field, kept for backward compatibility
   uploadCount: number;
+  firstMergeTime?: string; // ISO timestamp of first merge in current 24h window
 }
 
 export interface User {
