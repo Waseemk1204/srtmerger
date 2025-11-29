@@ -8,6 +8,14 @@ export function Dashboard() {
     const { user, logout, refreshUser } = useAuth();
     const [refreshKey, setRefreshKey] = useState(0);
     const [timeUntilReset, setTimeUntilReset] = useState<string>('');
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+
+    const handleShowToast = (message: string) => {
+        setToastMessage(message);
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+    };
 
     // Calculate time until reset and effective count
     useEffect(() => {
@@ -189,17 +197,25 @@ export function Dashboard() {
 
             {/* Merger Tool */}
             <div className="pt-8 relative z-10">
-                <MergerTool onFileSaved={loadFiles} />
+                <MergerTool onFileSaved={loadFiles} onShowToast={handleShowToast} />
             </div>
 
             {/* Saved Files Section */}
             <section className="px-4 pb-20 pt-8 relative z-10">
                 <div className="max-w-5xl mx-auto">
                     <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200">
-                        <SavedFilesSection key={refreshKey} />
+                        <SavedFilesSection refreshTrigger={refreshKey} />
                     </div>
                 </div>
             </section>
+
+            {/* Toast Notification */}
+            {showToast && (
+                <div className="fixed bottom-4 right-4 bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg text-sm animate-fade-in z-[10000] font-medium flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                    {toastMessage}
+                </div>
+            )}
         </div>
     );
 }
