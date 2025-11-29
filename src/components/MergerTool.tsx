@@ -31,6 +31,20 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
     const [computedOffsets, setComputedOffsets] = useState<ComputedOffset[]>([]);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
+
+
+    // Prefetch fingerprint on mount to speed up subsequent checks
+    useEffect(() => {
+        const prefetchFingerprint = async () => {
+            try {
+                const { getBrowserFingerprint } = await import('../utils/fingerprint');
+                await getBrowserFingerprint();
+            } catch (e) {
+                console.error('Failed to prefetch fingerprint:', e);
+            }
+        };
+        prefetchFingerprint();
+    }, []);
     const [isSaving, setIsSaving] = useState(false);
 
     // Upgrade Modal State
@@ -71,134 +85,142 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
     }, [initialFiles]);
 
     const handleFilesSelected = async (selectedFiles: File[]) => {
-        // Check Upload Limit with rolling 24h window
-        const currentPlan = user?.subscription?.plan || 'free';
-        const limit = PLAN_LIMITS[currentPlan];
+        setIsProcessing(true);
+        try {
+            // Check Upload Limit with rolling 24h window
+            const currentPlan = user?.subscription?.plan || 'free';
+            const limit = PLAN_LIMITS[currentPlan];
 
-        let currentCount = 0;
-        let firstMergeTime: string | undefined;
-        let isExpired = false;
+            let currentCount = 0;
+            let firstMergeTime: string | undefined;
+            let isExpired = false;
 
-        if (user) {
-            // Logged-in user: use server data
-            currentCount = user.usage?.uploadCount || 0;
-            firstMergeTime = user.usage?.firstMergeTime;
-        } else {
-            // Anonymous user: check server-side fingerprint limit
-            try {
-                const { getBrowserFingerprint } = await import('../utils/fingerprint');
-                const fingerprint = await getBrowserFingerprint();
-                const serverCheck: any = await api.checkAnonymousUsage(fingerprint);
+            if (user) {
+                // Logged-in user: use server data
+                currentCount = user.usage?.uploadCount || 0;
+                firstMergeTime = user.usage?.firstMergeTime;
+            } else {
+                // Anonymous user: check server-side fingerprint limit
+                try {
+                    const { getBrowserFingerprint } = await import('../utils/fingerprint');
+                    const fingerprint = await getBrowserFingerprint();
+                    const serverCheck: any = await api.checkAnonymousUsage(fingerprint);
 
-                if (!serverCheck.allowed) {
-                    if (serverCheck.requiresLogin) {
-                        // This device has been used with an account before
+                    if (!serverCheck.allowed) {
+                        if (serverCheck.requiresLogin) {
+                            // This device has been used with an account before
+                            setUpgradeReason('limit');
+                            setUpgradeLimit(4);
+                            setShowUpgradeModal(true);
+                            alert('This device has been used with an account. Please log in to continue.');
+                            setIsProcessing(false);
+                            return;
+                        }
+                        // Regular limit exceeded
                         setUpgradeReason('limit');
-                        setUpgradeLimit(4);
+                        setUpgradeLimit(serverCheck.limit);
                         setShowUpgradeModal(true);
-                        alert('This device has been used with an account. Please log in to continue.');
+                        setIsProcessing(false);
                         return;
                     }
-                    // Regular limit exceeded
-                    setUpgradeReason('limit');
-                    setUpgradeLimit(serverCheck.limit);
-                    setShowUpgradeModal(true);
-                    return;
-                }
 
-                currentCount = serverCheck.current;
-                // Also sync with localStorage for UI display
-                const { anonymousUsage } = await import('../utils/anonymousUsage');
-                const anonUsage = anonymousUsage.get();
-                if (anonUsage) {
-                    currentCount = Math.max(currentCount, anonUsage.uploadCount || 0);
-                }
-            } catch (error) {
-                console.error('Failed to check server usage, falling back to localStorage:', error);
-                // Fallback to localStorage if server check fails
-                const { anonymousUsage } = await import('../utils/anonymousUsage');
-                const anonUsage = anonymousUsage.get();
-                currentCount = anonUsage?.uploadCount || 0;
-                firstMergeTime = anonUsage?.firstMergeTime;
-            }
-        }
-
-        // Check if 24h window has passed since first merge
-        isExpired = firstMergeTime ?
-            (Date.now() - new Date(firstMergeTime).getTime()) >= 24 * 60 * 60 * 1000 : false;
-
-        // If expired or no timestamp, count is effectively 0
-        const effectiveCount = isExpired || !firstMergeTime ? 0 : currentCount;
-        const totalFilesAfterUpload = files.length + selectedFiles.length;
-        const remainingLimit = limit - effectiveCount;
-
-        console.log('Upload Limit Check (24h window):', {
-            userType: user ? 'authenticated' : 'anonymous',
-            firstMergeTime,
-            isExpired,
-            currentCount,
-            effectiveCount,
-            limit,
-            remainingLimit,
-            totalFilesAfterUpload,
-            willBlock: totalFilesAfterUpload > remainingLimit
-        });
-
-        // Check if total files (currently loaded + new) exceeds remaining limit
-        if (totalFilesAfterUpload > remainingLimit) {
-            setUpgradeReason('limit');
-            setUpgradeLimit(limit);
-            setShowUpgradeModal(true);
-            return;
-        }
-
-        const newFiles: FileWithContent[] = [];
-        for (const file of selectedFiles) {
-            try {
-                const content = await file.text();
-                let duration: string | null = null;
-                try {
-                    const blocks = permissiveParseSrt(content);
-                    if (blocks.length > 0) {
-                        const lastBlock = blocks[blocks.length - 1];
-                        const shifted = shiftTimestampLine(lastBlock.tsRaw, 0);
-                        if (shifted) {
-                            const endToken = shifted.split('-->')[1]?.trim();
-                            if (endToken) duration = endToken;
-                        }
+                    currentCount = serverCheck.current;
+                    // Also sync with localStorage for UI display
+                    const { anonymousUsage } = await import('../utils/anonymousUsage');
+                    const anonUsage = anonymousUsage.get();
+                    if (anonUsage) {
+                        currentCount = Math.max(currentCount, anonUsage.uploadCount || 0);
                     }
-                } catch (e) { }
-                const hasPrimary = files.some(f => f.isPrimary) || newFiles.some(f => f.isPrimary);
-                newFiles.push({
-                    id: `file-${Date.now()}-${Math.random()}`,
-                    name: file.name,
-                    type: '.' + file.name.split('.').pop()?.toLowerCase() || '.txt',
-                    size: file.size,
-                    duration,
-                    isPrimary: !hasPrimary && files.length === 0 && newFiles.length === 0,
-                    offset: '00:00:00,000',
-                    content: [],
-                    errors: [],
-                    fileContent: content
-                });
-            } catch (error) {
-                const hasPrimary = files.some(f => f.isPrimary);
-                newFiles.push({
-                    id: `file-${Date.now()}-${Math.random()}`,
-                    name: file.name,
-                    type: '.' + file.name.split('.').pop()?.toLowerCase() || '.txt',
-                    size: file.size,
-                    duration: null,
-                    isPrimary: !hasPrimary && files.length === 0 && newFiles.length === 0,
-                    offset: '00:00:00,000',
-                    content: [],
-                    errors: [`Failed to read file: ${error instanceof Error ? error.message : 'Unknown error'}`],
-                    fileContent: ''
-                });
+                } catch (error) {
+                    console.error('Failed to check server usage, falling back to localStorage:', error);
+                    // Fallback to localStorage if server check fails
+                    const { anonymousUsage } = await import('../utils/anonymousUsage');
+                    const anonUsage = anonymousUsage.get();
+                    currentCount = anonUsage?.uploadCount || 0;
+                    firstMergeTime = anonUsage?.firstMergeTime;
+                }
             }
+
+            // Check if 24h window has passed since first merge
+            isExpired = firstMergeTime ?
+                (Date.now() - new Date(firstMergeTime).getTime()) >= 24 * 60 * 60 * 1000 : false;
+
+            // If expired or no timestamp, count is effectively 0
+            const effectiveCount = isExpired || !firstMergeTime ? 0 : currentCount;
+            const totalFilesAfterUpload = files.length + selectedFiles.length;
+            const remainingLimit = limit - effectiveCount;
+
+            console.log('Upload Limit Check (24h window):', {
+                userType: user ? 'authenticated' : 'anonymous',
+                firstMergeTime,
+                isExpired,
+                currentCount,
+                effectiveCount,
+                limit,
+                remainingLimit,
+                totalFilesAfterUpload,
+                willBlock: totalFilesAfterUpload > remainingLimit
+            });
+
+            // Check if total files (currently loaded + new) exceeds remaining limit
+            if (totalFilesAfterUpload > remainingLimit) {
+                setUpgradeReason('limit');
+                setUpgradeLimit(limit);
+                setShowUpgradeModal(true);
+                return;
+            }
+
+            const newFiles: FileWithContent[] = [];
+            for (const file of selectedFiles) {
+                try {
+                    const content = await file.text();
+                    let duration: string | null = null;
+                    try {
+                        const blocks = permissiveParseSrt(content);
+                        if (blocks.length > 0) {
+                            const lastBlock = blocks[blocks.length - 1];
+                            const shifted = shiftTimestampLine(lastBlock.tsRaw, 0);
+                            if (shifted) {
+                                const endToken = shifted.split('-->')[1]?.trim();
+                                if (endToken) duration = endToken;
+                            }
+                        }
+                    } catch (e) { }
+                    const hasPrimary = files.some(f => f.isPrimary) || newFiles.some(f => f.isPrimary);
+                    newFiles.push({
+                        id: `file-${Date.now()}-${Math.random()}`,
+                        name: file.name,
+                        type: '.' + file.name.split('.').pop()?.toLowerCase() || '.txt',
+                        size: file.size,
+                        duration,
+                        isPrimary: !hasPrimary && files.length === 0 && newFiles.length === 0,
+                        offset: '00:00:00,000',
+                        content: [],
+                        errors: [],
+                        fileContent: content
+                    });
+                } catch (error) {
+                    const hasPrimary = files.some(f => f.isPrimary);
+                    newFiles.push({
+                        id: `file-${Date.now()}-${Math.random()}`,
+                        name: file.name,
+                        type: '.' + file.name.split('.').pop()?.toLowerCase() || '.txt',
+                        size: file.size,
+                        duration: null,
+                        isPrimary: !hasPrimary && files.length === 0 && newFiles.length === 0,
+                        offset: '00:00:00,000',
+                        content: [],
+                        errors: [`Failed to read file: ${error instanceof Error ? error.message : 'Unknown error'}`],
+                        fileContent: ''
+                    });
+                }
+            }
+            setFiles(prev => [...prev, ...newFiles]);
+        } finally {
+            setIsProcessing(false);
         }
-        setFiles(prev => [...prev, ...newFiles]);
     };
+
 
     const handleSetPrimary = (id: string) => {
         setFiles(prev => prev.map(f => ({ ...f, isPrimary: f.id === id })));
@@ -492,8 +514,17 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                         <div className="w-16"></div>
                     </div>
                     <div className="p-6 sm:p-8 lg:p-10">
-                        <div className="mb-10">
-                            <UploadArea onFilesSelected={handleFilesSelected} />
+                        {/* File Upload Area */}
+                        <div className="mb-8">
+                            {isProcessing ? (
+                                <div className="border-2 border-dashed border-blue-300 rounded-xl p-12 text-center bg-blue-50 flex flex-col items-center justify-center h-64 animate-pulse">
+                                    <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                                    <p className="text-lg font-medium text-blue-700">Processing files...</p>
+                                    <p className="text-sm text-blue-500 mt-2">Checking limits and parsing content</p>
+                                </div>
+                            ) : (
+                                <UploadArea onFilesSelected={handleFilesSelected} />
+                            )}
                         </div>
                         {files.length > 0 && (
                             <div className="mb-10 animate-fade-in">
