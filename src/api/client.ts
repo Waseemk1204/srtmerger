@@ -75,7 +75,6 @@ export const api = {
     // Files
     saveFile: (filename: string, content: string, filesize: number) => {
         const payload = { filename, content, filesize };
-        console.log('API saveFile payload:', payload);
         return request('/files', {
             method: 'POST',
             body: JSON.stringify(payload),

@@ -511,16 +511,12 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             const filename = `merged_${timestamp}.srt`;
             const filesize = new Blob([result.mergedSrt]).size;
 
-            console.log('Saving file:', { filename, filesize, contentLength: result.mergedSrt.length });
-            console.log('Content preview:', result.mergedSrt.substring(0, 100));
-
             // Save file as plain text
             const saveResult = await api.saveFile(
                 filename,
                 result.mergedSrt,
                 filesize
             );
-            console.log('Save result:', saveResult);
 
             setToastMessage('File saved successfully!');
             setShowToast(true);

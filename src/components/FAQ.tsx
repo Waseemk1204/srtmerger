@@ -43,10 +43,13 @@ const faqs: FAQItem[] = [
 
 export function FAQ() {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
+    const [showAll, setShowAll] = useState(false);
 
     const toggleFAQ = (index: number) => {
         setOpenIndex(openIndex === index ? null : index);
     };
+
+    const displayedFAQs = showAll ? faqs : faqs.slice(0, 3);
 
     return (
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
@@ -63,7 +66,7 @@ export function FAQ() {
 
                 {/* FAQ Items */}
                 <div className="space-y-4">
-                    {faqs.map((faq, index) => (
+                    {displayedFAQs.map((faq, index) => (
                         <div
                             key={index}
                             className="bg-gray-50 rounded-xl border border-gray-200 overflow-hidden transition-all hover:border-gray-300"
@@ -88,6 +91,18 @@ export function FAQ() {
                         </div>
                     ))}
                 </div>
+
+                {/* Show More/Less Button */}
+                {faqs.length > 3 && (
+                    <div className="mt-6 text-center">
+                        <button
+                            onClick={() => setShowAll(!showAll)}
+                            className="px-6 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                        >
+                            {showAll ? 'Show Less' : `Show More (${faqs.length - 3} more)`}
+                        </button>
+                    </div>
+                )}
             </div>
         </section>
     );

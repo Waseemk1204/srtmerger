@@ -126,7 +126,7 @@ export function UsageCard() {
                     {!user && (
                         <div className="mt-4 pt-4 border-t border-gray-100">
                             <p className="text-sm text-gray-600 mb-3 text-center">
-                                📊 Sign in to track your progress and access saved files
+                                🔒 Login to never lose your files
                             </p>
                             <div className="flex gap-3 justify-center">
                                 <a
