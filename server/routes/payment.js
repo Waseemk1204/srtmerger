@@ -9,8 +9,8 @@ const router = express.Router();
 
 // Initialize Razorpay
 const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
+    key_id: process.env.RAZORPAY_KEY_ID?.trim(),
+    key_secret: process.env.RAZORPAY_KEY_SECRET?.trim()
 });
 
 // Plans Configuration
@@ -71,9 +71,21 @@ router.post('/verify-payment', async (req, res) => {
 
         const body = razorpay_order_id + "|" + razorpay_payment_id;
         const expectedSignature = crypto
-            .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+            .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET?.trim())
             .update(body.toString())
             .digest('hex');
+
+        // DEBUG LOGGING
+        console.log('--- Payment Verification Debug ---');
+        console.log('Plan ID:', planId);
+        console.log('Razorpay Order ID:', razorpay_order_id);
+        console.log('Razorpay Payment ID:', razorpay_payment_id);
+        console.log('Received Signature:', razorpay_signature);
+        console.log('Calculated Signature:', expectedSignature);
+        console.log('Loaded Key ID:', process.env.RAZORPAY_KEY_ID ? process.env.RAZORPAY_KEY_ID.slice(0, 8) + '...' : 'MISSING');
+        console.log('Loaded Key Secret:', process.env.RAZORPAY_KEY_SECRET ? process.env.RAZORPAY_KEY_SECRET.slice(0, 8) + '...' : 'MISSING');
+        console.log('Match?', expectedSignature === razorpay_signature);
+        console.log('----------------------------------');
 
         if (expectedSignature !== razorpay_signature) {
             return res.status(400).json({ error: 'Invalid payment signature' });

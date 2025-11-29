@@ -45,6 +45,8 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
         try {
             const order = await api.createOrder(planId) as any; // Cast to any to avoid unknown type error
 
+            console.log('Frontend Razorpay Key:', import.meta.env.VITE_RAZORPAY_KEY_ID);
+
             const options = {
                 key: import.meta.env.VITE_RAZORPAY_KEY_ID,
                 amount: order.amount,
