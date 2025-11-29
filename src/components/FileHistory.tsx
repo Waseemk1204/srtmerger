@@ -122,6 +122,14 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
                                             type="text"
                                             value={editName}
                                             onChange={(e) => setEditName(e.target.value)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    saveRename();
+                                                } else if (e.key === 'Escape') {
+                                                    setEditingId(null);
+                                                }
+                                            }}
                                             className="flex-1 px-2 py-1 text-sm border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             autoFocus
                                         />
