@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { PricingSection } from './components/Pricing/PricingSection';
 import { MergerTool } from './components/MergerTool';
+import { UsageCard } from './components/UsageCard';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Footer } from './components/Footer';
@@ -187,6 +188,13 @@ function App() {
 
         {/* Merger Tool Section */}
         <MergerTool />
+
+        {/* Usage Card Section */}
+        <section className="py-8 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-5xl mx-auto">
+            <UsageCard />
+          </div>
+        </section>
 
         <PricingSection />
 
