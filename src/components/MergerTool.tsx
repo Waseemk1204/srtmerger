@@ -32,8 +32,6 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [edits, setEdits] = useState<Record<string, { text?: string; start?: string; end?: string }>>({}); // Key: fileId-blockIndex
-    const [deletedCues, setDeletedCues] = useState<Set<string>>(new Set()); // Track deleted cues by editKey
-    const [addedCues, setAddedCues] = useState<Array<{ id: string; start: string; end: string; text: string }>>([]);
 
 
     // Prefetch fingerprint on mount to speed up subsequent checks
@@ -318,18 +316,6 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
         });
     };
 
-    const handleDeleteCue = (fileId: string, blockIndex: number) => {
-        setDeletedCues(prev => {
-            const newSet = new Set(prev);
-            newSet.add(`${fileId}-${blockIndex}`);
-            return newSet;
-        });
-    };
-
-    const handleAddCue = (cue: { id: string; start: string; end: string; text: string }) => {
-        setAddedCues(prev => [...prev, cue]);
-    };
-
     const handleMerge = async () => {
         if (files.length === 0) return;
 
@@ -385,14 +371,9 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 const allBlocks: Array<{ index: number; timestamp: string; texts: string[] }> = [];
                 let globalIndex = 1;
                 for (const block of primaryBlocks) {
-                    const editKey = `${primaryFile.id}-${block.index}`;
-                    // Skip deleted cues
-                    if (deletedCues.has(editKey)) {
-                        continue;
-                    }
                     const shifted = shiftTimestampLine(block.tsRaw, 0);
                     if (shifted) {
-                        const edit = edits[editKey];
+                        const edit = edits[`${primaryFile.id}-${block.index}`];
                         allBlocks.push({
                             index: globalIndex++,
                             timestamp: (edit?.start && edit?.end)
@@ -409,14 +390,9 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                     const offsetMs = offset?.offsetMs ?? 0;
                     const blocks = permissiveParseSrt(file.fileContent);
                     for (const block of blocks) {
-                        const editKey = `${file.id}-${block.index}`;
-                        // Skip deleted cues
-                        if (deletedCues.has(editKey)) {
-                            continue;
-                        }
                         const shifted = shiftTimestampLine(block.tsRaw, offsetMs);
                         if (shifted) {
-                            const edit = edits[editKey];
+                            const edit = edits[`${file.id}-${block.index}`];
                             allBlocks.push({
                                 index: globalIndex++,
                                 timestamp: (edit?.start && edit?.end)
@@ -428,31 +404,6 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                         }
                     }
                 }
-
-                // Add the added cues
-                for (const cue of addedCues) {
-                    const edit = edits[`${cue.id}--1`]; // Check if added cue was edited
-                    allBlocks.push({
-                        index: globalIndex++,
-                        timestamp: edit?.start && edit?.end
-                            ? `${edit.start} --> ${edit.end}`
-                            : `${cue.start} --> ${cue.end}`,
-                        texts: edit?.text ? [edit.text] : [cue.text]
-                    });
-                }
-
-                // Sort by timestamp
-                allBlocks.sort((a, b) => {
-                    const aMs = parseTimestampToMs(a.timestamp.split('-->')[0].trim()) || 0;
-                    const bMs = parseTimestampToMs(b.timestamp.split('-->')[0].trim()) || 0;
-                    return aMs - bMs;
-                });
-
-                // Renumber sequentially
-                allBlocks.forEach((block, idx) => {
-                    block.index = idx + 1;
-                });
-
                 const mergedSrt = allBlocks.map(block => {
                     return `${block.index}\n${block.timestamp}\n${block.texts.join('\n')}\n`;
                 }).join('\n');
@@ -647,10 +598,6 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                                         computedOffsets={computedOffsets}
                                         edits={edits}
                                         onEdit={handleEdit}
-                                        onDelete={handleDeleteCue}
-                                        onAdd={handleAddCue}
-                                        deletedCues={deletedCues}
-                                        addedCues={addedCues}
                                         canEdit={canEdit}
                                     />
                                     {!canPreview && (
