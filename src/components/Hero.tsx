@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowDownIcon } from 'lucide-react';
 
 interface HeroProps {
-    onNavigate?: (page: 'home' | 'privacy' | 'how-it-works') => void;
+    onNavigate?: (page: 'home' | 'privacy' | 'how-it-works' | 'signup') => void;
 }
 
 export function Hero({ onNavigate }: HeroProps) {
@@ -40,11 +40,11 @@ export function Hero({ onNavigate }: HeroProps) {
                         <ArrowDownIcon className="w-4 h-4" />
                     </a>
                     <a
-                        href="/?view=how-it-works"
-                        onClick={(e) => { e.preventDefault(); onNavigate?.('how-it-works'); }}
+                        href="/?view=signup"
+                        onClick={(e) => { e.preventDefault(); onNavigate?.('signup'); }}
                         className="w-full sm:w-auto px-8 py-4 bg-white text-gray-700 border border-gray-200 rounded-xl font-medium hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
                     >
-                        View Demo
+                        Sign Up
                     </a>
                 </div>
 
