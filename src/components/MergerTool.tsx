@@ -513,7 +513,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                         <div className="text-xs font-mono text-gray-400">srt_merger_v2.exe</div>
                         <div className="w-16"></div>
                     </div>
-                    <div className="p-6 sm:p-8 lg:p-10">
+                    <div className="p-4 sm:p-8 lg:p-10">
                         {/* File Upload Area */}
                         <div className="mb-8">
                             {isProcessing ? (

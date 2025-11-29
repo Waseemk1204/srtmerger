@@ -32,23 +32,23 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
 
   return (
     <div className={`
-            group relative flex items-center gap-4 p-4 rounded-xl border transition-all duration-200
+            group relative flex items-center gap-2 sm:gap-4 p-3 sm:p-4 rounded-xl border transition-all duration-200
             ${file.isPrimary
         ? 'bg-blue-50/50 border-blue-200 shadow-sm'
         : 'bg-white border-gray-100 hover:border-gray-200 hover:shadow-sm'
       }
         `}>
       {/* Drag Handle */}
-      <div className="cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500 transition-colors">
+      <div className="cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500 transition-colors hidden sm:block">
         <GripVerticalIcon className="w-5 h-5" />
       </div>
 
       {/* File Icon */}
       <div className={`
-                p-3 rounded-lg transition-colors
+                p-2 sm:p-3 rounded-lg transition-colors
                 ${file.isPrimary ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-500 group-hover:bg-gray-200'}
             `}>
-        <FileTextIcon className="w-6 h-6" />
+        <FileTextIcon className="w-5 h-5 sm:w-6 sm:h-6" />
       </div>
 
       {/* File Info */}
@@ -61,7 +61,7 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="w-full px-2 py-1 text-sm border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 max-w-[200px]"
+                className="w-full px-2 py-1 text-sm border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 max-w-[150px] sm:max-w-[200px]"
                 autoFocus
               />
               <button
@@ -84,7 +84,7 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
             </div>
           ) : (
             <h3
-              className="font-medium text-gray-900 truncate cursor-pointer hover:text-blue-600"
+              className="font-medium text-gray-900 truncate cursor-pointer hover:text-blue-600 text-sm sm:text-base"
               onClick={() => onRename && setIsEditing(true)}
               title="Click to rename"
             >
@@ -93,12 +93,12 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
           )}
 
           {file.isPrimary && (
-            <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-100 rounded-full">
+            <span className="px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-100 rounded-full flex-shrink-0">
               Primary
             </span>
           )}
         </div>
-        <div className="flex items-center gap-3 text-xs text-gray-500 font-mono">
+        <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-500 font-mono">
           <span>{(file.size / 1024).toFixed(1)} KB</span>
           {file.duration && (
             <>
@@ -110,11 +110,11 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
         {onPreview && (
           <button
             onClick={() => onPreview(file.id)}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-1.5 sm:p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
             title="Preview content"
           >
             <EyeIcon className="w-4 h-4" />
@@ -124,18 +124,16 @@ export function FileCard({ file, onSetPrimary, onRemove, onPreview, onRename }: 
         {onRename && !isEditing && (
           <button
             onClick={() => setIsEditing(true)}
-            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            className="p-1.5 sm:p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
             title="Rename file"
           >
             <Edit2Icon className="w-4 h-4" />
           </button>
         )}
 
-
-
         <button
           onClick={() => onRemove(file.id)}
-          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+          className="p-1.5 sm:p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
           title="Remove file"
         >
           <Trash2Icon className="w-4 h-4" />
