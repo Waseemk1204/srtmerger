@@ -58,21 +58,9 @@ export function Dashboard() {
             user?.subscription?.plan === 'tier1' ? 20 : 4;
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-zinc-50">
-            {/* Premium Background for Tier 3 */}
-            {user?.subscription?.plan === 'tier3' ? (
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-                    <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-                    <div className="absolute -bottom-32 left-1/3 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
-                </div>
-            ) : (
-                /* Standard Background Pattern */
-                <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
-            )}
-
+        <div className="min-h-screen bg-zinc-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
             {/* Dashboard Header */}
-            <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50 relative">
+            <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
                         {/* Logo & Dashboard Label */}
