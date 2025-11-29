@@ -60,10 +60,15 @@ export function FileList({
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <h2 className="font-mono text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-          Uploaded Files ({files.length})
-        </h2>
+        <div className="flex flex-col gap-1">
+          <h2 className="font-mono text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+            Uploaded Files ({files.length})
+          </h2>
+          <p className="text-xs text-gray-500 sm:hidden italic">
+            Tip: Press and hold a file to reorder
+          </p>
+        </div>
         {onClear && (
           <button
             onClick={onClear}
