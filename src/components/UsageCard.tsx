@@ -66,6 +66,12 @@ export function UsageCard() {
         plan === 'tier2' ? 100 :
             plan === 'tier1' ? 20 : 4;
 
+    // Don't show card if user hasn't merged anything yet
+    const hasUsage = user?.usage?.firstMergeTime || anonUsage?.firstMergeTime;
+    if (!hasUsage) {
+        return null;
+    }
+
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             {/* Header - Always visible */}
