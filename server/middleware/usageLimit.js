@@ -62,15 +62,15 @@ export const incrementUsage = async (userId, count = 1) => {
     const db = getDB();
     const users = db.collection('users');
     const user = await users.findOne({ _id: new ObjectId(userId) });
-    
+
     const now = new Date();
     const firstMergeTime = user?.usage?.firstMergeTime ? new Date(user.usage.firstMergeTime) : null;
-    
+
     // Calculate hours since first merge
-    const hoursSinceFirst = firstMergeTime 
-        ? (now - firstMergeTime) / (1000 * 60 * 60) 
+    const hoursSinceFirst = firstMergeTime
+        ? (now - firstMergeTime) / (1000 * 60 * 60)
         : 25; // 25 hours = past the 24h window, will trigger reset
-    
+
     console.log('incrementUsage - Rolling 24h window:', {
         userId,
         count,
@@ -80,7 +80,7 @@ export const incrementUsage = async (userId, count = 1) => {
         currentCount: user?.usage?.uploadCount || 0,
         willReset: hoursSinceFirst >= 24
     });
-    
+
     if (!firstMergeTime || hoursSinceFirst >= 24) {
         // Start new 24h window
         console.log('STARTING NEW 24H WINDOW - Setting count to:', count);
@@ -90,6 +90,9 @@ export const incrementUsage = async (userId, count = 1) => {
                 $set: {
                     'usage.uploadCount': count,
                     'usage.firstMergeTime': now.toISOString()
+                },
+                $unset: {
+                    'usage.date': '' // Remove old date field
                 }
             }
         );
@@ -100,7 +103,10 @@ export const incrementUsage = async (userId, count = 1) => {
         await users.updateOne(
             { _id: new ObjectId(userId) },
             {
-                $inc: { 'usage.uploadCount': count }
+                $inc: { 'usage.uploadCount': count },
+                $unset: {
+                    'usage.date': '' // Remove old date field
+                }
             }
         );
     }
