@@ -46,10 +46,16 @@ async function createIndexes() {
     try {
         const users = db.collection('users');
         const files = db.collection('files');
+        const anonymousUsage = db.collection('anonymousUsage');
 
         await users.createIndex({ email: 1 }, { unique: true });
         await files.createIndex({ userId: 1 });
         await files.createIndex({ createdAt: -1 });
+
+        // Anonymous usage tracking indexes
+        await anonymousUsage.createIndex({ fingerprintHash: 1 }, { unique: true }); // Primary lookup
+        await anonymousUsage.createIndex({ ipHash: 1 }); // For analytics/abuse detection
+        await anonymousUsage.createIndex({ createdAt: 1 }, { expireAfterSeconds: 172800 }); // 48h TTL
 
         console.log('✅ Database indexes created');
     } catch (error) {

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { api } from '../api/client';
 import { User } from '../types';
+import { getBrowserFingerprint } from '../utils/fingerprint';
 
 interface AuthContextType {
     user: User | null;
@@ -45,7 +46,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const login = async (email: string, password: string) => {
         try {
-            const response: any = await api.login(email, password);
+            const fingerprint = await getBrowserFingerprint();
+            const response: any = await api.login(email, password, fingerprint);
             setUser(response.user);
             setToken(response.token);
             localStorage.setItem('token', response.token);
@@ -56,7 +58,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const signup = async (email: string, password: string, name: string) => {
         try {
-            const response: any = await api.signup(email, password, name);
+            const fingerprint = await getBrowserFingerprint();
+            const response: any = await api.signup(email, password, name, fingerprint);
             setUser(response.user);
             setToken(response.token);
             localStorage.setItem('token', response.token);
@@ -67,7 +70,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const googleLogin = async (credential: string) => {
         try {
-            const response: any = await api.googleLogin(credential);
+            const fingerprint = await getBrowserFingerprint();
+            const response: any = await api.googleLogin(credential, fingerprint);
             setUser(response.user);
             setToken(response.token);
             localStorage.setItem('token', response.token);

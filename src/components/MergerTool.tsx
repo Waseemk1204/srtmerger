@@ -84,11 +84,43 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             currentCount = user.usage?.uploadCount || 0;
             firstMergeTime = user.usage?.firstMergeTime;
         } else {
-            // Anonymous user: use localStorage
-            const { anonymousUsage } = await import('../utils/anonymousUsage');
-            const anonUsage = anonymousUsage.get();
-            currentCount = anonUsage?.uploadCount || 0;
-            firstMergeTime = anonUsage?.firstMergeTime;
+            // Anonymous user: check server-side fingerprint limit
+            try {
+                const { getBrowserFingerprint } = await import('../utils/fingerprint');
+                const fingerprint = await getBrowserFingerprint();
+                const serverCheck: any = await api.checkAnonymousUsage(fingerprint);
+
+                if (!serverCheck.allowed) {
+                    if (serverCheck.requiresLogin) {
+                        // This device has been used with an account before
+                        setUpgradeReason('limit');
+                        setUpgradeLimit(4);
+                        setShowUpgradeModal(true);
+                        alert('This device has been used with an account. Please log in to continue.');
+                        return;
+                    }
+                    // Regular limit exceeded
+                    setUpgradeReason('limit');
+                    setUpgradeLimit(serverCheck.limit);
+                    setShowUpgradeModal(true);
+                    return;
+                }
+
+                currentCount = serverCheck.current;
+                // Also sync with localStorage for UI display
+                const { anonymousUsage } = await import('../utils/anonymousUsage');
+                const anonUsage = anonymousUsage.get();
+                if (anonUsage) {
+                    currentCount = Math.max(currentCount, anonUsage.uploadCount || 0);
+                }
+            } catch (error) {
+                console.error('Failed to check server usage, falling back to localStorage:', error);
+                // Fallback to localStorage if server check fails
+                const { anonymousUsage } = await import('../utils/anonymousUsage');
+                const anonUsage = anonymousUsage.get();
+                currentCount = anonUsage?.uploadCount || 0;
+                firstMergeTime = anonUsage?.firstMergeTime;
+            }
         }
 
         // Check if 24h window has passed since first merge
@@ -352,7 +384,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             setShowToast(true);
             setTimeout(() => setShowToast(false), 3000);
 
-            // Track merge operation (only if authenticated)
+            // Track merge operation
             if (user) {
                 try {
                     await api.trackMerge(files.length);
@@ -370,10 +402,19 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 // Auto-save the file (only if authenticated)
                 await saveFile(result);
             } else {
-                // Anonymous user: track in localStorage
+                // Anonymous user: track with fingerprint on server
+                try {
+                    const { getBrowserFingerprint } = await import('../utils/fingerprint');
+                    const fingerprint = await getBrowserFingerprint();
+                    await api.trackAnonymousMerge(fingerprint, files.length);
+                    console.log('Anonymous merge tracked with fingerprint');
+                } catch (error) {
+                    console.error('Failed to track anonymous merge:', error);
+                }
+
+                // Also update localStorage as visual feedback
                 const { anonymousUsage } = await import('../utils/anonymousUsage');
                 anonymousUsage.increment(files.length);
-                console.log('Anonymous user - usage tracked in localStorage');
             }
         } catch (error) {
             setToastMessage(`Merge failed: ${error instanceof Error ? error.message : 'Unknown error'}`);

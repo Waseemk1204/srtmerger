@@ -46,22 +46,22 @@ async function request<T>(
 
 export const api = {
     // Auth
-    signup: (email: string, password: string, name: string) =>
+    signup: (email: string, password: string, name: string, fingerprint?: string) =>
         request('/auth/signup', {
             method: 'POST',
-            body: JSON.stringify({ email, password, name }),
+            body: JSON.stringify({ email, password, name, fingerprint }),
         }),
 
-    login: (email: string, password: string) =>
+    login: (email: string, password: string, fingerprint?: string) =>
         request('/auth/login', {
             method: 'POST',
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ email, password, fingerprint }),
         }),
 
-    googleLogin: (credential: string) =>
+    googleLogin: (credential: string, fingerprint?: string) =>
         request('/auth/google', {
             method: 'POST',
-            body: JSON.stringify({ credential }),
+            body: JSON.stringify({ credential, fingerprint }),
         }),
 
     logout: () =>
@@ -117,6 +117,19 @@ export const api = {
         request('/usage/merge', {
             method: 'POST',
             body: JSON.stringify({ fileCount }),
+        }),
+
+    // Anonymous usage tracking
+    checkAnonymousUsage: (fingerprint: string) =>
+        request('/usage/check-anonymous', {
+            method: 'POST',
+            body: JSON.stringify({ fingerprint }),
+        }),
+
+    trackAnonymousMerge: (fingerprint: string, fileCount: number) =>
+        request('/usage/merge-anonymous', {
+            method: 'POST',
+            body: JSON.stringify({ fingerprint, fileCount }),
         }),
 };
 

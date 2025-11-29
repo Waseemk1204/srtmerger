@@ -5,13 +5,14 @@ import { ObjectId } from 'mongodb';
 import { getDB } from '../config/db.js';
 import { loginLimiter, signupLimiter } from '../middleware/rateLimit.js';
 import authMiddleware from '../middleware/auth.js';
+import { linkFingerprintToUser } from '../middleware/usageLimit.js';
 
 const router = express.Router();
 
 // Signup
 router.post('/signup', signupLimiter, async (req, res) => {
     try {
-        const { email, password, name } = req.body;
+        const { email, password, name, fingerprint } = req.body;
 
         // Validation
         if (!email || !password || !name) {
@@ -54,8 +55,14 @@ router.post('/signup', signupLimiter, async (req, res) => {
                 uploadCount: 0
             },
             createdAt: new Date(),
-            lastLogin: new Date()
+            lastLogin: new Date(),
+            knownFingerprints: [] // Initialize empty array
         });
+
+        // Link fingerprint if provided
+        if (fingerprint) {
+            await linkFingerprintToUser(result.insertedId.toString(), fingerprint);
+        }
 
         // Generate JWT
         const token = jwt.sign(
@@ -82,7 +89,7 @@ router.post('/signup', signupLimiter, async (req, res) => {
 // Login
 router.post('/login', loginLimiter, async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, fingerprint } = req.body;
 
         if (!email || !password) {
             return res.status(400).json({ error: 'Email and password are required' });
@@ -120,6 +127,11 @@ router.post('/login', loginLimiter, async (req, res) => {
             { _id: user._id },
             { $set: updates }
         );
+
+        // Link fingerprint if provided
+        if (fingerprint) {
+            await linkFingerprintToUser(user._id.toString(), fingerprint);
+        }
 
         // Generate JWT
         const token = jwt.sign(
@@ -178,7 +190,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 router.post('/google', async (req, res) => {
     try {
-        const { credential } = req.body;
+        const { credential, fingerprint } = req.body;
 
         if (!credential) {
             return res.status(400).json({ error: 'Google credential is required' });
@@ -224,7 +236,8 @@ router.post('/google', async (req, res) => {
                     uploadCount: 0
                 },
                 createdAt: new Date(),
-                lastLogin: new Date()
+                lastLogin: new Date(),
+                knownFingerprints: []
             });
 
             user = {
@@ -260,6 +273,11 @@ router.post('/google', async (req, res) => {
             if (updates.subscription) user.subscription = updates.subscription;
             if (updates.usage) user.usage = updates.usage;
             if (updates.googleId) user.googleId = updates.googleId;
+        }
+
+        // Link fingerprint if provided
+        if (fingerprint) {
+            await linkFingerprintToUser(user._id.toString(), fingerprint);
         }
 
         // Generate JWT
