@@ -17,12 +17,6 @@ router.post('/', async (req, res) => {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
-        // Enforce 500KB file size limit
-        const MAX_SIZE = 500 * 1024; // 500KB
-        if (filesize && filesize > MAX_SIZE) {
-            return res.status(400).json({ error: 'File size exceeds 500KB limit' });
-        }
-
         const db = getDB();
         const files = db.collection('files');
 
