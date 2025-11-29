@@ -58,9 +58,21 @@ export function Dashboard() {
             user?.subscription?.plan === 'tier1' ? 20 : 4;
 
     return (
-        <div className="min-h-screen bg-zinc-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+        <div className="min-h-screen relative overflow-hidden bg-zinc-50">
+            {/* Premium Background for Tier 3 */}
+            {user?.subscription?.plan === 'tier3' ? (
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+                    <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+                    <div className="absolute -bottom-32 left-1/3 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+                </div>
+            ) : (
+                /* Standard Background Pattern */
+                <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
+            )}
+
             {/* Dashboard Header */}
-            <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+            <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50 relative">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16">
                         {/* Logo & Dashboard Label */}
@@ -95,14 +107,14 @@ export function Dashboard() {
             </header>
 
             {/* Plan & Usage */}
-            <section className="px-4 pt-8">
+            <section className="px-4 pt-8 relative z-10">
                 <div className="max-w-5xl mx-auto">
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200 p-6">
                         <h2 className="text-lg font-semibold text-gray-900 mb-4">Plan & Usage</h2>
                         {user?.subscription?.plan === 'tier3' ? (
-                            /* Premium Unlimited UI */
-                            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 p-6 text-white shadow-lg animate-breathe border border-blue-500/30">
-                                {/* Background Glow Effect */}
+                            /* Premium Unlimited UI (Static Container) */
+                            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 p-6 text-white shadow-lg border border-blue-500/30">
+                                {/* Background Glow Effect (Static) */}
                                 <div className="absolute inset-0 bg-blue-500/10 blur-3xl"></div>
 
                                 <div className="relative z-10 flex items-center justify-between">
@@ -117,7 +129,7 @@ export function Dashboard() {
                                         </div>
                                     </div>
 
-                                    {/* Infinity Animation */}
+                                    {/* Infinity Animation (Kept as requested) */}
                                     <div className="w-32 h-16 flex items-center justify-center">
                                         <svg viewBox="0 0 100 50" className="w-full h-full drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]">
                                             <defs>
@@ -188,14 +200,16 @@ export function Dashboard() {
             </section>
 
             {/* Merger Tool */}
-            <div className="pt-8">
+            <div className="pt-8 relative z-10">
                 <MergerTool onFileSaved={loadFiles} />
             </div>
 
             {/* Saved Files Section */}
-            <section className="px-4 pb-20 pt-8">
+            <section className="px-4 pb-20 pt-8 relative z-10">
                 <div className="max-w-5xl mx-auto">
-                    <SavedFilesSection key={refreshKey} />
+                    <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200">
+                        <SavedFilesSection key={refreshKey} />
+                    </div>
                 </div>
             </section>
         </div>
