@@ -546,6 +546,9 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             // Refresh saved files list
             if (onFileSaved) {
                 await onFileSaved();
+                // Only clear files on dashboard (when onFileSaved is present)
+                // and only AFTER the list has been refreshed
+                handleClearFiles();
             }
         } catch (error) {
             console.error('Save file error:', error);
