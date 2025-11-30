@@ -512,8 +512,8 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 anonymousUsage.increment(files.length);
             }
 
-            // Auto-clear files after successful merge to allow fresh start
-            handleClearFiles();
+            // Files are NOT auto-cleared so user can download the result
+            // handleClearFiles();
         } catch (error) {
             handleShowToast(`Merge failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
         } finally {
@@ -734,7 +734,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
 
                                 {/* Download Button - Only on home page */}
                                 {showDownloadButton && (
-                                    <div className="mt-6 flex justify-center">
+                                    <div className="mt-6 flex justify-center gap-4">
                                         <button
                                             onClick={() => {
                                                 const timestamp = new Date().toISOString().slice(0, 16).replace('T', '_').replace(/:/g, '-');
@@ -747,6 +747,16 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                             </svg>
                                             Download SRT
+                                        </button>
+
+                                        <button
+                                            onClick={handleClearFiles}
+                                            className="px-8 py-3 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold rounded-lg shadow-sm transition-all flex items-center gap-2"
+                                        >
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                            </svg>
+                                            Start New Merge
                                         </button>
                                     </div>
                                 )}
