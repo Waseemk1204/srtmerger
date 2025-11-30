@@ -187,8 +187,6 @@ router.post('/logout', (req, res) => {
 });
 
 // Google Login
-import { OAuth2Client } from 'google-auth-library';
-
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 router.post('/google', async (req, res) => {
