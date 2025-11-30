@@ -88,9 +88,9 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
     };
 
     const prices = {
-        weekly: { tier1: '$99', tier2: '$199', tier3: '$399' },
-        monthly: { tier1: '$299', tier2: '$599', tier3: '$999' },
-        yearly: { tier1: '$2999', tier2: '$5999', tier3: '$9999' },
+        weekly: { tier1: '$1.99', tier2: '$3.99', tier3: '$6.99' },
+        monthly: { tier1: '$4.99', tier2: '$9.99', tier3: '$14.99' },
+        yearly: { tier1: '$39', tier2: '$79', tier3: '$129' },
     };
 
     return (
