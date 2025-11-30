@@ -123,4 +123,28 @@ router.post('/verify-payment', async (req, res) => {
     }
 });
 
+// Cancel Subscription
+router.post('/cancel-subscription', async (req, res) => {
+    try {
+        const db = getDB();
+        const users = db.collection('users');
+
+        await users.updateOne(
+            { _id: new ObjectId(req.user.userId) },
+            {
+                $set: {
+                    'subscription.plan': 'free',
+                    'subscription.status': 'canceled',
+                    'subscription.expiryDate': null
+                }
+            }
+        );
+
+        res.json({ success: true, message: 'Subscription canceled successfully' });
+    } catch (error) {
+        console.error('Cancel subscription error:', error);
+        res.status(500).json({ error: 'Failed to cancel subscription' });
+    }
+});
+
 export default router;

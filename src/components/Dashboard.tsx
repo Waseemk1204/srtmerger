@@ -3,6 +3,8 @@ import { LogOutIcon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { SavedFilesSection } from './SavedFilesSection';
 import { MergerTool } from './MergerTool';
+import { UpgradeModal } from './Pricing/UpgradeModal';
+import { api } from '../api/client';
 
 export function Dashboard() {
     const { user, logout, refreshUser } = useAuth();
@@ -10,6 +12,22 @@ export function Dashboard() {
     const [timeUntilReset, setTimeUntilReset] = useState<string>('');
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+    const handleCancelSubscription = async () => {
+        if (!confirm('Are you sure you want to cancel your subscription? You will lose premium features immediately.')) {
+            return;
+        }
+
+        try {
+            await api.cancelSubscription();
+            handleShowToast('Subscription canceled successfully');
+            if (refreshUser) await refreshUser();
+        } catch (error) {
+            console.error('Failed to cancel subscription:', error);
+            handleShowToast('Failed to cancel subscription');
+        }
+    };
 
     const handleShowToast = (message: string) => {
         setToastMessage(message);
@@ -123,6 +141,14 @@ export function Dashboard() {
                                         <div className="mt-2 text-sm text-blue-300/80">
                                             No limits. No boundaries.
                                         </div>
+                                        <div className="mt-4 flex gap-3">
+                                            <button
+                                                onClick={handleCancelSubscription}
+                                                className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg transition-colors border border-white/20"
+                                            >
+                                                Cancel Subscription
+                                            </button>
+                                        </div>
                                     </div>
 
                                     {/* Infinity Animation (Kept as requested) */}
@@ -191,9 +217,36 @@ export function Dashboard() {
                                 </div>
                             </div>
                         )}
+
+                        {/* Upgrade Button for Free/Tier1/Tier2 */}
+                        {user?.subscription?.plan !== 'tier3' && (
+                            <div className="mt-6 pt-6 border-t border-gray-100 flex justify-end gap-3">
+                                {user?.subscription?.plan !== 'free' && (
+                                    <button
+                                        onClick={handleCancelSubscription}
+                                        className="text-sm text-red-600 hover:text-red-700 font-medium px-4 py-2 hover:bg-red-50 rounded-lg transition-colors"
+                                    >
+                                        Cancel Subscription
+                                    </button>
+                                )}
+                                <button
+                                    onClick={() => setShowUpgradeModal(true)}
+                                    className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors shadow-lg shadow-gray-900/20"
+                                >
+                                    Upgrade Plan
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </section>
+
+            <UpgradeModal
+                isOpen={showUpgradeModal}
+                onClose={() => setShowUpgradeModal(false)}
+                reason="feature"
+                featureName="Premium Features"
+            />
 
             {/* Merger Tool */}
             <div className="pt-8 relative z-10">
@@ -210,12 +263,14 @@ export function Dashboard() {
             </section>
 
             {/* Toast Notification */}
-            {showToast && (
-                <div className="fixed bottom-4 right-4 bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg text-sm animate-fade-in z-[10000] font-medium flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-green-400"></div>
-                    {toastMessage}
-                </div>
-            )}
-        </div>
+            {
+                showToast && (
+                    <div className="fixed bottom-4 right-4 bg-gray-900 text-white px-4 py-2 rounded-lg shadow-lg text-sm animate-fade-in z-[10000] font-medium flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                        {toastMessage}
+                    </div>
+                )
+            }
+        </div >
     );
 }

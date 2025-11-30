@@ -111,6 +111,11 @@ export const api = {
             body: JSON.stringify(data),
         }),
 
+    cancelSubscription: () =>
+        request('/payment/cancel-subscription', {
+            method: 'POST',
+        }),
+
     // Usage tracking
     trackMerge: (fileCount: number) =>
         request('/usage/merge', {
