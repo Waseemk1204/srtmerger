@@ -60,9 +60,10 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
 
     // Upgrade Modal State
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-    const [upgradeReason, setUpgradeReason] = useState<'limit' | 'feature'>('feature');
-    const [upgradeFeature, setUpgradeFeature] = useState('');
-    const [upgradeLimit, setUpgradeLimit] = useState(0);
+    const [upgradeReason, setUpgradeReason] = useState<'limit' | 'feature' | 'general'>('limit');
+    const [upgradeFeature, setUpgradeFeature] = useState<string>('');
+    const [upgradeLimit, setUpgradeLimit] = useState<number>(0);
+    const [showLoginRequiredModal, setShowLoginRequiredModal] = useState(false);
 
     // Feature Access Helpers
     const currentPlan = user?.subscription?.plan || 'free';
@@ -165,10 +166,9 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
 
                     if (!serverCheck.allowed) {
                         if (serverCheck.requiresLogin) {
-                            // This device has been used with an account before - redirect to login
+                            // This device has been used with an account before - show modal
                             setIsProcessing(false);
-                            // Navigate to login page
-                            window.location.href = '/?view=login';
+                            setShowLoginRequiredModal(true);
                             return;
                         }
                         // Regular limit exceeded
