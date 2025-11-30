@@ -13,19 +13,36 @@ const razorpay = new Razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET?.trim()
 });
 
-// Plans Configuration (amounts in cents for USD)
+// Plans Configuration - Dual Currency Support
 const PLANS = {
-    'tier1-weekly': { amount: 199, plan: 'tier1', duration: 'weekly' },     // $1.99
-    'tier1-monthly': { amount: 499, plan: 'tier1', duration: 'monthly' },   // $4.99
-    'tier1-yearly': { amount: 3900, plan: 'tier1', duration: 'yearly' },    // $39
+    // USD Pricing (for international users)
+    usd: {
+        'tier1-weekly': { amount: 199, plan: 'tier1', duration: 'weekly' },     // $1.99
+        'tier1-monthly': { amount: 499, plan: 'tier1', duration: 'monthly' },   // $4.99
+        'tier1-yearly': { amount: 3900, plan: 'tier1', duration: 'yearly' },    // $39
 
-    'tier2-weekly': { amount: 399, plan: 'tier2', duration: 'weekly' },     // $3.99
-    'tier2-monthly': { amount: 999, plan: 'tier2', duration: 'monthly' },   // $9.99
-    'tier2-yearly': { amount: 7900, plan: 'tier2', duration: 'yearly' },    // $79
+        'tier2-weekly': { amount: 399, plan: 'tier2', duration: 'weekly' },     // $3.99
+        'tier2-monthly': { amount: 999, plan: 'tier2', duration: 'monthly' },   // $9.99
+        'tier2-yearly': { amount: 7900, plan: 'tier2', duration: 'yearly' },    // $79
 
-    'tier3-weekly': { amount: 699, plan: 'tier3', duration: 'weekly' },     // $6.99
-    'tier3-monthly': { amount: 1499, plan: 'tier3', duration: 'monthly' },  // $14.99
-    'tier3-yearly': { amount: 12900, plan: 'tier3', duration: 'yearly' },   // $129
+        'tier3-weekly': { amount: 699, plan: 'tier3', duration: 'weekly' },     // $6.99
+        'tier3-monthly': { amount: 1499, plan: 'tier3', duration: 'monthly' },  // $14.99
+        'tier3-yearly': { amount: 12900, plan: 'tier3', duration: 'yearly' },   // $129
+    },
+    // INR Pricing (for Indian users - enables UPI and local payment methods)
+    inr: {
+        'tier1-weekly': { amount: 9900, plan: 'tier1', duration: 'weekly' },    // ₹99
+        'tier1-monthly': { amount: 29900, plan: 'tier1', duration: 'monthly' }, // ₹299
+        'tier1-yearly': { amount: 299900, plan: 'tier1', duration: 'yearly' },  // ₹2999
+
+        'tier2-weekly': { amount: 19900, plan: 'tier2', duration: 'weekly' },   // ₹199
+        'tier2-monthly': { amount: 59900, plan: 'tier2', duration: 'monthly' }, // ₹599
+        'tier2-yearly': { amount: 599900, plan: 'tier2', duration: 'yearly' },  // ₹5999
+
+        'tier3-weekly': { amount: 39900, plan: 'tier3', duration: 'weekly' },   // ₹399
+        'tier3-monthly': { amount: 99900, plan: 'tier3', duration: 'monthly' }, // ₹999
+        'tier3-yearly': { amount: 999900, plan: 'tier3', duration: 'yearly' },  // ₹9999
+    }
 };
 
 router.use(authMiddleware);
@@ -34,7 +51,21 @@ router.use(authMiddleware);
 router.post('/create-order', async (req, res) => {
     try {
         const { planId } = req.body;
-        const selectedPlan = PLANS[planId];
+
+        // Detect user's country from various sources
+        // Priority: 1) User profile, 2) Request headers, 3) Default to international
+        const db = getDB();
+        const users = db.collection('users');
+        const user = await users.findOne({ _id: new ObjectId(req.user.userId) });
+
+        // Check user's stored country preference or detect from headers
+        const userCountry = user?.country || req.headers['cf-ipcountry'] || req.headers['x-vercel-ip-country'] || 'US';
+        const isIndianUser = userCountry === 'IN';
+
+        // Select currency based on location
+        const currency = isIndianUser ? 'INR' : 'USD';
+        const currencyKey = isIndianUser ? 'inr' : 'usd';
+        const selectedPlan = PLANS[currencyKey][planId];
 
         if (!selectedPlan) {
             return res.status(400).json({ error: 'Invalid plan selected' });
@@ -42,12 +73,13 @@ router.post('/create-order', async (req, res) => {
 
         const options = {
             amount: selectedPlan.amount,
-            currency: 'USD',
+            currency: currency,
             receipt: `rcpt_${Date.now().toString().slice(-8)}_${req.user.userId.toString().slice(-6)}`,
             notes: {
                 userId: req.user.userId,
                 planId: planId,
-                planType: selectedPlan.plan
+                planType: selectedPlan.plan,
+                currency: currency
             }
         };
 
@@ -94,7 +126,13 @@ router.post('/verify-payment', async (req, res) => {
         // Payment successful, update user subscription
         const db = getDB();
         const users = db.collection('users');
-        const selectedPlan = PLANS[planId];
+
+        // Detect user's country to get correct pricing plan
+        const user = await users.findOne({ _id: new ObjectId(req.user.userId) });
+        const userCountry = user?.country || req.headers['cf-ipcountry'] || req.headers['x-vercel-ip-country'] || 'US';
+        const isIndianUser = userCountry === 'IN';
+        const currencyKey = isIndianUser ? 'inr' : 'usd';
+        const selectedPlan = PLANS[currencyKey][planId];
 
         // Calculate expiry date
         const expiryDate = new Date();

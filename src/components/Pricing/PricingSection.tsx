@@ -14,6 +14,22 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
     const { user } = useAuth();
     const [billingPeriod, setBillingPeriod] = useState<'weekly' | 'monthly' | 'yearly'>('monthly');
     const [loading, setLoading] = useState<string | null>(null);
+    const [isIndianUser, setIsIndianUser] = useState(false);
+
+    useEffect(() => {
+        // Detect user's location
+        // Try to get timezone first, then fallback to navigator language
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const language = navigator.language;
+
+        // Check if user is likely from India
+        const isIndia = timezone?.includes('Asia/Kolkata') ||
+            timezone?.includes('Asia/Calcutta') ||
+            language?.startsWith('hi') ||
+            language?.startsWith('en-IN');
+
+        setIsIndianUser(isIndia);
+    }, []);
 
     useEffect(() => {
         // Load Razorpay script
@@ -87,11 +103,21 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
         }
     };
 
+    // Dual currency pricing
     const prices = {
-        weekly: { tier1: '$1.99', tier2: '$3.99', tier3: '$6.99' },
-        monthly: { tier1: '$4.99', tier2: '$9.99', tier3: '$14.99' },
-        yearly: { tier1: '$39', tier2: '$79', tier3: '$129' },
+        usd: {
+            weekly: { tier1: '$1.99', tier2: '$3.99', tier3: '$6.99' },
+            monthly: { tier1: '$4.99', tier2: '$9.99', tier3: '$14.99' },
+            yearly: { tier1: '$39', tier2: '$79', tier3: '$129' },
+        },
+        inr: {
+            weekly: { tier1: '₹99', tier2: '₹199', tier3: '₹399' },
+            monthly: { tier1: '₹299', tier2: '₹599', tier3: '₹999' },
+            yearly: { tier1: '₹2,999', tier2: '₹5,999', tier3: '₹9,999' },
+        }
     };
+
+    const currencyKey = isIndianUser ? 'inr' : 'usd';
 
     return (
         <section className={compact ? "" : "py-8 sm:py-16 px-4 sm:px-6 lg:px-8 bg-gray-50"} id={compact ? undefined : "pricing"}>
@@ -161,7 +187,7 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
                     />
                     <PricingCard
                         title="Basic"
-                        price={prices[billingPeriod].tier1}
+                        price={prices[currencyKey][billingPeriod].tier1}
                         period={billingPeriod.slice(0, -2)} // week/month/year
                         planType="tier1"
                         currentPlan={user?.subscription?.plan}
@@ -177,7 +203,7 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
                     />
                     <PricingCard
                         title="Pro"
-                        price={prices[billingPeriod].tier2}
+                        price={prices[currencyKey][billingPeriod].tier2}
                         period={billingPeriod.slice(0, -2)}
                         planType="tier2"
                         currentPlan={user?.subscription?.plan}
@@ -194,7 +220,7 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
                     />
                     <PricingCard
                         title="Unlimited"
-                        price={prices[billingPeriod].tier3}
+                        price={prices[currencyKey][billingPeriod].tier3}
                         period={billingPeriod.slice(0, -2)}
                         planType="tier3"
                         currentPlan={user?.subscription?.plan}
