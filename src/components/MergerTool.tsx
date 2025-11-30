@@ -655,7 +655,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                                         canEdit={canEdit}
                                     />
                                     {!canPreview && (
-                                        <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-center justify-center z-10 rounded-xl border border-gray-200">
+                                        <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-center justify-center z-[60] rounded-xl border border-gray-200">
                                             <div className="text-center p-6 bg-white rounded-xl shadow-lg border border-gray-100">
                                                 <LockIcon className="w-8 h-8 text-blue-600 mx-auto mb-3" />
                                                 <h3 className="text-lg font-semibold text-gray-900 mb-1">Preview Locked</h3>
