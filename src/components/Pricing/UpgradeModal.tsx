@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { XIcon, LockIcon, UploadCloudIcon } from 'lucide-react';
 import { PricingSection } from './PricingSection';
 
@@ -26,7 +27,7 @@ export function UpgradeModal({ isOpen, onClose, reason, featureName, limit }: Up
 
     if (!isOpen) return null;
 
-    return (
+    return createPortal(
         <div
             className="fixed inset-0 z-[10000] flex items-start justify-center p-4 bg-black/50 backdrop-blur-sm overflow-y-auto"
             onClick={onClose}
@@ -71,6 +72,7 @@ export function UpgradeModal({ isOpen, onClose, reason, featureName, limit }: Up
                     <PricingSection compact hideHeader />
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
