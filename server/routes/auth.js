@@ -304,4 +304,45 @@ router.post('/google', async (req, res) => {
     }
 });
 
+// Delete Account
+router.delete('/delete', authMiddleware, async (req, res) => {
+    try {
+        const db = getDB();
+        const users = db.collection('users');
+        const files = db.collection('files');
+        const userId = toObjectId(req.user.userId, 'User ID');
+
+        // 1. Delete all user files
+        const fileDeleteResult = await files.deleteMany({ userId });
+        console.log(`Deleted ${fileDeleteResult.deletedCount} files for user ${userId}`);
+
+        // 2. Delete user account
+        const userDeleteResult = await users.deleteOne({ _id: userId });
+
+        if (userDeleteResult.deletedCount === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // 3. Log audit event
+        await logAuditEvent(
+            userId.toString(),
+            req.user.email,
+            AuditEventType.USER_ACTION,
+            req.ip,
+            req.headers['user-agent'],
+            true,
+            { action: 'account_deleted', filesDeleted: fileDeleteResult.deletedCount }
+        );
+
+        res.json({
+            message: 'Account and all associated data deleted successfully',
+            filesDeleted: fileDeleteResult.deletedCount
+        });
+
+    } catch (error) {
+        console.error('Delete account error:', error);
+        res.status(500).json({ error: 'Failed to delete account' });
+    }
+});
+
 export default router;
