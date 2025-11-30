@@ -5,7 +5,7 @@ import { PricingSection } from './PricingSection';
 interface UpgradeModalProps {
     isOpen: boolean;
     onClose: () => void;
-    reason: 'limit' | 'feature';
+    reason: 'limit' | 'feature' | 'general';
     featureName?: string;
     limit?: number;
 }
@@ -54,12 +54,16 @@ export function UpgradeModal({ isOpen, onClose, reason, featureName, limit }: Up
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">
                         {reason === 'limit'
                             ? `You've reached your daily limit of ${limit} uploads`
-                            : `Unlock ${featureName}`}
+                            : reason === 'general'
+                                ? "Upgrade Your Plan"
+                                : `Unlock ${featureName}`}
                     </h2>
                     <p className="text-gray-600 max-w-md mx-auto">
                         {reason === 'limit'
                             ? "Upgrade your plan to upload more files and unlock premium features."
-                            : `The ${featureName} feature is available on our premium plans. Upgrade now to access it.`}
+                            : reason === 'general'
+                                ? "Choose the plan that best fits your needs to unlock more features and limits."
+                                : `The ${featureName} feature is available on our premium plans. Upgrade now to access it.`}
                     </p>
                 </div>
 

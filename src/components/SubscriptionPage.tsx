@@ -156,8 +156,7 @@ export function SubscriptionPage() {
                 <UpgradeModal
                     isOpen={showUpgradeModal}
                     onClose={() => setShowUpgradeModal(false)}
-                    reason="feature"
-                    featureName="Plan Upgrade"
+                    reason="general"
                 />
             </div>
         </div>
