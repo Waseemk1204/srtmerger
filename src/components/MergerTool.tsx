@@ -165,12 +165,10 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
 
                     if (!serverCheck.allowed) {
                         if (serverCheck.requiresLogin) {
-                            // This device has been used with an account before
-                            setUpgradeReason('limit');
-                            setUpgradeLimit(4);
-                            setShowUpgradeModal(true);
-                            alert('This device has been used with an account. Please log in to continue.');
+                            // This device has been used with an account before - redirect to login
                             setIsProcessing(false);
+                            // Navigate to login page
+                            window.location.href = '/?view=login';
                             return;
                         }
                         // Regular limit exceeded
