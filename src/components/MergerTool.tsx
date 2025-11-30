@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { SparklesIcon, LockIcon } from 'lucide-react';
 import { UploadArea } from './UploadArea';
 import { FileList } from './FileList';
@@ -34,6 +34,13 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [edits, setEdits] = useState<Record<string, { text?: string; start?: string; end?: string }>>({}); // Key: fileId-blockIndex
+    const topRef = useRef<HTMLDivElement>(null);
+
+    const handleStartNewMerge = () => {
+        handleClearFiles();
+        // Scroll to top of tool for better UX
+        topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
 
 
     const handleShowToast = (message: string) => {
@@ -578,7 +585,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
     const canMerge = files.length >= 1;
 
     return (
-        <section id="merger-tool" className="px-4 pb-8">
+        <section id="merger-tool" className="px-4 pb-8" ref={topRef}>
             <div className="max-w-5xl mx-auto">
                 <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
                     <h2 className="sr-only">Merge SRT Files</h2>
@@ -753,7 +760,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                                         </button>
 
                                         <button
-                                            onClick={handleClearFiles}
+                                            onClick={handleStartNewMerge}
                                             className="px-8 py-3 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold rounded-lg shadow-sm transition-all flex items-center gap-2"
                                         >
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
