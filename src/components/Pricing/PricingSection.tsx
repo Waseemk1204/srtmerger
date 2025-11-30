@@ -14,7 +14,37 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
     const { user } = useAuth();
     const [billingPeriod, setBillingPeriod] = useState<'weekly' | 'monthly' | 'yearly'>('monthly');
     const [loading, setLoading] = useState<string | null>(null);
-    const [isIndianUser, setIsIndianUser] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+    // Success Modal Component
+    const SuccessModal = () => (
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-scale-in relative overflow-hidden">
+                {/* Confetti/Success Decoration */}
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-400 to-emerald-500"></div>
+
+                <div className="text-center">
+                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce-small">
+                        <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Subscription Activated!</h3>
+                    <p className="text-gray-600 mb-8">
+                        Thank you for upgrading. Your account has been successfully updated with premium features.
+                    </p>
+
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="w-full px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg shadow-green-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                        Continue to Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
 
     useEffect(() => {
         // Detect user's location
@@ -78,8 +108,9 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
                             razorpay_signature: response.razorpay_signature,
                             planId: planId // Required for server-side verification logic
                         });
-                        alert('Payment successful! Subscription activated.');
-                        window.location.reload();
+                        setShowSuccessModal(true);
+                        // alert('Payment successful! Subscription activated.');
+                        // window.location.reload();
                     } catch (error) {
                         alert('Payment verification failed');
                     }
@@ -237,6 +268,7 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
                     />
                 </div>
             </div>
+            {showSuccessModal && <SuccessModal />}
         </section>
     );
 }
