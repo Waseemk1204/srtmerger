@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { PricingCard } from './PricingCard';
 import { useAuth } from '../../contexts/AuthContext';
 import { api } from '../../api/client';
@@ -18,7 +19,7 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     // Success Modal Component
-    const SuccessModal = () => (
+    const SuccessModal = () => createPortal(
         <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
             <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-scale-in relative overflow-hidden">
                 {/* Confetti/Success Decoration */}
@@ -44,7 +45,8 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 
     useEffect(() => {
