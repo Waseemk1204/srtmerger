@@ -30,7 +30,7 @@ export function SubscriptionPage() {
     };
 
     const planName = user?.subscription?.plan || 'free';
-    const isPremium = planName !== 'free';
+    const isPremium = ['tier1', 'tier2', 'tier3'].includes(planName);
     const expiryDate = user?.subscription?.expiryDate ? new Date(user.subscription.expiryDate).toLocaleDateString() : null;
 
     return (
