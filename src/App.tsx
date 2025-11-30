@@ -1,23 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import { PricingSection } from './components/Pricing/PricingSection';
-import { MergerTool } from './components/MergerTool';
-import { UsageCard } from './components/UsageCard';
+import { useAuth } from './contexts/AuthContext';
+import { blogPosts } from './data/blogPosts';
+
+// Critical components - loaded immediately
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Footer } from './components/Footer';
-import { PrivacyPolicy } from './components/PrivacyPolicy';
-import { HowItWorks } from './components/HowItWorks';
-import { Blog } from './components/Blog';
-import { BlogPost } from './components/BlogPost';
-import { Login } from './components/Login';
-import { Signup } from './components/Signup';
-import { Dashboard } from './components/Dashboard';
-import { FAQ } from './components/FAQ';
-import { useAuth } from './contexts/AuthContext';
-import { blogPosts } from './data/blogPosts';
+
+// Lazy load heavy route components
+const PricingSection = lazy(() => import('./components/Pricing/PricingSection').then(m => ({ default: m.PricingSection })));
+const MergerTool = lazy(() => import('./components/MergerTool').then(m => ({ default: m.MergerTool })));
+const UsageCard = lazy(() => import('./components/UsageCard').then(m => ({ default: m.UsageCard })));
+const PrivacyPolicy = lazy(() => import('./components/PrivacyPolicy').then(m => ({ default: m.PrivacyPolicy })));
+const HowItWorks = lazy(() => import('./components/HowItWorks').then(m => ({ default: m.HowItWorks })));
+const Blog = lazy(() => import('./components/Blog').then(m => ({ default: m.Blog })));
+const BlogPost = lazy(() => import('./components/BlogPost').then(m => ({ default: m.BlogPost })));
+const Login = lazy(() => import('./components/Login').then(m => ({ default: m.Login })));
+const Signup = lazy(() => import('./components/Signup').then(m => ({ default: m.Signup })));
+const Dashboard = lazy(() => import('./components/Dashboard').then(m => ({ default: m.Dashboard })));
+const FAQ = lazy(() => import('./components/FAQ').then(m => ({ default: m.FAQ })));
 
 type View = 'home' | 'privacy' | 'how-it-works' | 'blog' | 'blog-post' | 'login' | 'signup' | 'dashboard';
 
@@ -206,29 +210,29 @@ function App() {
     );
   };
 
-  const hideNavbar = view === 'dashboard' || view === 'login' || view === 'signup';
-
-  return (
-    <div className="min-h-screen w-full bg-zinc-50 font-sans text-zinc-900 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
-      {!hideNavbar && <Navbar onNavigate={(page) => navigate(page as View)} />}
-
-      {renderContent()}
-
-      {!hideNavbar && <Footer onOpenPrivacy={() => navigate('privacy')} />}
-
-
+  // Loading fallback for lazy components
+  const LoadingFallback = () => (
+    <div className="min-h-[400px] flex items-center justify-center">
+      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
     </div>
   );
-}
 
-function AppWrapper() {
   return (
     <ErrorBoundary>
-      <App />
-      <Analytics />
-      <SpeedInsights />
+      <div className="min-h-screen flex flex-col bg-zinc-50">
+        <Navbar onNavigate={(page) => navigate(page as View)} />
+
+        <Suspense fallback={<LoadingFallback />}>
+          {renderContent()}
+        </Suspense>
+
+        <Footer onOpenPrivacy={() => navigate('privacy')} />
+
+        <Analytics />
+        <SpeedInsights />
+      </div>
     </ErrorBoundary>
   );
 }
 
-export default AppWrapper;
+export default App;

@@ -16,11 +16,37 @@
   <meta property="og:description"
     content="Easily merge multiple SRT files into one seamless timeline. No sign-up required. Secure, fast, and free." />
   <meta property="og:type" content="website" />
+  
+  <!-- DNS Prefetch for external domains (early connection setup) -->
+  <link rel="dns-prefetch" href="https://accounts.google.com">
+  <link rel="dns-prefetch" href="https://api.razorpay.com">
+  
+  <!-- Preconnect to critical origins -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- Async font loading - doesn't block FCP -->
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
-    rel="stylesheet">
+    rel="stylesheet"
+    media="print"
+    onload="this.media='all'"
+  >
+  <noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    >
+  </noscript>
+  
+  <!-- Fallback system fonts for instant text rendering -->
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  </style>
 </head>
 
 <body>
