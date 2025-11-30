@@ -61,10 +61,13 @@ export const incrementUsage = async (userId, count = 1) => {
     const users = db.collection('users');
     const now = new Date();
 
+    // Validate and convert userId
+    const userObjectId = toObjectId(userId, 'User ID');
+
     // Use atomic findOneAndUpdate to prevent race conditions
     const result = await users.findOneAndUpdate(
         {
-            _id: new ObjectId(userId),
+            _id: userObjectId,
             $or: [
                 { 'usage.firstMergeTime': { $exists: false } },
                 {
@@ -87,7 +90,7 @@ export const incrementUsage = async (userId, count = 1) => {
     // If no document was updated, window hasn't expired - increment within window
     if (!result.value) {
         await users.updateOne(
-            { _id: new ObjectId(userId) },
+            { _id: userObjectId },
             {
                 $inc: { 'usage.uploadCount': count },
                 $unset: { 'usage.date': '' }
