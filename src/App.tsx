@@ -15,11 +15,12 @@ import { BlogPost } from './components/BlogPost';
 import { Login } from './components/Login';
 import { Signup } from './components/Signup';
 import { Dashboard } from './components/Dashboard';
+import { SubscriptionPage } from './components/SubscriptionPage';
 import { FAQ } from './components/FAQ';
 import { useAuth } from './contexts/AuthContext';
 import { blogPosts } from './data/blogPosts';
 
-type View = 'home' | 'privacy' | 'how-it-works' | 'blog' | 'blog-post' | 'login' | 'signup' | 'dashboard';
+type View = 'home' | 'privacy' | 'how-it-works' | 'blog' | 'blog-post' | 'login' | 'signup' | 'dashboard' | 'subscription';
 
 function App() {
   const { isAuthenticated, loading: authLoading } = useAuth();
@@ -32,7 +33,7 @@ function App() {
     const viewParam = params.get('view') as typeof view;
     const postIdParam = params.get('postId');
 
-    if (viewParam && ['home', 'privacy', 'how-it-works', 'blog', 'blog-post', 'login', 'signup', 'dashboard'].includes(viewParam)) {
+    if (viewParam && ['home', 'privacy', 'how-it-works', 'blog', 'blog-post', 'login', 'signup', 'dashboard', 'subscription'].includes(viewParam)) {
       setView(viewParam);
       if (viewParam === 'blog-post' && postIdParam) {
         setSelectedPostId(postIdParam);
@@ -124,6 +125,11 @@ function App() {
     // Dashboard (authenticated users only)
     if (view === 'dashboard' && isAuthenticated) {
       return <Dashboard />;
+    }
+
+    // Subscription Page (authenticated users only)
+    if (view === 'subscription' && isAuthenticated) {
+      return <SubscriptionPage onBack={() => navigate('dashboard')} />;
     }
 
     if (view === 'privacy') {

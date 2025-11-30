@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { SavedFilesSection } from './SavedFilesSection';
 import { MergerTool } from './MergerTool';
 import { UpgradeModal } from './Pricing/UpgradeModal';
-import { api } from '../api/client';
+
 
 export function Dashboard() {
     const { user, logout, refreshUser } = useAuth();
@@ -14,20 +14,7 @@ export function Dashboard() {
     const [toastMessage, setToastMessage] = useState('');
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
-    const handleCancelSubscription = async () => {
-        if (!confirm('Are you sure you want to cancel your subscription? You will lose premium features immediately.')) {
-            return;
-        }
 
-        try {
-            await api.cancelSubscription();
-            handleShowToast('Subscription canceled successfully');
-            if (refreshUser) await refreshUser();
-        } catch (error) {
-            console.error('Failed to cancel subscription:', error);
-            handleShowToast('Failed to cancel subscription');
-        }
-    };
 
     const handleShowToast = (message: string) => {
         setToastMessage(message);
@@ -141,14 +128,7 @@ export function Dashboard() {
                                         <div className="mt-2 text-sm text-blue-300/80">
                                             No limits. No boundaries.
                                         </div>
-                                        <div className="mt-4 flex gap-3">
-                                            <button
-                                                onClick={handleCancelSubscription}
-                                                className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg transition-colors border border-white/20"
-                                            >
-                                                Cancel Subscription
-                                            </button>
-                                        </div>
+
                                     </div>
 
                                     {/* Infinity Animation (Kept as requested) */}
@@ -221,14 +201,7 @@ export function Dashboard() {
                         {/* Upgrade Button for Free/Tier1/Tier2 */}
                         {user?.subscription?.plan !== 'tier3' && (
                             <div className="mt-6 pt-6 border-t border-gray-100 flex justify-end gap-3">
-                                {user?.subscription?.plan !== 'free' && (
-                                    <button
-                                        onClick={handleCancelSubscription}
-                                        className="text-sm text-red-600 hover:text-red-700 font-medium px-4 py-2 hover:bg-red-50 rounded-lg transition-colors"
-                                    >
-                                        Cancel Subscription
-                                    </button>
-                                )}
+
                                 <button
                                     onClick={() => setShowUpgradeModal(true)}
                                     className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors shadow-lg shadow-gray-900/20"
