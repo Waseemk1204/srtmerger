@@ -15,11 +15,30 @@ router.post('/merge', async (req, res) => {
         const { fileCount } = req.body;
         const count = fileCount || 1; // Default to 1 if not provided
 
+        // Log for debugging
+        console.log('Track merge request:', {
+            userId: req.user?.userId,
+            fileCount: count,
+            userExists: !!req.user
+        });
+
+        if (!req.user || !req.user.userId) {
+            console.error('Track merge error: No user ID in request');
+            return res.status(401).json({ error: 'User ID not found in token' });
+        }
+
         await incrementUsage(req.user.userId, count);
         res.json({ success: true });
     } catch (error) {
-        console.error('Track merge error:', error);
-        res.status(500).json({ error: 'Failed to track merge operation' });
+        console.error('Track merge error:', {
+            message: error.message,
+            stack: error.stack,
+            userId: req.user?.userId
+        });
+        res.status(500).json({
+            error: 'Failed to track merge operation',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 });
 

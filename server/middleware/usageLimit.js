@@ -57,45 +57,60 @@ export const usageLimit = async (req, res, next) => {
 };
 
 export const incrementUsage = async (userId, count = 1) => {
-    const db = getDB();
-    const users = db.collection('users');
-    const now = new Date();
+    try {
+        const db = getDB();
+        const users = db.collection('users');
+        const now = new Date();
 
-    // Validate and convert userId
-    const userObjectId = toObjectId(userId, 'User ID');
+        // Validate and convert userId
+        const userObjectId = toObjectId(userId, 'User ID');
 
-    // Use atomic findOneAndUpdate to prevent race conditions
-    const result = await users.findOneAndUpdate(
-        {
-            _id: userObjectId,
-            $or: [
-                { 'usage.firstMergeTime': { $exists: false } },
-                {
-                    'usage.firstMergeTime': {
-                        $lt: new Date(Date.now() - 24 * 60 * 60 * 1000)
-                    }
-                }
-            ]
-        },
-        {
-            $set: {
-                'usage.uploadCount': count,
-                'usage.firstMergeTime': now.toISOString()
-            },
-            $unset: { 'usage.date': '' }
-        },
-        { returnDocument: 'after' }
-    );
+        console.log('Incrementing usage:', { userId, count, objectId: userObjectId.toString() });
 
-    // If no document was updated, window hasn't expired - increment within window
-    if (!result.value) {
-        await users.updateOne(
-            { _id: userObjectId },
+        // Use atomic findOneAndUpdate to prevent race conditions
+        const result = await users.findOneAndUpdate(
             {
-                $inc: { 'usage.uploadCount': count },
+                _id: userObjectId,
+                $or: [
+                    { 'usage.firstMergeTime': { $exists: false } },
+                    {
+                        'usage.firstMergeTime': {
+                            $lt: new Date(Date.now() - 24 * 60 * 60 * 1000)
+                        }
+                    }
+                ]
+            },
+            {
+                $set: {
+                    'usage.uploadCount': count,
+                    'usage.firstMergeTime': now.toISOString()
+                },
                 $unset: { 'usage.date': '' }
-            }
+            },
+            { returnDocument: 'after' }
         );
+
+        // If no document was updated, window hasn't expired - increment within window
+        if (!result.value) {
+            await users.updateOne(
+                { _id: userObjectId },
+                {
+                    $inc: { 'usage.uploadCount': count },
+                    $unset: { 'usage.date': '' }
+                }
+            );
+            console.log('Usage incremented (within window)');
+        } else {
+            console.log('Usage reset (new window)');
+        }
+    } catch (error) {
+        console.error('incrementUsage error:', {
+            message: error.message,
+            stack: error.stack,
+            userId,
+            count
+        });
+        throw error; // Re-throw to be caught by the caller
     }
 };
 
