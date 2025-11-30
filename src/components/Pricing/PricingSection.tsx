@@ -14,6 +14,7 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
     const { user } = useAuth();
     const [billingPeriod, setBillingPeriod] = useState<'weekly' | 'monthly' | 'yearly'>('monthly');
     const [loading, setLoading] = useState<string | null>(null);
+    const [isIndianUser, setIsIndianUser] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     // Success Modal Component
