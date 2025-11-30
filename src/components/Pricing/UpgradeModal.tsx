@@ -28,7 +28,7 @@ export function UpgradeModal({ isOpen, onClose, reason, featureName, limit }: Up
 
     return (
         <div
-            className="fixed inset-0 z-[9999] flex items-start justify-center p-4 bg-black/50 backdrop-blur-sm overflow-y-auto"
+            className="fixed inset-0 z-[10000] flex items-start justify-center p-4 bg-black/50 backdrop-blur-sm overflow-y-auto"
             onClick={onClose}
         >
             <div
