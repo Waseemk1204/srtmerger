@@ -28,6 +28,10 @@ export const validateEnvironment = () => {
         'GOOGLE_CLIENT_ID': {
             minLength: 20,
             description: 'Google OAuth client ID'
+        },
+        'GOOGLE_CLIENT_SECRET': {
+            minLength: 20,
+            description: 'Google OAuth client secret'
         }
     };
 
