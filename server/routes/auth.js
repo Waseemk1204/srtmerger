@@ -1,10 +1,12 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
 import { ObjectId } from 'mongodb';
 import { getDB } from '../config/db.js';
 import { loginLimiter, signupLimiter } from '../middleware/rateLimit.js';
 import authMiddleware from '../middleware/auth.js';
+import { toObjectId } from '../utils/objectIdValidator.js';
 import { linkFingerprintToUser } from '../middleware/usageLimit.js';
 import { logAuditEvent, AuditEventType } from '../utils/auditLogger.js';
 
@@ -164,7 +166,7 @@ router.get('/me', authMiddleware, async (req, res) => {
         const users = db.collection('users');
 
         const user = await users.findOne(
-            { _id: new ObjectId(req.user.userId) },
+            { _id: toObjectId(req.user.userId, 'User ID') },
             { projection: { passwordHash: 0 } }
         );
 

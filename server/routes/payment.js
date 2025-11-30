@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import { ObjectId } from 'mongodb';
 import { getDB } from '../config/db.js';
 import authMiddleware from '../middleware/auth.js';
+import { toObjectId } from '../utils/objectIdValidator.js';
 
 const router = express.Router();
 
@@ -56,7 +57,7 @@ router.post('/create-order', async (req, res) => {
         // Priority: 1) User profile, 2) Request headers, 3) Default to international
         const db = getDB();
         const users = db.collection('users');
-        const user = await users.findOne({ _id: new ObjectId(req.user.userId) });
+        const user = await users.findOne({ _id: toObjectId(req.user.userId, 'User ID') });
 
         // Check user's stored country preference or detect from headers
         const userCountry = user?.country || req.headers['cf-ipcountry'] || req.headers['x-vercel-ip-country'] || 'US';
@@ -128,7 +129,7 @@ router.post('/verify-payment', async (req, res) => {
         const users = db.collection('users');
 
         // Detect user's country to get correct pricing plan
-        const user = await users.findOne({ _id: new ObjectId(req.user.userId) });
+        const user = await users.findOne({ _id: toObjectId(req.user.userId, 'User ID') });
         const userCountry = user?.country || req.headers['cf-ipcountry'] || req.headers['x-vercel-ip-country'] || 'US';
         const isIndianUser = userCountry === 'IN';
         const currencyKey = isIndianUser ? 'inr' : 'usd';
@@ -141,7 +142,7 @@ router.post('/verify-payment', async (req, res) => {
         if (selectedPlan.duration === 'yearly') expiryDate.setFullYear(expiryDate.getFullYear() + 1);
 
         await users.updateOne(
-            { _id: new ObjectId(req.user.userId) },
+            { _id: toObjectId(req.user.userId, 'User ID') },
             {
                 $set: {
                     subscription: {
@@ -168,7 +169,7 @@ router.post('/cancel-subscription', async (req, res) => {
         const users = db.collection('users');
 
         await users.updateOne(
-            { _id: new ObjectId(req.user.userId) },
+            { _id: toObjectId(req.user.userId, 'User ID') },
             {
                 $set: {
                     'subscription.plan': 'free',

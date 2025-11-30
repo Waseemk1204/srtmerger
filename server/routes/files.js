@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import { getDB } from '../config/db.js';
 import authMiddleware from '../middleware/auth.js';
 import { getCurrentPlan, canAccessFeature, PLAN_LIMITS } from '../utils/planUtils.js';
+import { toObjectId } from '../utils/objectIdValidator.js';
 
 const router = express.Router();
 
@@ -31,7 +32,7 @@ router.post('/', async (req, res) => {
         const users = db.collection('users');
 
         // SECURITY: Verify upload limits (prevents API bypass)
-        const user = await users.findOne({ _id: new ObjectId(req.user.userId) });
+        const user = await users.findOne({ _id: toObjectId(req.user.userId, 'User ID') });
         const currentPlan = getCurrentPlan(user);
         const limit = PLAN_LIMITS[currentPlan];
 
@@ -53,7 +54,7 @@ router.post('/', async (req, res) => {
         }
 
         const result = await files.insertOne({
-            userId: new ObjectId(req.user.userId),
+            userId: toObjectId(req.user.userId, 'User ID'),
             filename,
             originalFilename: filename,
             content, // Plain text SRT content
@@ -81,7 +82,7 @@ router.get('/', async (req, res) => {
 
         const userFiles = await files
             .find(
-                { userId: new ObjectId(req.user.userId) },
+                { userId: toObjectId(req.user.userId, 'User ID') },
                 { projection: { content: 0 } } // Don't send content in list
             )
             .sort({ createdAt: -1 })
@@ -101,8 +102,8 @@ router.get('/:id', async (req, res) => {
         const files = db.collection('files');
 
         const file = await files.findOne({
-            _id: new ObjectId(req.params.id),
-            userId: new ObjectId(req.user.userId)
+            _id: toObjectId(req.params.id, 'File ID'),
+            userId: toObjectId(req.user.userId, 'User ID')
         });
 
         if (!file) {
@@ -130,7 +131,7 @@ router.put('/:id', async (req, res) => {
         const users = db.collection('users');
 
         // Check if user has rename feature access (tier1+)
-        const user = await users.findOne({ _id: new ObjectId(req.user.userId) });
+        const user = await users.findOne({ _id: toObjectId(req.user.userId, 'User ID') });
         if (!canAccessFeature(user, 'rename')) {
             return res.status(403).json({
                 error: 'Rename feature requires a premium plan',
@@ -141,8 +142,8 @@ router.put('/:id', async (req, res) => {
 
         const result = await files.updateOne(
             {
-                _id: new ObjectId(req.params.id),
-                userId: new ObjectId(req.user.userId)
+                _id: toObjectId(req.params.id, 'File ID'),
+                userId: toObjectId(req.user.userId, 'User ID')
             },
             {
                 $set: {
@@ -170,8 +171,8 @@ router.delete('/:id', async (req, res) => {
         const files = db.collection('files');
 
         const result = await files.deleteOne({
-            _id: new ObjectId(req.params.id),
-            userId: new ObjectId(req.user.userId)
+            _id: toObjectId(req.params.id, 'File ID'),
+            userId: toObjectId(req.user.userId, 'User ID')
         });
 
         if (result.deletedCount === 0) {

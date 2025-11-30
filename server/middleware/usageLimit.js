@@ -2,6 +2,7 @@ import { getDB } from '../config/db.js';
 import { ObjectId } from 'mongodb';
 import crypto from 'crypto';
 import { getCurrentPlan, PLAN_LIMITS } from '../utils/planUtils.js';
+import { toObjectId } from '../utils/objectIdValidator.js';
 
 
 
@@ -10,7 +11,7 @@ export const usageLimit = async (req, res, next) => {
         const db = getDB();
         const users = db.collection('users');
 
-        const user = await users.findOne({ _id: new ObjectId(req.user.userId) });
+        const user = await users.findOne({ _id: toObjectId(req.user.userId, 'User ID') });
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
