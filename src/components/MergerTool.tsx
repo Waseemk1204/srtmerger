@@ -122,9 +122,10 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 const savedState = localStorage.getItem('dashboard-merger-state');
                 if (savedState) {
                     const state = JSON.parse(savedState);
-                    // Check if state is not too old (24 hours)
+                    // Check if state is not too old (6 hours for better performance)
                     const age = Date.now() - (state.timestamp || 0);
-                    if (age < 24 * 60 * 60 * 1000) {
+                    const SIX_HOURS = 6 * 60 * 60 * 1000; // 21600000 ms
+                    if (age < SIX_HOURS) {
                         setFiles(state.files || []);
                         setComputedOffsets(state.computedOffsets || []);
                         setEdits(state.edits || {});
@@ -197,14 +198,12 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 }
             }
 
-            // Check if 24h window has passed since first merge
+            // Check if 24h window has passed since first upload
             isExpired = firstMergeTime ?
                 (Date.now() - new Date(firstMergeTime).getTime()) >= 24 * 60 * 60 * 1000 : false;
 
             // If expired or no timestamp, count is effectively 0
             const effectiveCount = isExpired || !firstMergeTime ? 0 : currentCount;
-            const totalFilesAfterUpload = files.length + selectedFiles.length;
-            const remainingLimit = limit - effectiveCount;
 
             console.log('Upload Limit Check (24h window):', {
                 userType: user ? 'authenticated' : 'anonymous',
@@ -213,16 +212,16 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 currentCount,
                 effectiveCount,
                 limit,
-                remainingLimit,
-                totalFilesAfterUpload,
-                willBlock: totalFilesAfterUpload > remainingLimit
+                remainingUploads: limit - effectiveCount,
+                willBlock: effectiveCount >= limit
             });
 
-            // Check if total files (currently loaded + new) exceeds remaining limit
-            if (totalFilesAfterUpload > remainingLimit) {
+            // Check if user has exceeded upload limit (each upload action counts, not file count)
+            if (effectiveCount >= limit) {
                 setUpgradeReason('limit');
                 setUpgradeLimit(limit);
                 setShowUpgradeModal(true);
+                setIsProcessing(false);
                 return;
             }
 
@@ -499,6 +498,9 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 const { anonymousUsage } = await import('../utils/anonymousUsage');
                 anonymousUsage.increment(files.length);
             }
+
+            // Auto-clear files after successful merge to allow fresh start
+            handleClearFiles();
         } catch (error) {
             handleShowToast(`Merge failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
         } finally {
