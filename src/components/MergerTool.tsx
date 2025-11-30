@@ -22,9 +22,10 @@ interface MergerToolProps {
     showDiagnostics?: boolean;
     initialFiles?: any[];
     onShowToast?: (message: string) => void;
+    showDownloadButton?: boolean; // Show download button (true for home page, false for dashboard)
 }
 
-export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles = [], onShowToast }: MergerToolProps) {
+export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles = [], onShowToast, showDownloadButton = true }: MergerToolProps) {
     const { user, refreshUser } = useAuth();
     const [files, setFiles] = useState<FileWithContent[]>([]);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -731,22 +732,24 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                                     </div>
                                 </div>
 
-                                {/* Download Button */}
-                                <div className="mt-6 flex justify-center">
-                                    <button
-                                        onClick={() => {
-                                            const timestamp = new Date().toISOString().slice(0, 16).replace('T', '_').replace(/:/g, '-');
-                                            const filename = `merged_${timestamp}.srt`;
-                                            downloadFile(mergeResult.mergedSrt, filename, 'text/plain');
-                                        }}
-                                        className="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-lg transition-all flex items-center gap-2"
-                                    >
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                        </svg>
-                                        Download SRT
-                                    </button>
-                                </div>
+                                {/* Download Button - Only on home page */}
+                                {showDownloadButton && (
+                                    <div className="mt-6 flex justify-center">
+                                        <button
+                                            onClick={() => {
+                                                const timestamp = new Date().toISOString().slice(0, 16).replace('T', '_').replace(/:/g, '-');
+                                                const filename = `merged_${timestamp}.srt`;
+                                                downloadFile(mergeResult.mergedSrt, filename, 'text/plain');
+                                            }}
+                                            className="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-lg transition-all flex items-center gap-2"
+                                        >
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                            </svg>
+                                            Download SRT
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
