@@ -13,19 +13,19 @@ const razorpay = new Razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET?.trim()
 });
 
-// Plans Configuration
+// Plans Configuration (amounts in cents for USD)
 const PLANS = {
-    'tier1-weekly': { amount: 9900, plan: 'tier1', duration: 'weekly' },   // ₹99
-    'tier1-monthly': { amount: 29900, plan: 'tier1', duration: 'monthly' }, // ₹299
-    'tier1-yearly': { amount: 299900, plan: 'tier1', duration: 'yearly' },  // ₹2999
+    'tier1-weekly': { amount: 199, plan: 'tier1', duration: 'weekly' },     // $1.99
+    'tier1-monthly': { amount: 499, plan: 'tier1', duration: 'monthly' },   // $4.99
+    'tier1-yearly': { amount: 3900, plan: 'tier1', duration: 'yearly' },    // $39
 
-    'tier2-weekly': { amount: 19900, plan: 'tier2', duration: 'weekly' },   // ₹199
-    'tier2-monthly': { amount: 59900, plan: 'tier2', duration: 'monthly' }, // ₹599
-    'tier2-yearly': { amount: 599900, plan: 'tier2', duration: 'yearly' },  // ₹5999
+    'tier2-weekly': { amount: 399, plan: 'tier2', duration: 'weekly' },     // $3.99
+    'tier2-monthly': { amount: 999, plan: 'tier2', duration: 'monthly' },   // $9.99
+    'tier2-yearly': { amount: 7900, plan: 'tier2', duration: 'yearly' },    // $79
 
-    'tier3-weekly': { amount: 39900, plan: 'tier3', duration: 'weekly' },   // ₹399
-    'tier3-monthly': { amount: 99900, plan: 'tier3', duration: 'monthly' }, // ₹999
-    'tier3-yearly': { amount: 999900, plan: 'tier3', duration: 'yearly' },  // ₹9999
+    'tier3-weekly': { amount: 699, plan: 'tier3', duration: 'weekly' },     // $6.99
+    'tier3-monthly': { amount: 1499, plan: 'tier3', duration: 'monthly' },  // $14.99
+    'tier3-yearly': { amount: 12900, plan: 'tier3', duration: 'yearly' },   // $129
 };
 
 router.use(authMiddleware);
@@ -42,7 +42,7 @@ router.post('/create-order', async (req, res) => {
 
         const options = {
             amount: selectedPlan.amount,
-            currency: 'INR',
+            currency: 'USD',
             receipt: `rcpt_${Date.now().toString().slice(-8)}_${req.user.userId.toString().slice(-6)}`,
             notes: {
                 userId: req.user.userId,
