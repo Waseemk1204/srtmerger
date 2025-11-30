@@ -71,19 +71,23 @@ export function SubscriptionPage() {
                                                 )}
                                             </div>
                                         </div>
-                                        {isPremium ? (
-                                            <div className="text-right">
-                                                <div className="text-sm text-gray-500 mb-1">Renews on</div>
-                                                <div className="font-medium text-gray-900">{expiryDate}</div>
-                                            </div>
-                                        ) : (
-                                            <button
-                                                onClick={() => setShowUpgradeModal(true)}
-                                                className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm"
-                                            >
-                                                Upgrade Now
-                                            </button>
-                                        )}
+                                        <div className="flex flex-col items-end gap-3">
+                                            {isPremium && (
+                                                <div className="text-right">
+                                                    <div className="text-sm text-gray-500 mb-1">Renews on</div>
+                                                    <div className="font-medium text-gray-900">{expiryDate}</div>
+                                                </div>
+                                            )}
+
+                                            {planName !== 'tier3' && (
+                                                <button
+                                                    onClick={() => setShowUpgradeModal(true)}
+                                                    className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm"
+                                                >
+                                                    {isPremium ? 'Upgrade Plan' : 'Upgrade Now'}
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </section>
