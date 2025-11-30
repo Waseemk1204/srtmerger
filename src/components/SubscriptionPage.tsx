@@ -96,23 +96,58 @@ export function SubscriptionPage() {
                             <section>
                                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Plan Features</h2>
                                 <ul className="space-y-3">
+                                    {/* Upload Limit */}
                                     <li className="flex items-center text-gray-700">
                                         <CheckCircleIcon className="w-5 h-5 text-green-500 mr-3" />
                                         {planName === 'tier3' ? 'Unlimited daily uploads' :
                                             planName === 'tier2' ? '100 daily uploads' :
                                                 planName === 'tier1' ? '20 daily uploads' : '4 daily uploads'}
                                     </li>
+
+                                    {/* Basic Merging */}
                                     <li className="flex items-center text-gray-700">
                                         <CheckCircleIcon className="w-5 h-5 text-green-500 mr-3" />
-                                        {planName === 'free' ? 'Basic merge tools' : 'Advanced merge tools'}
+                                        Basic merging
                                     </li>
+
+                                    {/* File Renaming */}
                                     <li className="flex items-center text-gray-700">
                                         <CheckCircleIcon className={`w-5 h-5 mr-3 ${isPremium ? 'text-green-500' : 'text-gray-300'}`} />
-                                        {isPremium ? 'Priority support' : 'Standard support'}
+                                        <span className={!isPremium ? 'text-gray-400' : ''}>
+                                            Renaming
+                                        </span>
                                     </li>
+
+                                    {/* Timeline Alignment */}
+                                    <li className="flex items-center text-gray-700">
+                                        <CheckCircleIcon className={`w-5 h-5 mr-3 ${isPremium ? 'text-green-500' : 'text-gray-300'}`} />
+                                        <span className={!isPremium ? 'text-gray-400' : ''}>
+                                            Timeline Alignment
+                                        </span>
+                                    </li>
+
+                                    {/* Merge Preview */}
                                     <li className="flex items-center text-gray-700">
                                         <CheckCircleIcon className={`w-5 h-5 mr-3 ${['tier2', 'tier3'].includes(planName) ? 'text-green-500' : 'text-gray-300'}`} />
-                                        Advanced editing features
+                                        <span className={!['tier2', 'tier3'].includes(planName) ? 'text-gray-400' : ''}>
+                                            Merge Preview
+                                        </span>
+                                    </li>
+
+                                    {/* Text Editing */}
+                                    <li className="flex items-center text-gray-700">
+                                        <CheckCircleIcon className={`w-5 h-5 mr-3 ${planName === 'tier3' ? 'text-green-500' : 'text-gray-300'}`} />
+                                        <span className={planName !== 'tier3' ? 'text-gray-400' : ''}>
+                                            Text editing
+                                        </span>
+                                    </li>
+
+                                    {/* Priority Support */}
+                                    <li className="flex items-center text-gray-700">
+                                        <CheckCircleIcon className={`w-5 h-5 mr-3 ${planName === 'tier3' ? 'text-green-500' : 'text-gray-300'}`} />
+                                        <span className={planName !== 'tier3' ? 'text-gray-400' : ''}>
+                                            Priority Support
+                                        </span>
                                     </li>
                                 </ul>
                             </section>
