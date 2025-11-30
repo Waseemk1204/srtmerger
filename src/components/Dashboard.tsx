@@ -191,7 +191,7 @@ export function Dashboard() {
 
             {/* Merger Tool */}
             <div className="pt-8 relative z-10">
-                <MergerTool onFileSaved={loadFiles} on ShowToast={handleShowToast} showDownloadButton={false} />
+                <MergerTool onFileSaved={loadFiles} onShowToast={handleShowToast} showDownloadButton={false} />
             </div>
 
             {/* Saved Files Section */}
