@@ -2,7 +2,7 @@ import express from 'express';
 import { ObjectId } from 'mongodb';
 import { getDB } from '../config/db.js';
 import authMiddleware from '../middleware/auth.js';
-import { getCurrentPlan, canAccessFeature } from '../utils/planUtils.js';
+import { getCurrentPlan, canAccessFeature, PLAN_LIMITS } from '../utils/planUtils.js';
 
 const router = express.Router();
 
@@ -28,6 +28,29 @@ router.post('/', async (req, res) => {
 
         const db = getDB();
         const files = db.collection('files');
+        const users = db.collection('users');
+
+        // SECURITY: Verify upload limits (prevents API bypass)
+        const user = await users.findOne({ _id: new ObjectId(req.user.userId) });
+        const currentPlan = getCurrentPlan(user);
+        const limit = PLAN_LIMITS[currentPlan];
+
+        const hoursSinceFirst = user?.usage?.firstMergeTime
+            ? (Date.now() - new Date(user.usage.firstMergeTime).getTime()) / (1000 * 60 * 60)
+            : 25;
+
+        const effectiveCount = (hoursSinceFirst >= 24 || !user?.usage?.firstMergeTime)
+            ? 0
+            : (user?.usage?.uploadCount || 0);
+
+        if (effectiveCount >= limit) {
+            return res.status(403).json({
+                error: 'Upload limit reached',
+                code: 'LIMIT_REACHED',
+                current: effectiveCount,
+                limit
+            });
+        }
 
         const result = await files.insertOne({
             userId: new ObjectId(req.user.userId),
