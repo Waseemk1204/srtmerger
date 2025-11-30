@@ -1,10 +1,14 @@
 import app from './app.js';
 import { connectDB } from './config/db.js';
+import { validateEnvironment } from './utils/envValidation.js';
 
 const PORT = process.env.PORT || 3001;
 
 async function startServer() {
     try {
+        // Validate environment variables first
+        validateEnvironment();
+
         await connectDB();
 
         app.listen(PORT, () => {

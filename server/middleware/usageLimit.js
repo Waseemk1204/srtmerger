@@ -58,52 +58,38 @@ export const usageLimit = async (req, res, next) => {
 export const incrementUsage = async (userId, count = 1) => {
     const db = getDB();
     const users = db.collection('users');
-    const user = await users.findOne({ _id: new ObjectId(userId) });
-
     const now = new Date();
-    const firstMergeTime = user?.usage?.firstMergeTime ? new Date(user.usage.firstMergeTime) : null;
 
-    // Calculate hours since first merge
-    const hoursSinceFirst = firstMergeTime
-        ? (now - firstMergeTime) / (1000 * 60 * 60)
-        : 25; // 25 hours = past the 24h window, will trigger reset
-
-    console.log('incrementUsage - Rolling 24h window:', {
-        userId,
-        count,
-        firstMergeTime: firstMergeTime?.toISOString() || 'none',
-        now: now.toISOString(),
-        hoursSinceFirst: hoursSinceFirst.toFixed(2),
-        currentCount: user?.usage?.uploadCount || 0,
-        willReset: hoursSinceFirst >= 24
-    });
-
-    if (!firstMergeTime || hoursSinceFirst >= 24) {
-        // Start new 24h window
-        console.log('STARTING NEW 24H WINDOW - Setting count to:', count);
-        await users.updateOne(
-            { _id: new ObjectId(userId) },
-            {
-                $set: {
-                    'usage.uploadCount': count,
-                    'usage.firstMergeTime': now.toISOString()
-                },
-                $unset: {
-                    'usage.date': '' // Remove old date field
+    // Use atomic findOneAndUpdate to prevent race conditions
+    const result = await users.findOneAndUpdate(
+        {
+            _id: new ObjectId(userId),
+            $or: [
+                { 'usage.firstMergeTime': { $exists: false } },
+                {
+                    'usage.firstMergeTime': {
+                        $lt: new Date(Date.now() - 24 * 60 * 60 * 1000)
+                    }
                 }
-            }
-        );
-    } else {
-        // Within 24h window, add to existing count
-        const newCount = (user?.usage?.uploadCount || 0) + count;
-        console.log('WITHIN 24H WINDOW - Adding', count, 'to existing. New total:', newCount);
+            ]
+        },
+        {
+            $set: {
+                'usage.uploadCount': count,
+                'usage.firstMergeTime': now.toISOString()
+            },
+            $unset: { 'usage.date': '' }
+        },
+        { returnDocument: 'after' }
+    );
+
+    // If no document was updated, window hasn't expired - increment within window
+    if (!result.value) {
         await users.updateOne(
             { _id: new ObjectId(userId) },
             {
                 $inc: { 'usage.uploadCount': count },
-                $unset: {
-                    'usage.date': '' // Remove old date field
-                }
+                $unset: { 'usage.date': '' }
             }
         );
     }
