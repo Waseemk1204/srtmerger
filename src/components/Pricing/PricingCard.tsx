@@ -13,6 +13,13 @@ interface PricingCardProps {
     loading?: boolean;
 }
 
+const PLAN_LEVELS: Record<string, number> = {
+    free: 0,
+    tier1: 1,
+    tier2: 2,
+    tier3: 3
+};
+
 export function PricingCard({
     title,
     price,
@@ -26,6 +33,10 @@ export function PricingCard({
 }: PricingCardProps) {
     const isCurrent = currentPlan === planType;
     const isFree = planType === 'free';
+
+    const currentLevel = PLAN_LEVELS[currentPlan || 'free'] || 0;
+    const cardLevel = PLAN_LEVELS[planType] || 0;
+    const isLowerTier = currentLevel > cardLevel;
 
     return (
         <div className={`relative rounded-2xl p-6 sm:p-8 transition-all duration-300 ${isPopular
@@ -65,15 +76,15 @@ export function PricingCard({
             {!isFree && (
                 <button
                     onClick={() => onSelect(planType)}
-                    disabled={isCurrent || loading}
-                    className={`w-full py-3 px-4 rounded-xl font-medium transition-colors ${isCurrent
+                    disabled={isCurrent || isLowerTier || loading}
+                    className={`w-full py-3 px-4 rounded-xl font-medium transition-colors ${isCurrent || isLowerTier
                         ? 'bg-gray-100 text-gray-500 cursor-default'
                         : isPopular
                             ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200'
                             : 'bg-gray-900 hover:bg-gray-800 text-white'
                         }`}
                 >
-                    {loading ? 'Processing...' : isCurrent ? 'Current Plan' : 'Upgrade'}
+                    {loading ? 'Processing...' : isCurrent ? 'Current Plan' : isLowerTier ? 'Included' : 'Upgrade'}
                 </button>
             )}
         </div>
