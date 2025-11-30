@@ -225,6 +225,20 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 return;
             }
 
+            // Validate file sizes (500KB limit per file)
+            const MAX_UPLOAD_SIZE = 500 * 1024; // 500KB in bytes
+            const oversizedFiles = selectedFiles.filter(f => f.size > MAX_UPLOAD_SIZE);
+
+            if (oversizedFiles.length > 0) {
+                setIsProcessing(false);
+                if (selectedFiles.length === 1) {
+                    alert(`File size exceeds the limit. Maximum allowed: 500KB\nYour file: ${(oversizedFiles[0].size / 1024).toFixed(1)}KB`);
+                } else {
+                    alert(`One or more files exceed the 500KB size limit.\n\nOversized files:\n${oversizedFiles.map(f => `• ${f.name} (${(f.size / 1024).toFixed(1)}KB)`).join('\n')}\n\nPlease select smaller files.`);
+                }
+                return;
+            }
+
             const newFiles: FileWithContent[] = [];
             for (const file of selectedFiles) {
                 try {
@@ -514,6 +528,12 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             const timestamp = new Date().toISOString().slice(0, 16).replace('T', '_').replace(/:/g, '-');
             const filename = `merged_${timestamp}.srt`;
             const filesize = new Blob([result.mergedSrt]).size;
+
+            // Validate merged file size (25MB limit to prevent DB exhaustion)
+            const MAX_MERGED_SIZE = 25 * 1024 * 1024; // 25MB
+            if (filesize > MAX_MERGED_SIZE) {
+                throw new Error(`Merged file too large (${(filesize / 1024 / 1024).toFixed(1)}MB). Maximum: 25MB. Please split your files into smaller merges.`);
+            }
 
             // Save file as plain text
             const saveResult = await api.saveFile(

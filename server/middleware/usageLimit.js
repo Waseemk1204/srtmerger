@@ -1,13 +1,9 @@
 import { getDB } from '../config/db.js';
 import { ObjectId } from 'mongodb';
 import crypto from 'crypto';
+import { getCurrentPlan, PLAN_LIMITS } from '../utils/planUtils.js';
 
-const PLAN_LIMITS = {
-    free: 4,
-    tier1: 20,
-    tier2: 100,
-    tier3: Infinity
-};
+
 
 export const usageLimit = async (req, res, next) => {
     try {
@@ -21,7 +17,7 @@ export const usageLimit = async (req, res, next) => {
         }
 
         const today = new Date().toISOString().split('T')[0];
-        const userPlan = user.subscription?.plan || 'free';
+        const userPlan = getCurrentPlan(user); // Now checks expiry
         const limit = PLAN_LIMITS[userPlan];
 
         // Reset usage if it's a new day

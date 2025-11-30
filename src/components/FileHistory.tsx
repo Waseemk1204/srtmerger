@@ -58,9 +58,16 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
             await api.deleteFile(fileId);
             onFileDeleted(fileId);
             setConfirmingDeleteId(null);
-        } catch (err) {
-            console.error('Failed to delete file:', err);
-            alert('Failed to delete file');
+        } catch (err: any) {
+            // If file not found, it may have been already deleted (e.g., after auto-clear)
+            if (err?.message?.includes('not found') || err?.message?.includes('404')) {
+                // Silently remove from UI
+                onFileDeleted(fileId);
+                setConfirmingDeleteId(null);
+            } else {
+                console.error('Failed to delete file:', err);
+                alert('Failed to delete file. Please try again.');
+            }
         }
     };
 

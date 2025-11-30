@@ -2,6 +2,7 @@ import express from 'express';
 import { ObjectId } from 'mongodb';
 import { getDB } from '../config/db.js';
 import authMiddleware from '../middleware/auth.js';
+import { getCurrentPlan, canAccessFeature } from '../utils/planUtils.js';
 
 const router = express.Router();
 
@@ -15,6 +16,14 @@ router.post('/', async (req, res) => {
 
         if (!filename || !content) {
             return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        // Validate file size (25MB limit for merged files)
+        const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25MB
+        if (filesize && filesize > MAX_FILE_SIZE) {
+            return res.status(413).json({
+                error: `File too large (${(filesize / 1024 / 1024).toFixed(1)}MB). Maximum: 25MB`
+            });
         }
 
         const db = getDB();
@@ -95,6 +104,17 @@ router.put('/:id', async (req, res) => {
 
         const db = getDB();
         const files = db.collection('files');
+        const users = db.collection('users');
+
+        // Check if user has rename feature access (tier1+)
+        const user = await users.findOne({ _id: new ObjectId(req.user.userId) });
+        if (!canAccessFeature(user, 'rename')) {
+            return res.status(403).json({
+                error: 'Rename feature requires a premium plan',
+                code: 'FEATURE_LOCKED',
+                feature: 'rename'
+            });
+        }
 
         const result = await files.updateOne(
             {
