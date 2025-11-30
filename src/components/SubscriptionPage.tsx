@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { CheckCircleIcon, AlertTriangleIcon, CreditCardIcon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../api/client';
@@ -8,22 +9,60 @@ import { DashboardNavbar } from './DashboardNavbar';
 export function SubscriptionPage() {
     const { user, refreshUser } = useAuth();
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+    const [showCancelModal, setShowCancelModal] = useState(false);
     const [isCancelling, setIsCancelling] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
-    const handleCancelSubscription = async () => {
-        if (!confirm('Are you sure you want to cancel your subscription? You will lose premium features immediately.')) {
-            return;
-        }
+    const CancelModal = () => createPortal(
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-scale-in relative overflow-hidden">
+                <div className="text-center">
+                    <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <AlertTriangleIcon className="w-8 h-8 text-red-600" />
+                    </div>
 
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Cancel Subscription?</h3>
+                    <p className="text-gray-600 mb-8">
+                        Are you sure you want to cancel? You will lose access to premium features immediately. This action cannot be undone.
+                    </p>
+
+                    <div className="flex flex-col gap-3">
+                        <button
+                            onClick={confirmCancellation}
+                            disabled={isCancelling}
+                            className="w-full px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {isCancelling ? 'Cancelling...' : 'Yes, Cancel Subscription'}
+                        </button>
+                        <button
+                            onClick={() => setShowCancelModal(false)}
+                            disabled={isCancelling}
+                            className="w-full px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-all"
+                        >
+                            Keep Subscription
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>,
+        document.body
+    );
+
+    const handleCancelSubscription = () => {
+        setShowCancelModal(true);
+    };
+
+    const confirmCancellation = async () => {
         setIsCancelling(true);
         try {
             await api.cancelSubscription();
             setMessage({ type: 'success', text: 'Subscription canceled successfully' });
+            setShowCancelModal(false);
             if (refreshUser) await refreshUser();
         } catch (error) {
             console.error('Failed to cancel subscription:', error);
             setMessage({ type: 'error', text: 'Failed to cancel subscription. Please try again.' });
+            setShowCancelModal(false);
         } finally {
             setIsCancelling(false);
         }
@@ -193,6 +232,7 @@ export function SubscriptionPage() {
                     onClose={() => setShowUpgradeModal(false)}
                     reason="general"
                 />
+                {showCancelModal && <CancelModal />}
             </div>
         </div>
     );
