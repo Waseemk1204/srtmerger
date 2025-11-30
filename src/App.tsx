@@ -123,12 +123,46 @@ function App() {
     }
 
     // Dashboard (authenticated users only)
-    if (view === 'dashboard' && isAuthenticated) {
+    if (view === 'dashboard') {
+      if (!isAuthenticated) {
+        // Redirect to home if not authenticated
+        window.history.replaceState({}, '', '/');
+        return (
+          <main>
+            <Hero onNavigate={(page) => setView(page)} />
+            <MergerTool />
+            <section className="py-8 px-4 sm:px-6 lg:px-8">
+              <div className="max-w-5xl mx-auto">
+                <UsageCard />
+              </div>
+            </section>
+            <PricingSection />
+            <FAQ />
+          </main>
+        );
+      }
       return <Dashboard />;
     }
 
     // Subscription Page (authenticated users only)
-    if (view === 'subscription' && isAuthenticated) {
+    if (view === 'subscription') {
+      if (!isAuthenticated) {
+        // Redirect to home if not authenticated
+        window.history.replaceState({}, '', '/');
+        return (
+          <main>
+            <Hero onNavigate={(page) => setView(page)} />
+            <MergerTool />
+            <section className="py-8 px-4 sm:px-6 lg:px-8">
+              <div className="max-w-5xl mx-auto">
+                <UsageCard />
+              </div>
+            </section>
+            <PricingSection />
+            <FAQ />
+          </main>
+        );
+      }
       return <SubscriptionPage />;
     }
 
