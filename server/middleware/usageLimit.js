@@ -91,7 +91,7 @@ export const incrementUsage = async (userId, count = 1) => {
         );
 
         // If no document was updated, window hasn't expired - increment within window
-        if (!result.value) {
+        if (!result) {
             await users.updateOne(
                 { _id: userObjectId },
                 {
