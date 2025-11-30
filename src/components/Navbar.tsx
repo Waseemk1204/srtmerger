@@ -60,9 +60,26 @@ export function Navbar({ onNavigate }: NavbarProps) {
                         </a>
                         <button
                             onClick={() => {
-                                const pricingSection = document.getElementById('pricing');
-                                if (pricingSection) {
-                                    pricingSection.scrollIntoView({ behavior: 'smooth' });
+                                // Check if we're on home page
+                                const urlParams = new URLSearchParams(window.location.search);
+                                const currentView = urlParams.get('view') || 'home';
+
+                                if (currentView !== 'home') {
+                                    // Navigate to home first, then scroll
+                                    handleNavigate('home');
+                                    // Wait for navigation to complete before scrolling
+                                    setTimeout(() => {
+                                        const pricingSection = document.getElementById('pricing');
+                                        if (pricingSection) {
+                                            pricingSection.scrollIntoView({ behavior: 'smooth' });
+                                        }
+                                    }, 100);
+                                } else {
+                                    // Already on home, just scroll
+                                    const pricingSection = document.getElementById('pricing');
+                                    if (pricingSection) {
+                                        pricingSection.scrollIntoView({ behavior: 'smooth' });
+                                    }
                                 }
                             }}
                             className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
@@ -200,11 +217,29 @@ export function Navbar({ onNavigate }: NavbarProps) {
                         </a>
                         <button
                             onClick={() => {
-                                const pricingSection = document.getElementById('pricing');
-                                if (pricingSection) {
-                                    pricingSection.scrollIntoView({ behavior: 'smooth' });
-                                }
+                                // Check if we're on home page
+                                const urlParams = new URLSearchParams(window.location.search);
+                                const currentView = urlParams.get('view') || 'home';
+
                                 setIsMenuOpen(false);
+
+                                if (currentView !== 'home') {
+                                    // Navigate to home first, then scroll
+                                    handleNavigate('home');
+                                    // Wait for navigation to complete before scrolling
+                                    setTimeout(() => {
+                                        const pricingSection = document.getElementById('pricing');
+                                        if (pricingSection) {
+                                            pricingSection.scrollIntoView({ behavior: 'smooth' });
+                                        }
+                                    }, 100);
+                                } else {
+                                    // Already on home, just scroll
+                                    const pricingSection = document.getElementById('pricing');
+                                    if (pricingSection) {
+                                        pricingSection.scrollIntoView({ behavior: 'smooth' });
+                                    }
+                                }
                             }}
                             className="block w-full text-left px-3 py-3 rounded-lg text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 cursor-pointer"
                         >
