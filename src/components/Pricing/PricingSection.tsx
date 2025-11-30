@@ -88,9 +88,9 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
     };
 
     const prices = {
-        weekly: { tier1: '₹99', tier2: '₹199', tier3: '₹399' },
-        monthly: { tier1: '₹299', tier2: '₹599', tier3: '₹999' },
-        yearly: { tier1: '₹2999', tier2: '₹5999', tier3: '₹9999' },
+        weekly: { tier1: '$99', tier2: '$199', tier3: '$399' },
+        monthly: { tier1: '$299', tier2: '$599', tier3: '$999' },
+        yearly: { tier1: '$2999', tier2: '$5999', tier3: '$9999' },
     };
 
     return (
@@ -206,6 +206,7 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
                             'Renaming',
                             'Timeline Alignment',
                             'Merge Preview',
+                            'Text editing',
                         ]}
                     />
                 </div>

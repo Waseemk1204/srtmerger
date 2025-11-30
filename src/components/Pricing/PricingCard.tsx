@@ -62,18 +62,20 @@ export function PricingCard({
                 ))}
             </ul>
 
-            <button
-                onClick={() => onSelect(planType)}
-                disabled={isCurrent || loading}
-                className={`w-full py-3 px-4 rounded-xl font-medium transition-colors ${isCurrent
-                    ? 'bg-gray-100 text-gray-500 cursor-default'
-                    : isPopular
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200'
-                        : 'bg-gray-900 hover:bg-gray-800 text-white'
-                    }`}
-            >
-                {loading ? 'Processing...' : isCurrent ? 'Current Plan' : isFree ? 'Get Started' : 'Upgrade'}
-            </button>
+            {!isFree && (
+                <button
+                    onClick={() => onSelect(planType)}
+                    disabled={isCurrent || loading}
+                    className={`w-full py-3 px-4 rounded-xl font-medium transition-colors ${isCurrent
+                        ? 'bg-gray-100 text-gray-500 cursor-default'
+                        : isPopular
+                            ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200'
+                            : 'bg-gray-900 hover:bg-gray-800 text-white'
+                        }`}
+                >
+                    {loading ? 'Processing...' : isCurrent ? 'Current Plan' : 'Upgrade'}
+                </button>
+            )}
         </div>
     );
 }
