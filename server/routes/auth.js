@@ -6,6 +6,7 @@ import { getDB } from '../config/db.js';
 import { loginLimiter, signupLimiter } from '../middleware/rateLimit.js';
 import authMiddleware from '../middleware/auth.js';
 import { linkFingerprintToUser } from '../middleware/usageLimit.js';
+import { logAuditEvent, AuditEventType } from '../utils/auditLogger.js';
 
 const router = express.Router();
 
