@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { SavedFilesSection } from './SavedFilesSection';
 import { MergerTool } from './MergerTool';
 import { UpgradeModal } from './Pricing/UpgradeModal';
-
+import { DashboardNavbar } from './DashboardNavbar';
 
 export function Dashboard() {
     const { user, refreshUser } = useAuth();
@@ -13,8 +13,6 @@ export function Dashboard() {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-
-
 
     const handleShowToast = (message: string) => {
         setToastMessage(message);
@@ -72,6 +70,9 @@ export function Dashboard() {
 
     return (
         <div className="min-h-screen bg-zinc-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+            <DashboardNavbar onNavigate={(page) => window.location.href = `/?view=${page}`} />
+
+            {/* Plan & Usage */}
 
 
             {/* Plan & Usage */}

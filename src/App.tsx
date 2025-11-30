@@ -212,7 +212,7 @@ function App() {
     );
   };
 
-  const hideNavbar = view === 'login' || view === 'signup';
+  const hideNavbar = view === 'dashboard' || view === 'login' || view === 'signup';
 
   return (
     <div className="min-h-screen w-full bg-zinc-50 font-sans text-zinc-900 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
