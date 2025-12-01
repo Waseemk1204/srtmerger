@@ -7,7 +7,7 @@ import { UpgradeModal } from './Pricing/UpgradeModal';
 import { DashboardNavbar } from './DashboardNavbar';
 
 export function SubscriptionPage() {
-    const { user, refreshUser } = useAuth();
+    const { user, refreshUser, updateUser } = useAuth();
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [isCancelling, setIsCancelling] = useState(false);
@@ -58,6 +58,18 @@ export function SubscriptionPage() {
             await api.cancelSubscription();
             setMessage({ type: 'success', text: 'Subscription canceled successfully' });
             setShowCancelModal(false);
+
+            // Optimistically update local state immediately
+            if (updateUser) {
+                updateUser({
+                    subscription: {
+                        plan: 'free',
+                        status: 'canceled',
+                        expiryDate: undefined
+                    }
+                });
+            }
+
             if (refreshUser) await refreshUser();
         } catch (error) {
             console.error('Failed to cancel subscription:', error);

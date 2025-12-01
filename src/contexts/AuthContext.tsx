@@ -12,6 +12,7 @@ interface AuthContextType {
     googleLogin: (credential: string) => Promise<void>;
     logout: () => void;
     refreshUser: () => Promise<void>;
+    updateUser: (data: Partial<User>) => void;
     isAuthenticated: boolean;
 }
 
@@ -106,6 +107,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    const updateUser = (data: Partial<User>) => {
+        setUser(prev => prev ? { ...prev, ...data } : null);
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -117,6 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 googleLogin,
                 logout,
                 refreshUser,
+                updateUser,
                 isAuthenticated: !!user,
             }}
         >
