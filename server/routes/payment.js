@@ -172,9 +172,7 @@ router.post('/cancel-subscription', async (req, res) => {
             { _id: toObjectId(req.user.userId, 'User ID') },
             {
                 $set: {
-                    'subscription.plan': 'free',
-                    'subscription.status': 'canceled',
-                    'subscription.expiryDate': null
+                    'subscription.status': 'canceled'
                 }
             }
         );

@@ -9,6 +9,7 @@ import authMiddleware from '../middleware/auth.js';
 import { toObjectId } from '../utils/objectIdValidator.js';
 import { linkFingerprintToUser } from '../middleware/usageLimit.js';
 import { logAuditEvent, AuditEventType } from '../utils/auditLogger.js';
+import { checkSubscriptionExpiry } from '../utils/subscription.js';
 
 const router = express.Router();
 
@@ -107,6 +108,9 @@ router.post('/login', loginLimiter, async (req, res) => {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
+        // Check for subscription expiry
+        user = await checkSubscriptionExpiry(user);
+
         // Verify password
         const isValid = await bcrypt.compare(password, user.passwordHash);
         if (!isValid) {
@@ -174,7 +178,10 @@ router.get('/me', authMiddleware, async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        res.json({ user });
+        // Check for subscription expiry
+        const updatedUser = await checkSubscriptionExpiry(user);
+
+        res.json({ user: updatedUser });
     } catch (error) {
         console.error('Get user error:', error);
         res.status(500).json({ error: 'Server error' });
@@ -274,6 +281,9 @@ router.post('/google', async (req, res) => {
             if (updates.subscription) user.subscription = updates.subscription;
             if (updates.usage) user.usage = updates.usage;
             if (updates.googleId) user.googleId = updates.googleId;
+
+            // Check for subscription expiry
+            user = await checkSubscriptionExpiry(user);
         }
 
         // Link fingerprint if provided
