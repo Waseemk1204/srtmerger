@@ -19,7 +19,7 @@ export type PlanType = 'free' | 'tier1' | 'tier2' | 'tier3';
 
 export interface Subscription {
   plan: PlanType;
-  status: 'active' | 'expired';
+  status: 'active' | 'expired' | 'canceled';
   expiryDate?: string;
   razorpaySubscriptionId?: string;
 }
