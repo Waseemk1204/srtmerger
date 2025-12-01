@@ -120,8 +120,8 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
             <div className="grid gap-3">
                 {files.map((file) => (
                     <div key={file._id} className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
+                            <div className="flex items-center gap-3 flex-1 min-w-0 w-full">
                                 <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
                                     <FileTextIcon className="w-5 h-5" />
                                 </div>
@@ -172,7 +172,7 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
                                     </div>
                                 )}
                             </div>
-                            <div className="flex items-center gap-2 ml-4">
+                            <div className="flex items-center gap-2 self-end sm:self-auto sm:ml-4">
                                 {editingId !== file._id && (
                                     <>
                                         <button
