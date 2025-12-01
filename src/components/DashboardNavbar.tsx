@@ -4,9 +4,10 @@ import { UserIcon, CreditCardIcon, LogOutIcon, ChevronDownIcon } from 'lucide-re
 
 interface DashboardNavbarProps {
     onNavigate?: (page: string) => void;
+    activePage?: 'dashboard' | 'subscription';
 }
 
-export function DashboardNavbar({ onNavigate }: DashboardNavbarProps) {
+export function DashboardNavbar({ onNavigate, activePage }: DashboardNavbarProps) {
     const { user, logout } = useAuth();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
@@ -73,21 +74,25 @@ export function DashboardNavbar({ onNavigate }: DashboardNavbarProps) {
                                     <div className="text-xs text-gray-500 truncate">{user?.email}</div>
                                 </div>
 
-                                <button
-                                    onClick={() => handleNavigate('dashboard')}
-                                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-                                >
-                                    <UserIcon className="w-4 h-4 text-gray-400" />
-                                    Dashboard
-                                </button>
+                                {activePage !== 'dashboard' && (
+                                    <button
+                                        onClick={() => handleNavigate('dashboard')}
+                                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                                    >
+                                        <UserIcon className="w-4 h-4 text-gray-400" />
+                                        Dashboard
+                                    </button>
+                                )}
 
-                                <button
-                                    onClick={() => handleNavigate('subscription')}
-                                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-                                >
-                                    <CreditCardIcon className="w-4 h-4 text-gray-400" />
-                                    My Subscription
-                                </button>
+                                {activePage !== 'subscription' && (
+                                    <button
+                                        onClick={() => handleNavigate('subscription')}
+                                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                                    >
+                                        <CreditCardIcon className="w-4 h-4 text-gray-400" />
+                                        My Subscription
+                                    </button>
+                                )}
 
                                 <div className="border-t border-gray-50 my-1"></div>
 

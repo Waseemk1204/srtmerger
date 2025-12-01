@@ -70,7 +70,7 @@ export function Dashboard() {
 
     return (
         <div className="min-h-screen bg-zinc-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
-            <DashboardNavbar onNavigate={(page) => window.location.href = `/?view=${page}`} />
+            <DashboardNavbar onNavigate={(page) => window.location.href = `/?view=${page}`} activePage="dashboard" />
 
             {/* Plan & Usage */}
 
