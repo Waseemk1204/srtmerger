@@ -63,10 +63,10 @@ export function SubscriptionPage() {
             if (updateUser) {
                 updateUser({
                     subscription: {
-                        plan: 'free',
-                        status: 'canceled',
-                        expiryDate: undefined
-                    }
+                        ...user?.subscription,
+                        status: 'canceled'
+                        // We keep the plan and expiry date as is
+                    } as any
                 });
             }
 
@@ -81,7 +81,9 @@ export function SubscriptionPage() {
     };
 
     const planName = user?.subscription?.plan || 'free';
+    // User is premium if they have a paid plan, even if status is 'canceled' (until it expires)
     const isPremium = ['tier1', 'tier2', 'tier3'].includes(planName);
+    const isCanceled = user?.subscription?.status === 'canceled';
     const expiryDate = user?.subscription?.expiryDate ? new Date(user.subscription.expiryDate).toLocaleDateString() : null;
 
     return (
@@ -113,9 +115,9 @@ export function SubscriptionPage() {
                                             </div>
                                             <div className="text-gray-600 text-sm">
                                                 {isPremium ? (
-                                                    <span className="flex items-center gap-2 text-green-600">
+                                                    <span className={`flex items-center gap-2 ${isCanceled ? 'text-orange-600' : 'text-green-600'}`}>
                                                         <CheckCircleIcon className="w-4 h-4" />
-                                                        Active Subscription
+                                                        {isCanceled ? 'Access until period ends' : 'Active Subscription'}
                                                     </span>
                                                 ) : (
                                                     'Basic features with daily limits'
@@ -125,7 +127,7 @@ export function SubscriptionPage() {
                                         <div className="flex flex-col items-end gap-3">
                                             {isPremium && (
                                                 <div className="text-right">
-                                                    <div className="text-sm text-gray-500 mb-1">Renews on</div>
+                                                    <div className="text-sm text-gray-500 mb-1">{isCanceled ? 'Expires on' : 'Renews on'}</div>
                                                     <div className="font-medium text-gray-900">{expiryDate}</div>
                                                 </div>
                                             )}
@@ -204,7 +206,7 @@ export function SubscriptionPage() {
                             </section>
 
                             {/* Danger Zone - Cancellation */}
-                            {isPremium && (
+                            {isPremium && !isCanceled && (
                                 <section className="pt-8 border-t border-gray-100">
                                     <h2 className="text-lg font-semibold text-red-600 mb-4 flex items-center gap-2">
                                         <AlertTriangleIcon className="w-5 h-5" />
