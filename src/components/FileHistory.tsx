@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { FileTextIcon, DownloadIcon, Trash2Icon, Edit2Icon, CheckIcon, XIcon, FileJsonIcon } from 'lucide-react';
 import { api } from '../api/client';
 import { useAuth } from '../contexts/AuthContext';
@@ -25,9 +26,54 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
     const [editName, setEditName] = useState('');
     const [confirmingDeleteId, setConfirmingDeleteId] = useState<string | null>(null);
     const [isSavingRename, setIsSavingRename] = useState(false);
+    const [fileToDelete, setFileToDelete] = useState<SavedFile | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     // Upgrade Modal State
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+    // Delete Modal Component
+    const DeleteFileModal = () => createPortal(
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-scale-in relative overflow-hidden">
+                <div className="text-center">
+                    <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <Trash2Icon className="w-8 h-8 text-red-600" />
+                    </div>
+
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Delete File?</h3>
+                    <p className="text-gray-600 mb-8">
+                        Are you sure you want to delete <span className="font-semibold text-gray-900">"{fileToDelete?.filename}"</span>? This action cannot be undone.
+                    </p>
+
+                    <div className="flex flex-col gap-3">
+                        <button
+                            onClick={() => handleDelete(fileToDelete!._id)}
+                            disabled={isDeleting}
+                            className="w-full px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                            {isDeleting ? (
+                                <>
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                    Deleting...
+                                </>
+                            ) : (
+                                'Yes, Delete File'
+                            )}
+                        </button>
+                        <button
+                            onClick={() => setFileToDelete(null)}
+                            disabled={isDeleting}
+                            className="w-full px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-all"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>,
+        document.body
+    );
 
     // Feature Access
     const currentPlan = user?.subscription?.plan || 'free';
@@ -54,20 +100,23 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
     };
 
     const handleDelete = async (fileId: string) => {
+        setIsDeleting(true);
         try {
             await api.deleteFile(fileId);
             onFileDeleted(fileId);
-            setConfirmingDeleteId(null);
+            setFileToDelete(null);
         } catch (err: any) {
             // If file not found, it may have been already deleted (e.g., after auto-clear)
             if (err?.message?.includes('not found') || err?.message?.includes('404')) {
                 // Silently remove from UI
                 onFileDeleted(fileId);
-                setConfirmingDeleteId(null);
+                setFileToDelete(null);
             } else {
                 console.error('Failed to delete file:', err);
                 alert('Failed to delete file. Please try again.');
             }
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -194,31 +243,13 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
                                                 <DownloadIcon className="w-4 h-4" />
                                             )}
                                         </button>
-                                        {confirmingDeleteId === file._id ? (
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-xs text-red-600">Delete?</span>
-                                                <button
-                                                    onClick={() => handleDelete(file._id)}
-                                                    className="px-2 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700"
-                                                >
-                                                    Yes
-                                                </button>
-                                                <button
-                                                    onClick={() => setConfirmingDeleteId(null)}
-                                                    className="px-2 py-1 text-xs bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
-                                                >
-                                                    No
-                                                </button>
-                                            </div>
-                                        ) : (
-                                            <button
-                                                onClick={() => setConfirmingDeleteId(file._id)}
-                                                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                title="Delete"
-                                            >
-                                                <Trash2Icon className="w-4 h-4" />
-                                            </button>
-                                        )}
+                                        <button
+                                            onClick={() => setFileToDelete(file)}
+                                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                            title="Delete"
+                                        >
+                                            <Trash2Icon className="w-4 h-4" />
+                                        </button>
                                     </>
                                 )}
                             </div>
@@ -236,6 +267,7 @@ export function FileHistory({ files, onFileDeleted, onFileRenamed, title = "Merg
                     featureName="File Renaming"
                 />
             )}
+            {fileToDelete && <DeleteFileModal />}
         </div>
     );
 }
