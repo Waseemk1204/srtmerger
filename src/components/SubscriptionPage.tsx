@@ -23,7 +23,7 @@ export function SubscriptionPage() {
 
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">Cancel Subscription?</h3>
                     <p className="text-gray-600 mb-8">
-                        Are you sure you want to cancel? You will lose access to premium features immediately. This action cannot be undone.
+                        Are you sure you want to cancel? You will retain access to premium features until the end of your billing period.
                     </p>
 
                     <div className="flex flex-col gap-3">
@@ -217,7 +217,7 @@ export function SubscriptionPage() {
                                             <div>
                                                 <h3 className="font-medium text-red-900">Cancel Subscription</h3>
                                                 <p className="text-sm text-red-700 mt-1">
-                                                    Once you cancel, you will lose access to premium features immediately.
+                                                    Once you cancel, you will retain access until the end of your billing period.
                                                 </p>
                                             </div>
                                             <button
