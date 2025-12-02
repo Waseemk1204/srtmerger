@@ -73,14 +73,14 @@ router.post('/create-subscription', async (req, res) => {
             return res.status(500).json({ error: 'Subscription plan not found. Please contact support.' });
         }
 
-        // Calculate total_count based on duration to stay within Razorpay's max timestamp (approx 100 years)
-        // Max timestamp is ~2121. 1200 years is too long.
-        let totalCount = 1200; // Default for weekly (approx 23 years)
+        // Calculate total_count based on duration to stay within Razorpay's max timestamp
+        // AND within UPI limits (max 30 years for UPI autopay)
+        let totalCount = 1200; // Default for weekly (approx 23 years) - Safe for UPI
 
         if (selectedPlan.duration === 'yearly') {
-            totalCount = 90; // 90 years
+            totalCount = 30; // Max 30 years for UPI
         } else if (selectedPlan.duration === 'monthly') {
-            totalCount = 1000; // ~83 years
+            totalCount = 360; // 30 years * 12 months = 360 cycles
         }
 
         // Create subscription options
