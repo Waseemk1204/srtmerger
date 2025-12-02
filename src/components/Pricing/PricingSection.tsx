@@ -63,8 +63,14 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
 
     const handleSubscribe = async (planType: PlanType) => {
         if (!user) {
-            // Redirect to login or show modal
-            window.location.href = '/?view=login';
+            // Redirect to login with return URL
+            const params = new URLSearchParams(window.location.search);
+            params.set('view', 'login');
+            params.set('redirect', 'pricing'); // Tell login page to send us back here
+            window.history.pushState({}, '', `?${params.toString()}`);
+
+            // Force a re-render/navigation in App.tsx by dispatching popstate
+            window.dispatchEvent(new PopStateEvent('popstate'));
             return;
         }
 

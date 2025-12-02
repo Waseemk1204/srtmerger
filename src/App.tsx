@@ -92,10 +92,22 @@ function App() {
     window.scrollTo(0, 0);
   };
 
-  // Auto-redirect to dashboard when user logs in
+  // Auto-redirect after login
   useEffect(() => {
     if (isAuthenticated && (view === 'login' || view === 'signup')) {
-      navigate('dashboard');
+      const params = new URLSearchParams(window.location.search);
+      const redirectTarget = params.get('redirect');
+
+      if (redirectTarget === 'pricing') {
+        navigate('home');
+        // Wait for render then scroll to pricing
+        setTimeout(() => {
+          const pricingElement = document.getElementById('pricing');
+          pricingElement?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else {
+        navigate('dashboard');
+      }
     }
     // Redirect to login if trying to access dashboard while logged out
     if (!authLoading && !isAuthenticated && view === 'dashboard') {
