@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../hooks/useSubscription';
 import { SavedFilesSection } from './SavedFilesSection';
 import { MergerTool } from './MergerTool';
 import { UpgradeModal } from './Pricing/UpgradeModal';
@@ -68,9 +69,52 @@ export function Dashboard() {
         user?.subscription?.plan === 'tier2' ? 100 :
             user?.subscription?.plan === 'tier1' ? 20 : 4;
 
+    // Subscription Hook
+    const { subscribe, loading: subscriptionLoading } = useSubscription({
+        onSuccess: () => {
+            setShowToast(true);
+            setToastMessage('Subscription activated successfully!');
+            setTimeout(() => setShowToast(false), 3000);
+            // Refresh user to update UI
+            if (refreshUser) refreshUser();
+
+            // Clear params
+            const newParams = new URLSearchParams(window.location.search);
+            newParams.delete('auto_plan');
+            newParams.delete('auto_period');
+            newParams.delete('redirect');
+            window.history.replaceState({}, '', `?${newParams.toString()}`);
+        }
+    });
+
+    // Auto-trigger subscription if returning from login
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const autoPlan = params.get('auto_plan');
+        const autoPeriod = params.get('auto_period');
+
+        if (user && autoPlan && autoPeriod) {
+            // Trigger subscription
+            // We need a small timeout to allow state update and component mount
+            setTimeout(() => {
+                subscribe(autoPlan as any, autoPeriod as any);
+            }, 500);
+        }
+    }, [user]);
+
     return (
         <div className="min-h-screen bg-zinc-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
             <DashboardNavbar onNavigate={(page) => window.location.href = `/?view=${page}`} activePage="dashboard" />
+
+            {/* Loading Overlay for Subscription */}
+            {subscriptionLoading && (
+                <div className="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center backdrop-blur-sm">
+                    <div className="bg-white p-6 rounded-xl shadow-xl flex flex-col items-center gap-4">
+                        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+                        <p className="text-gray-900 font-medium">Initializing Payment...</p>
+                    </div>
+                </div>
+            )}
 
             {/* Plan & Usage */}
 

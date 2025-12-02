@@ -99,21 +99,17 @@ function App() {
       const redirectTarget = params.get('redirect');
 
       if (redirectTarget === 'pricing') {
-        // We want to go to home view, but keep auto params
+        // We want to go to DASHBOARD view, but keep auto params
         const newParams = new URLSearchParams();
-        // view is home (empty)
+        newParams.set('view', 'dashboard'); // Explicitly set view to dashboard
         if (params.get('auto_plan')) newParams.set('auto_plan', params.get('auto_plan')!);
         if (params.get('auto_period')) newParams.set('auto_period', params.get('auto_period')!);
 
         const newUrl = newParams.toString() ? `?${newParams.toString()}` : '/';
         window.history.pushState({}, '', newUrl);
-        setView('home');
+        setView('dashboard');
 
-        // Wait for render then scroll to pricing
-        setTimeout(() => {
-          const pricingElement = document.getElementById('pricing');
-          pricingElement?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
+        // No scrolling needed as we are on dashboard
       } else {
         navigate('dashboard');
       }
