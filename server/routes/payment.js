@@ -73,10 +73,20 @@ router.post('/create-subscription', async (req, res) => {
             return res.status(500).json({ error: 'Subscription plan not found. Please contact support.' });
         }
 
+        // Calculate total_count based on duration to stay within Razorpay's max timestamp (approx 100 years)
+        // Max timestamp is ~2121. 1200 years is too long.
+        let totalCount = 1200; // Default for weekly (approx 23 years)
+
+        if (selectedPlan.duration === 'yearly') {
+            totalCount = 90; // 90 years
+        } else if (selectedPlan.duration === 'monthly') {
+            totalCount = 1000; // ~83 years
+        }
+
         // Create subscription options
         const subscriptionOptions = {
             plan_id: razorpayPlanId,
-            total_count: 1200, // Set to a large number (e.g. 100 years) for "infinite" renewal
+            total_count: totalCount,
             quantity: 1,
             customer_notify: 1, // Notify customer via email/SMS
             notes: {
