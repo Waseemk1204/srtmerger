@@ -55,8 +55,15 @@ router.post('/create-subscription', async (req, res) => {
             return res.status(400).json({ error: 'Invalid plan selected' });
         }
 
-        // Get Razorpay plan ID (INR only)
-        const razorpayPlanId = getRazorpayPlanId(planId);
+        // Get Razorpay plan ID
+        let razorpayPlanId;
+        try {
+            razorpayPlanId = getRazorpayPlanId(planId);
+        } catch (error) {
+            console.error('Plan ID lookup failed:', error.message);
+            console.error('Available plans:', Object.keys(require('../utils/razorpayPlans.js').RAZORPAY_PLAN_IDS));
+            return res.status(500).json({ error: 'Subscription plan not found. Please contact support.' });
+        }
 
         // Create subscription options
         const subscriptionOptions = {
@@ -87,7 +94,10 @@ router.post('/create-subscription', async (req, res) => {
         });
     } catch (error) {
         console.error('Create subscription error:', error);
-        res.status(500).json({ error: 'Failed to create subscription' });
+        res.status(500).json({
+            error: 'Failed to create subscription',
+            details: error.message
+        });
     }
 });
 

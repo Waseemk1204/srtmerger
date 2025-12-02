@@ -129,7 +129,9 @@ async function createPlan(planKey, planConfig) {
  */
 async function fetchExistingPlans() {
     try {
-        const plans = await razorpay.plans.all();
+        // Fetch up to 100 plans to ensure we get all of them
+        // Default is 10, which might miss plans if there are many
+        const plans = await razorpay.plans.all({ count: 100 });
         return plans.items || [];
     } catch (error) {
         console.error('Failed to fetch existing plans:', error);
@@ -157,8 +159,9 @@ export async function syncPlansWithRazorpay() {
     console.log('📦 Processing INR plans...');
     // Process all plans
     for (const [planKey, planConfig] of Object.entries(PLAN_CONFIG)) {
+        // Match by plan_key only (ignore currency in notes as we are INR-only now)
         const existing = existingPlans.find(p =>
-            p.notes?.plan_key === planKey && p.notes?.currency === 'inr'
+            p.notes?.plan_key === planKey
         );
 
         if (existing) {
