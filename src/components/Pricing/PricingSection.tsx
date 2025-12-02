@@ -61,12 +61,41 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
         };
     }, []);
 
+    // Auto-trigger subscription if returning from login
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const autoPlan = params.get('auto_plan');
+        const autoPeriod = params.get('auto_period');
+
+        if (user && autoPlan && autoPeriod) {
+            // Set correct billing period first
+            if (autoPeriod !== billingPeriod) {
+                setBillingPeriod(autoPeriod as any);
+            }
+
+            // Clear params to avoid loop, but keep view
+            const newParams = new URLSearchParams(window.location.search);
+            newParams.delete('auto_plan');
+            newParams.delete('auto_period');
+            newParams.delete('redirect');
+            window.history.replaceState({}, '', `?${newParams.toString()}`);
+
+            // Trigger subscription
+            // We need a small timeout to allow state update and component mount
+            setTimeout(() => {
+                handleSubscribe(autoPlan as PlanType);
+            }, 500);
+        }
+    }, [user]); // Run when user becomes available
+
     const handleSubscribe = async (planType: PlanType) => {
         if (!user) {
-            // Redirect to login with return URL
+            // Redirect to login with return URL and plan details
             const params = new URLSearchParams(window.location.search);
             params.set('view', 'login');
-            params.set('redirect', 'pricing'); // Tell login page to send us back here
+            params.set('redirect', 'pricing');
+            params.set('auto_plan', planType);
+            params.set('auto_period', billingPeriod);
             window.history.pushState({}, '', `?${params.toString()}`);
 
             // Force a re-render/navigation in App.tsx by dispatching popstate
