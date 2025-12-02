@@ -65,7 +65,7 @@ export function Dashboard() {
     const isExpired = firstMergeTime &&
         (Date.now() - new Date(firstMergeTime).getTime()) >= 24 * 60 * 60 * 1000;
     const effectiveCount = isExpired || !firstMergeTime ? 0 : (user?.usage?.uploadCount || 0);
-    const limit = user?.subscription?.plan === 'tier3' ? 1000 :
+    const limit = (user?.subscription?.plan as any) === 'tier3' ? 1000 :
         user?.subscription?.plan === 'tier2' ? 100 :
             user?.subscription?.plan === 'tier1' ? 20 : 4;
 
@@ -131,7 +131,7 @@ export function Dashboard() {
                 <div className="max-w-5xl mx-auto">
                     <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-200 p-6">
                         <h2 className="text-lg font-semibold text-gray-900 mb-4">Plan & Usage</h2>
-                        {user?.subscription?.plan === 'tier3' ? (
+                        {(user?.subscription?.plan as any) === 'tier3' ? (
                             /* Premium Unlimited UI (Static Container) */
                             <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 p-6 text-white shadow-lg border border-blue-500/30">
                                 {/* Background Glow Effect (Static) */}
@@ -196,7 +196,7 @@ export function Dashboard() {
                                     <div className="text-sm text-gray-500 mb-1">Daily Uploads</div>
                                     <div className="font-medium text-gray-900">
                                         {effectiveCount} / {
-                                            (user?.subscription?.plan === 'tier3' ? '∞' :
+                                            ((user?.subscription?.plan as any) === 'tier3' ? '∞' :
                                                 (user?.subscription?.plan === 'tier2' ? 100 :
                                                     (user?.subscription?.plan === 'tier1' ? 20 : 4)))
                                         }
@@ -218,7 +218,7 @@ export function Dashboard() {
                         )}
 
                         {/* Upgrade Button for Free/Tier1/Tier2 */}
-                        {user?.subscription?.plan !== 'tier3' && (
+                        {(user?.subscription?.plan as any) !== 'tier3' && (
                             <div className="mt-6 pt-6 border-t border-gray-100 flex justify-end gap-3">
 
                                 <button
