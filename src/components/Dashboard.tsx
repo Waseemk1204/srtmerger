@@ -99,6 +99,13 @@ export function Dashboard() {
             setTimeout(() => {
                 subscribe(autoPlan as any, autoPeriod as any);
             }, 500);
+
+            // Clear params immediately to prevent re-trigger on reload
+            const newParams = new URLSearchParams(window.location.search);
+            newParams.delete('auto_plan');
+            newParams.delete('auto_period');
+            newParams.delete('redirect');
+            window.history.replaceState({}, '', `?${newParams.toString()}`);
         }
     }, [user]);
 
