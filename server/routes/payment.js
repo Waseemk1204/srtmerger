@@ -76,7 +76,7 @@ router.post('/create-subscription', async (req, res) => {
         // Create subscription options
         const subscriptionOptions = {
             plan_id: razorpayPlanId,
-            total_count: 0, // 0 = infinite renewals until cancelled
+            total_count: 1200, // Set to a large number (e.g. 100 years) for "infinite" renewal
             quantity: 1,
             customer_notify: 1, // Notify customer via email/SMS
             notes: {
