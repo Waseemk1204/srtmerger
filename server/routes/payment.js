@@ -90,21 +90,31 @@ router.post('/create-subscription', async (req, res) => {
         };
 
         // Create subscription
-        const subscription = await razorpay.subscriptions.create(subscriptionOptions);
+        try {
+            const subscription = await razorpay.subscriptions.create(subscriptionOptions);
+            console.log('✓ Subscription created:', subscription.id);
 
-        console.log('✓ Subscription created:', subscription.id);
-
-        res.json({
-            id: subscription.id,
-            plan_id: razorpayPlanId,
-            status: subscription.status,
-            short_url: subscription.short_url
-        });
+            res.json({
+                id: subscription.id,
+                plan_id: razorpayPlanId,
+                status: subscription.status,
+                short_url: subscription.short_url
+            });
+        } catch (rzpError) {
+            console.error('Razorpay subscription creation failed:', rzpError);
+            throw rzpError; // Re-throw to be caught by outer catch
+        }
     } catch (error) {
         console.error('Create subscription error:', error);
+
+        // Extract meaningful error message
+        const errorMessage = error.error?.description || error.message || 'Unknown error';
+        const errorDetails = error.error || error;
+
         res.status(500).json({
             error: 'Failed to create subscription',
-            details: error.message
+            message: errorMessage,
+            details: errorDetails
         });
     }
 });
