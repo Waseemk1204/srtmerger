@@ -5,6 +5,7 @@ import { ObjectId } from 'mongodb';
 import { getDB } from '../config/db.js';
 import authMiddleware from '../middleware/auth.js';
 import { toObjectId } from '../utils/objectIdValidator.js';
+import { initializePlanIds, getRazorpayPlanId, PLAN_CONFIG } from '../utils/razorpayPlans.js';
 
 const router = express.Router();
 
@@ -14,133 +15,130 @@ const razorpay = new Razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET?.trim()
 });
 
-// Plans Configuration - Dual Currency Support
-const PLANS = {
-    // USD Pricing (for international users)
-    usd: {
-        'tier1-weekly': { amount: 199, plan: 'tier1', duration: 'weekly' },     // $1.99
-        'tier1-monthly': { amount: 499, plan: 'tier1', duration: 'monthly' },   // $4.99
-        'tier1-yearly': { amount: 3900, plan: 'tier1', duration: 'yearly' },    // $39
-
-        'tier2-weekly': { amount: 399, plan: 'tier2', duration: 'weekly' },     // $3.99
-        'tier2-monthly': { amount: 999, plan: 'tier2', duration: 'monthly' },   // $9.99
-        'tier2-yearly': { amount: 7900, plan: 'tier2', duration: 'yearly' },    // $79
-
-        'tier3-weekly': { amount: 699, plan: 'tier3', duration: 'weekly' },     // $6.99
-        'tier3-monthly': { amount: 1499, plan: 'tier3', duration: 'monthly' },  // $14.99
-        'tier3-yearly': { amount: 12900, plan: 'tier3', duration: 'yearly' },   // $129
-    },
-    // INR Pricing (for Indian users - enables UPI and local payment methods)
-    inr: {
-        'tier1-weekly': { amount: 9900, plan: 'tier1', duration: 'weekly' },    // ₹99
-        'tier1-monthly': { amount: 29900, plan: 'tier1', duration: 'monthly' }, // ₹299
-        'tier1-yearly': { amount: 299900, plan: 'tier1', duration: 'yearly' },  // ₹2999
-
-        'tier2-weekly': { amount: 19900, plan: 'tier2', duration: 'weekly' },   // ₹199
-        'tier2-monthly': { amount: 59900, plan: 'tier2', duration: 'monthly' }, // ₹599
-        'tier2-yearly': { amount: 599900, plan: 'tier2', duration: 'yearly' },  // ₹5999
-
-        'tier3-weekly': { amount: 39900, plan: 'tier3', duration: 'weekly' },   // ₹399
-        'tier3-monthly': { amount: 99900, plan: 'tier3', duration: 'monthly' }, // ₹999
-        'tier3-yearly': { amount: 999900, plan: 'tier3', duration: 'yearly' },  // ₹9999
-    }
-};
+// Initialize plan IDs on module load
+let planIdsInitialized = false;
+initializePlanIds()
+    .then(() => {
+        planIdsInitialized = true;
+        console.log('✓ Razorpay plan IDs loaded successfully');
+    })
+    .catch(err => {
+        console.error('✗ Failed to load Razorpay plan IDs:', err.message);
+        console.error('⚠️  Please run: node scripts/sync-razorpay-plans.js');
+    });
 
 router.use(authMiddleware);
 
-// Create Order
-router.post('/create-order', async (req, res) => {
+// Create Subscription (replaces create-order)
+router.post('/create-subscription', async (req, res) => {
     try {
+        if (!planIdsInitialized) {
+            return res.status(500).json({
+                error: 'Payment system not ready. Please contact support.'
+            });
+        }
+
         const { planId } = req.body;
 
-        // Detect user's country from various sources
-        // Priority: 1) User profile, 2) Request headers, 3) Default to international
+        // Get user details
         const db = getDB();
         const users = db.collection('users');
         const user = await users.findOne({ _id: toObjectId(req.user.userId, 'User ID') });
 
-        // Check user's stored country preference or detect from headers
-        const userCountry = user?.country || req.headers['cf-ipcountry'] || req.headers['x-vercel-ip-country'] || 'US';
-        const isIndianUser = userCountry === 'IN';
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
 
-        // Select currency based on location
-        const currency = isIndianUser ? 'INR' : 'USD';
-        const currencyKey = isIndianUser ? 'inr' : 'usd';
-        const selectedPlan = PLANS[currencyKey][planId];
-
+        // Validate plan exists
+        const selectedPlan = PLAN_CONFIG[planId];
         if (!selectedPlan) {
             return res.status(400).json({ error: 'Invalid plan selected' });
         }
 
-        const options = {
-            amount: selectedPlan.amount,
-            currency: currency,
-            receipt: `rcpt_${Date.now().toString().slice(-8)}_${req.user.userId.toString().slice(-6)}`,
+        // Get Razorpay plan ID (INR only)
+        const razorpayPlanId = getRazorpayPlanId(planId);
+
+        // Create subscription options
+        const subscriptionOptions = {
+            plan_id: razorpayPlanId,
+            total_count: 0, // 0 = infinite renewals until cancelled
+            quantity: 1,
+            customer_notify: 1, // Notify customer via email/SMS
             notes: {
                 userId: req.user.userId,
                 planId: planId,
                 planType: selectedPlan.plan,
-                currency: currency
+                currency: 'INR',
+                userEmail: user.email || '',
+                userName: user.name || ''
             }
         };
 
-        const order = await razorpay.orders.create(options);
-        res.json(order);
+        // Create subscription
+        const subscription = await razorpay.subscriptions.create(subscriptionOptions);
+
+        console.log('✓ Subscription created:', subscription.id);
+
+        res.json({
+            id: subscription.id,
+            plan_id: razorpayPlanId,
+            status: subscription.status,
+            short_url: subscription.short_url
+        });
     } catch (error) {
-        console.error('Create order error:', error);
-        res.status(500).json({ error: 'Failed to create payment order' });
+        console.error('Create subscription error:', error);
+        res.status(500).json({ error: 'Failed to create subscription' });
     }
 });
 
-// Verify Payment
-router.post('/verify-payment', async (req, res) => {
+// Verify Subscription Payment (replaces verify-payment)
+router.post('/verify-subscription', async (req, res) => {
     try {
         const {
-            razorpay_order_id,
+            razorpay_subscription_id,
             razorpay_payment_id,
             razorpay_signature,
             planId
         } = req.body;
 
-        const body = razorpay_order_id + "|" + razorpay_payment_id;
+        // Verify signature
+        const body = razorpay_payment_id + '|' + razorpay_subscription_id;
         const expectedSignature = crypto
             .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET?.trim())
             .update(body.toString())
             .digest('hex');
 
-        // DEBUG LOGGING
-        console.log('--- Payment Verification Debug ---');
+        console.log('--- Subscription Verification Debug ---');
         console.log('Plan ID:', planId);
-        console.log('Razorpay Order ID:', razorpay_order_id);
-        console.log('Razorpay Payment ID:', razorpay_payment_id);
-        console.log('Received Signature:', razorpay_signature);
-        console.log('Calculated Signature:', expectedSignature);
-        console.log('Loaded Key ID:', process.env.RAZORPAY_KEY_ID ? process.env.RAZORPAY_KEY_ID.slice(0, 8) + '...' : 'MISSING');
-        console.log('Loaded Key Secret:', process.env.RAZORPAY_KEY_SECRET ? process.env.RAZORPAY_KEY_SECRET.slice(0, 8) + '...' : 'MISSING');
-        console.log('Match?', expectedSignature === razorpay_signature);
-        console.log('----------------------------------');
+        console.log('Subscription ID:', razorpay_subscription_id);
+        console.log('Payment ID:', razorpay_payment_id);
+        console.log('Signature Match:', expectedSignature === razorpay_signature);
+        console.log('---------------------------------------');
 
         if (expectedSignature !== razorpay_signature) {
             return res.status(400).json({ error: 'Invalid payment signature' });
         }
 
-        // Payment successful, update user subscription
+        // Fetch subscription details from Razorpay
+        const subscription = await razorpay.subscriptions.fetch(razorpay_subscription_id);
+
+        // Get user and validate plan
         const db = getDB();
         const users = db.collection('users');
-
-        // Detect user's country to get correct pricing plan
         const user = await users.findOne({ _id: toObjectId(req.user.userId, 'User ID') });
-        const userCountry = user?.country || req.headers['cf-ipcountry'] || req.headers['x-vercel-ip-country'] || 'US';
-        const isIndianUser = userCountry === 'IN';
-        const currencyKey = isIndianUser ? 'inr' : 'usd';
-        const selectedPlan = PLANS[currencyKey][planId];
 
-        // Calculate expiry date
-        const expiryDate = new Date();
-        if (selectedPlan.duration === 'weekly') expiryDate.setDate(expiryDate.getDate() + 7);
-        if (selectedPlan.duration === 'monthly') expiryDate.setMonth(expiryDate.getMonth() + 1);
-        if (selectedPlan.duration === 'yearly') expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+        const selectedPlan = PLAN_CONFIG[planId];
 
+        if (!selectedPlan) {
+            return res.status(400).json({ error: 'Invalid plan configuration' });
+        }
+
+        // Calculate dates based on billing cycle
+        const currentPeriodStart = new Date(subscription.current_start * 1000);
+        const currentPeriodEnd = new Date(subscription.current_end * 1000);
+        const nextBillingDate = new Date(subscription.charge_at * 1000);
+
+        // Update user subscription
         await users.updateOne(
             { _id: toObjectId(req.user.userId, 'User ID') },
             {
@@ -148,17 +146,35 @@ router.post('/verify-payment', async (req, res) => {
                     subscription: {
                         plan: selectedPlan.plan,
                         status: 'active',
-                        expiryDate: expiryDate,
-                        razorpaySubscriptionId: razorpay_order_id // Storing order ID as ref
+                        expiryDate: currentPeriodEnd,
+                        razorpaySubscriptionId: razorpay_subscription_id,
+                        razorpayPlanId: subscription.plan_id,
+                        razorpayCustomerId: subscription.customer_id || null,
+                        nextBillingDate: nextBillingDate,
+                        currentPeriodStart: currentPeriodStart,
+                        currentPeriodEnd: currentPeriodEnd,
+                        currency: 'INR',
+                        cancelledAt: null
                     }
                 }
             }
         );
 
-        res.json({ success: true, message: 'Subscription updated successfully' });
+        console.log('✓ Subscription activated for user:', req.user.userId);
+
+        res.json({
+            success: true,
+            message: 'Subscription activated successfully',
+            subscription: {
+                plan: selectedPlan.plan,
+                status: 'active',
+                nextBillingDate: nextBillingDate,
+                currentPeriodEnd: currentPeriodEnd
+            }
+        });
     } catch (error) {
-        console.error('Verify payment error:', error);
-        res.status(500).json({ error: 'Payment verification failed' });
+        console.error('Verify subscription error:', error);
+        res.status(500).json({ error: 'Subscription verification failed' });
     }
 });
 
@@ -167,20 +183,72 @@ router.post('/cancel-subscription', async (req, res) => {
     try {
         const db = getDB();
         const users = db.collection('users');
+        const user = await users.findOne({ _id: toObjectId(req.user.userId, 'User ID') });
 
+        if (!user?.subscription?.razorpaySubscriptionId) {
+            return res.status(400).json({ error: 'No active subscription found' });
+        }
+
+        const subscriptionId = user.subscription.razorpaySubscriptionId;
+
+        // Cancel subscription on Razorpay (with access until period end)
+        await razorpay.subscriptions.cancel(subscriptionId, {
+            cancel_at_cycle_end: 1 // 1 = cancel at end of billing cycle, 0 = cancel immediately
+        });
+
+        // Update local subscription status
         await users.updateOne(
             { _id: toObjectId(req.user.userId, 'User ID') },
             {
                 $set: {
-                    'subscription.status': 'canceled'
+                    'subscription.status': 'cancelled',
+                    'subscription.cancelledAt': new Date()
                 }
             }
         );
 
-        res.json({ success: true, message: 'Subscription canceled successfully' });
+        console.log('✓ Subscription cancelled for user:', req.user.userId);
+
+        res.json({
+            success: true,
+            message: 'Subscription cancelled successfully. Access will continue until the end of your billing period.'
+        });
     } catch (error) {
         console.error('Cancel subscription error:', error);
         res.status(500).json({ error: 'Failed to cancel subscription' });
+    }
+});
+
+// Get Subscription Status
+router.get('/subscription-status', async (req, res) => {
+    try {
+        const db = getDB();
+        const users = db.collection('users');
+        const user = await users.findOne({ _id: toObjectId(req.user.userId, 'User ID') });
+
+        if (!user?.subscription?.razorpaySubscriptionId) {
+            return res.json({
+                hasSubscription: false,
+                plan: 'free'
+            });
+        }
+
+        // Fetch latest status from Razorpay
+        const subscription = await razorpay.subscriptions.fetch(
+            user.subscription.razorpaySubscriptionId
+        );
+
+        res.json({
+            hasSubscription: true,
+            plan: user.subscription.plan,
+            status: subscription.status,
+            currentPeriodEnd: new Date(subscription.current_end * 1000),
+            nextBillingDate: new Date(subscription.charge_at * 1000),
+            cancelAtCycleEnd: subscription.cancel_at_cycle_end === 1
+        });
+    } catch (error) {
+        console.error('Get subscription status error:', error);
+        res.status(500).json({ error: 'Failed to fetch subscription status' });
     }
 });
 

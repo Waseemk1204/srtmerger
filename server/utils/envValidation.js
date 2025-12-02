@@ -18,12 +18,16 @@ export const validateEnvironment = () => {
             description: 'MongoDB connection string'
         },
         'RAZORPAY_KEY_ID': {
-            minLength: 10,
+            required: true,
             description: 'Razorpay API key ID'
         },
         'RAZORPAY_KEY_SECRET': {
-            minLength: 10,
+            required: true,
             description: 'Razorpay API secret'
+        },
+        'RAZORPAY_WEBHOOK_SECRET': {
+            required: true,
+            description: 'Razorpay webhook signature secret'
         },
         'GOOGLE_CLIENT_ID': {
             minLength: 20,

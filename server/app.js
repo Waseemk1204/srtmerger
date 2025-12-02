@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.js';
 import fileRoutes from './routes/files.js';
 import paymentRoutes from './routes/payment.js';
 import usageRoutes from './routes/usage.js';
+import webhookRoutes from './routes/webhook.js';
 import { apiLimiter } from './middleware/rateLimit.js';
 
 const app = express();
@@ -28,6 +29,9 @@ app.use(cors({
 // Body parsing
 app.use(express.json({ limit: '20mb' })); // Increased for encrypted files
 app.use(express.urlencoded({ extended: true, limit: '20mb' }));
+
+// Webhook route (before rate limiting)
+app.use('/api/webhook', webhookRoutes);
 
 // Rate limiting
 app.use('/api', apiLimiter);

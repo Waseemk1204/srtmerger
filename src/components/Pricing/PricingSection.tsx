@@ -15,7 +15,6 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
     const { user } = useAuth();
     const [billingPeriod, setBillingPeriod] = useState<'weekly' | 'monthly' | 'yearly'>('monthly');
     const [loading, setLoading] = useState<string | null>(null);
-    const [isIndianUser, setIsIndianUser] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     // Success Modal Component
@@ -49,20 +48,7 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
         document.body
     );
 
-    useEffect(() => {
-        // Detect user's location
-        // Try to get timezone first, then fallback to navigator language
-        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const language = navigator.language;
 
-        // Check if user is likely from India
-        const isIndia = timezone?.includes('Asia/Kolkata') ||
-            timezone?.includes('Asia/Calcutta') ||
-            language?.startsWith('hi') ||
-            language?.startsWith('en-IN');
-
-        setIsIndianUser(isIndia);
-    }, []);
 
     useEffect(() => {
         // Load Razorpay script
@@ -92,30 +78,27 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
 
         setLoading(planType);
         try {
-            const order = await api.createOrder(planId) as any; // Cast to any to avoid unknown type error
+            const subscription = await api.createSubscription(planId) as any;
 
-            console.log('Frontend Razorpay Key:', import.meta.env.VITE_RAZORPAY_KEY_ID);
+            console.log('Subscription created:', subscription.id);
 
             const options = {
                 key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-                amount: order.amount,
-                currency: order.currency,
+                subscription_id: subscription.id,
                 name: "SRT Merger",
-                description: `${planType.toUpperCase()} Subscription - ${billingPeriod}`,
-                order_id: order.id,
+                description: `${planType.toUpperCase()} Plan - ${billingPeriod} (Auto-renewing)`,
                 handler: async function (response: any) {
                     try {
-                        await api.verifyPayment({
-                            razorpay_order_id: response.razorpay_order_id,
+                        await api.verifySubscription({
+                            razorpay_subscription_id: response.razorpay_subscription_id,
                             razorpay_payment_id: response.razorpay_payment_id,
                             razorpay_signature: response.razorpay_signature,
-                            planId: planId // Required for server-side verification logic
+                            planId: planId
                         });
                         setShowSuccessModal(true);
-                        // alert('Payment successful! Subscription activated.');
-                        // window.location.reload();
                     } catch (error) {
-                        alert('Payment verification failed');
+                        console.error('Subscription verification failed:', error);
+                        alert('Payment verification failed. Please contact support.');
                     }
                 },
                 prefill: {
@@ -124,6 +107,17 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
                 },
                 theme: {
                     color: "#2563eb"
+                },
+                notes: {
+                    note_key_1: `${planType} plan subscription`,
+                    note_key_2: `Billing: ${billingPeriod}`
+                },
+                modal: {
+                    confirm_close: true,
+                    ondismiss: function () {
+                        console.log('Checkout cancelled by user');
+                        setLoading(null);
+                    }
                 }
             };
 
@@ -137,21 +131,12 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
         }
     };
 
-    // Dual currency pricing
+    // INR pricing only
     const prices = {
-        usd: {
-            weekly: { tier1: '$1.99', tier2: '$3.99', tier3: '$6.99' },
-            monthly: { tier1: '$4.99', tier2: '$9.99', tier3: '$14.99' },
-            yearly: { tier1: '$39', tier2: '$79', tier3: '$129' },
-        },
-        inr: {
-            weekly: { tier1: '₹99', tier2: '₹199', tier3: '₹399' },
-            monthly: { tier1: '₹299', tier2: '₹599', tier3: '₹999' },
-            yearly: { tier1: '₹2,999', tier2: '₹5,999', tier3: '₹9,999' },
-        }
+        weekly: { tier1: '₹99', tier2: '₹199', tier3: '₹399' },
+        monthly: { tier1: '₹299', tier2: '₹599', tier3: '₹999' },
+        yearly: { tier1: '₹2,999', tier2: '₹5,999', tier3: '₹9,999' },
     };
-
-    const currencyKey = isIndianUser ? 'inr' : 'usd';
 
     return (
         <section className={compact ? "" : "py-8 sm:py-16 px-4 sm:px-6 lg:px-8 bg-gray-50"} id={compact ? undefined : "pricing"}>
@@ -221,7 +206,7 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
                     />
                     <PricingCard
                         title="Basic"
-                        price={prices[currencyKey][billingPeriod].tier1}
+                        price={prices[billingPeriod].tier1}
                         period={billingPeriod.slice(0, -2)} // week/month/year
                         planType="tier1"
                         currentPlan={user?.subscription?.plan}
@@ -237,7 +222,7 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
                     />
                     <PricingCard
                         title="Pro"
-                        price={prices[currencyKey][billingPeriod].tier2}
+                        price={prices[billingPeriod].tier2}
                         period={billingPeriod.slice(0, -2)}
                         planType="tier2"
                         currentPlan={user?.subscription?.plan}
@@ -254,7 +239,7 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
                     />
                     <PricingCard
                         title="Unlimited"
-                        price={prices[currencyKey][billingPeriod].tier3}
+                        price={prices[billingPeriod].tier3}
                         period={billingPeriod.slice(0, -2)}
                         planType="tier3"
                         currentPlan={user?.subscription?.plan}

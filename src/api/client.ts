@@ -99,17 +99,20 @@ export const api = {
         }),
 
     // Payment
-    createOrder: (planId: string) =>
-        request('/payment/create-order', {
+    createSubscription: (planId: string) =>
+        request('/payment/create-subscription', {
             method: 'POST',
             body: JSON.stringify({ planId }),
         }),
 
-    verifyPayment: (data: any) =>
-        request('/payment/verify-payment', {
+    verifySubscription: (data: any) =>
+        request('/payment/verify-subscription', {
             method: 'POST',
             body: JSON.stringify(data),
         }),
+
+    getSubscriptionStatus: () =>
+        request('/payment/subscription-status'),
 
     cancelSubscription: () =>
         request('/payment/cancel-subscription', {
