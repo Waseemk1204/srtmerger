@@ -10,6 +10,8 @@ import { toObjectId } from '../utils/objectIdValidator.js';
 import { linkFingerprintToUser } from '../middleware/usageLimit.js';
 import { logAuditEvent, AuditEventType } from '../utils/auditLogger.js';
 import { checkSubscriptionExpiry } from '../utils/subscription.js';
+import crypto from 'crypto';
+import { sendResetPasswordEmail } from '../utils/email.js';
 
 const router = express.Router();
 
@@ -352,6 +354,99 @@ router.delete('/delete', authMiddleware, async (req, res) => {
     } catch (error) {
         console.error('Delete account error:', error);
         res.status(500).json({ error: 'Failed to delete account' });
+    }
+});
+
+// Forgot Password
+router.post('/forgot-password', async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required' });
+        }
+
+        const db = getDB();
+        const users = db.collection('users');
+
+        const user = await users.findOne({ email: email.toLowerCase() });
+        if (!user) {
+            // Don't reveal if user exists
+            return res.json({ message: 'If an account exists with this email, a reset link has been sent.' });
+        }
+
+        // Generate reset token
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const resetTokenExpiry = Date.now() + 3600000; // 1 hour
+
+        await users.updateOne(
+            { _id: user._id },
+            {
+                $set: {
+                    resetToken,
+                    resetTokenExpiry
+                }
+            }
+        );
+
+        // Send email
+        const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/?view=reset-password&token=${resetToken}`;
+        const emailSent = await sendResetPasswordEmail(user.email, resetUrl);
+
+        if (!emailSent) {
+            // In dev without creds, we logged it. In prod, this is an error.
+            if (process.env.NODE_ENV === 'production') {
+                return res.status(500).json({ error: 'Failed to send email' });
+            }
+        }
+
+        res.json({ message: 'If an account exists with this email, a reset link has been sent.' });
+    } catch (error) {
+        console.error('Forgot password error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// Reset Password
+router.post('/reset-password', async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+
+        if (!token || !newPassword) {
+            return res.status(400).json({ error: 'Token and new password are required' });
+        }
+
+        if (newPassword.length < 8) {
+            return res.status(400).json({ error: 'Password must be at least 8 characters' });
+        }
+
+        const db = getDB();
+        const users = db.collection('users');
+
+        const user = await users.findOne({
+            resetToken: token,
+            resetTokenExpiry: { $gt: Date.now() }
+        });
+
+        if (!user) {
+            return res.status(400).json({ error: 'Invalid or expired reset token' });
+        }
+
+        // Hash new password
+        const passwordHash = await bcrypt.hash(newPassword, 12);
+
+        // Update user
+        await users.updateOne(
+            { _id: user._id },
+            {
+                $set: { passwordHash },
+                $unset: { resetToken: "", resetTokenExpiry: "" }
+            }
+        );
+
+        res.json({ message: 'Password reset successfully' });
+    } catch (error) {
+        console.error('Reset password error:', error);
+        res.status(500).json({ error: 'Server error' });
     }
 });
 

@@ -73,6 +73,18 @@ export const api = {
     getMe: () =>
         request('/auth/me'),
 
+    forgotPassword: (email: string) =>
+        request('/auth/forgot-password', {
+            method: 'POST',
+            body: JSON.stringify({ email }),
+        }),
+
+    resetPassword: (token: string, newPassword: string) =>
+        request('/auth/reset-password', {
+            method: 'POST',
+            body: JSON.stringify({ token, newPassword }),
+        }),
+
     // Files
     saveFile: (filename: string, content: string, filesize: number) => {
         const payload = { filename, content, filesize };

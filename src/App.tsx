@@ -16,11 +16,13 @@ import { Login } from './components/Login';
 import { Signup } from './components/Signup';
 import { Dashboard } from './components/Dashboard';
 import { SubscriptionPage } from './components/SubscriptionPage';
+import { ForgotPassword } from './components/ForgotPassword';
+import { ResetPassword } from './components/ResetPassword';
 import { FAQ } from './components/FAQ';
 import { useAuth } from './contexts/AuthContext';
 import { blogPosts } from './data/blogPosts';
 
-type View = 'home' | 'privacy' | 'how-it-works' | 'blog' | 'blog-post' | 'login' | 'signup' | 'dashboard' | 'subscription';
+type View = 'home' | 'privacy' | 'how-it-works' | 'blog' | 'blog-post' | 'login' | 'signup' | 'dashboard' | 'subscription' | 'forgot-password' | 'reset-password';
 
 function App() {
   const { isAuthenticated, loading: authLoading } = useAuth();
@@ -33,7 +35,7 @@ function App() {
     const viewParam = params.get('view') as typeof view;
     const postIdParam = params.get('postId');
 
-    if (viewParam && ['home', 'privacy', 'how-it-works', 'blog', 'blog-post', 'login', 'signup', 'dashboard', 'subscription'].includes(viewParam)) {
+    if (viewParam && ['home', 'privacy', 'how-it-works', 'blog', 'blog-post', 'login', 'signup', 'dashboard', 'subscription', 'forgot-password', 'reset-password'].includes(viewParam)) {
       setView(viewParam);
       if (viewParam === 'blog-post' && postIdParam) {
         setSelectedPostId(postIdParam);
@@ -239,6 +241,14 @@ function App() {
       );
     }
 
+    if (view === 'forgot-password') {
+      return <ForgotPassword />;
+    }
+
+    if (view === 'reset-password') {
+      return <ResetPassword />;
+    }
+
     // Home View
     return (
       <main>
@@ -263,7 +273,7 @@ function App() {
     );
   };
 
-  const hideNavbar = view === 'dashboard' || view === 'subscription' || view === 'login' || view === 'signup';
+  const hideNavbar = view === 'dashboard' || view === 'subscription' || view === 'login' || view === 'signup' || view === 'forgot-password' || view === 'reset-password';
 
   return (
     <div className="min-h-screen w-full bg-zinc-50 font-sans text-zinc-900 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
