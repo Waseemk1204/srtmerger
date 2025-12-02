@@ -16,15 +16,15 @@ const razorpay = new Razorpay({
 });
 
 // Initialize plan IDs on module load
-let planIdsInitialized = false;
-initializePlanIds()
+let initializationPromise = initializePlanIds()
     .then(() => {
-        planIdsInitialized = true;
         console.log('✓ Razorpay plan IDs loaded successfully');
+        return true;
     })
     .catch(err => {
         console.error('✗ Failed to load Razorpay plan IDs:', err.message);
         console.error('⚠️  Please run: node scripts/sync-razorpay-plans.js');
+        return false;
     });
 
 router.use(authMiddleware);
@@ -32,10 +32,18 @@ router.use(authMiddleware);
 // Create Subscription (replaces create-order)
 router.post('/create-subscription', async (req, res) => {
     try {
-        if (!planIdsInitialized) {
-            return res.status(500).json({
-                error: 'Payment system not ready. Please contact support.'
-            });
+        // Ensure plans are initialized
+        const initialized = await initializationPromise;
+        if (!initialized) {
+            // Try one more time if failed previously
+            try {
+                await initializePlanIds();
+            } catch (e) {
+                return res.status(500).json({
+                    error: 'Payment system not ready. Please contact support.',
+                    details: 'Failed to initialize plan IDs'
+                });
+            }
         }
 
         const { planId } = req.body;
