@@ -38,7 +38,8 @@ async function request<T>(
     const data = await response.json();
 
     if (!response.ok) {
-        throw new APIError(data.error || 'Request failed', response.status);
+        console.error('API Error Details:', data);
+        throw new APIError(data.error || data.message || 'Something went wrong', response.status);
     }
 
     return data;
