@@ -17,32 +17,33 @@ export const usageLimit = async (req, res, next) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        const today = new Date().toISOString().split('T')[0];
         const userPlan = getCurrentPlan(user); // Now checks expiry
         const limit = PLAN_LIMITS[userPlan];
 
-        // Reset usage if it's a new day
-        if (user.usage?.date !== today) {
-            await users.updateOne(
-                { _id: user._id },
-                {
-                    $set: {
-                        usage: {
-                            date: today,
-                            uploadCount: 0
-                        }
-                    }
-                }
-            );
-            user.usage = { date: today, uploadCount: 0 };
+        // Check rolling 24h window
+        let currentUsage = user.usage?.uploadCount || 0;
+        const firstMergeTime = user.usage?.firstMergeTime;
+
+        if (firstMergeTime) {
+            const timeDiff = Date.now() - new Date(firstMergeTime).getTime();
+            if (timeDiff >= 24 * 60 * 60 * 1000) {
+                // Window expired, effective usage is 0
+                currentUsage = 0;
+
+                // We don't strictly need to update DB here as incrementUsage handles the reset atomically,
+                // but we could to keep DB clean. For now, we just allow the request.
+            }
+        } else {
+            // No window start time, assume fresh window
+            currentUsage = 0;
         }
 
-        if (user.usage.uploadCount >= limit) {
+        if (currentUsage >= limit) {
             return res.status(403).json({
                 error: 'Daily upload limit reached',
                 code: 'LIMIT_REACHED',
                 limit,
-                current: user.usage.uploadCount,
+                current: currentUsage,
                 plan: userPlan
             });
         }
@@ -75,7 +76,7 @@ export const incrementUsage = async (userId, count = 1) => {
                     { 'usage.firstMergeTime': { $exists: false } },
                     {
                         'usage.firstMergeTime': {
-                            $lt: new Date(Date.now() - 24 * 60 * 60 * 1000)
+                            $lt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
                         }
                     }
                 ]

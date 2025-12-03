@@ -24,7 +24,7 @@ export const sendResetPasswordEmail = async (email, resetUrl) => {
     // Try Resend first
     if (resend) {
         try {
-            const data = await resend.emails.send({
+            const { data, error } = await resend.emails.send({
                 from: 'SRT Merger <onboarding@resend.dev>', // Default Resend testing domain
                 to: email,
                 subject: 'Reset Your Password - SRT Merger',
@@ -41,8 +41,14 @@ export const sendResetPasswordEmail = async (email, resetUrl) => {
                 </div>
             `
             });
-            console.log('Email sent via Resend:', data.id);
-            return true;
+
+            if (error) {
+                console.error('Resend API returned error:', error);
+                // Fall through to SMTP
+            } else {
+                console.log('Email sent via Resend:', data.id);
+                return true;
+            }
         } catch (error) {
             console.error('Resend failed, falling back to SMTP:', error);
             // Fall through to SMTP
