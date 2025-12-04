@@ -1186,5 +1186,65 @@ ES: ¿A dónde vas?</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">Merging subtitles is best for movies, multilingual viewers, and flexible editing. Hardcoding subtitles is best for short content, branding, and guaranteed visibility. Choose merge for flexibility, and hardcode for control and permanence.</p>
     `
+    },
+    {
+        id: 'what-is-an-srt-file-beginner-guide',
+        title: "What Is an SRT File? Complete Beginner’s Guide",
+        excerpt: "If you’ve ever downloaded subtitles, you’ve seen .srt files. This beginner-friendly guide covers everything you need to know about SRT files, their structure, and usage.",
+        date: "December 4, 2025",
+        readTime: "5 min read",
+        content: `
+      <p class="mb-6">If you’ve ever downloaded subtitles, watched a foreign movie, or worked with video captions, you’ve probably seen files ending in .srt. But what exactly is an SRT file, how does it work, and why is it the most popular subtitle format in the world?</p>
+
+      <p class="mb-6">This beginner-friendly guide covers everything you need to know about SRT files, including structure, examples, usage, pros/cons, and how SRTs compare to other subtitle formats.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">What Is an SRT File?</h3>
+      <p class="mb-6">An SRT file (SubRip Subtitle file) is a plain text file that contains subtitle numbers, start and end timestamps, subtitle text, and blank line separators. SRT is the most widely used subtitle format because it is simple, lightweight, and supported by almost all media players and editing tools.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">What Does an SRT File Look Like?</h3>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">1
+00:00:02,000 --> 00:00:04,500
+Hello! Welcome back.
+
+2
+00:00:06,000 --> 00:00:07,600
+How are you today?</pre>
+      <p class="mb-6">Each subtitle block contains: Subtitle number, Timestamp (start → end), Subtitle text, and Blank line.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">How Does an SRT File Work?</h3>
+      <p class="mb-6">SRT files work by showing text between the given timestamps. Video players read the file and display the corresponding lines at the exact moments defined. This simple timing structure makes SRT files incredibly easy to edit and merge.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Where Are SRT Files Used?</h3>
+      <p class="mb-6">SRT files are used everywhere: Movies, TV series, YouTube videos, Online courses, Social media content, and Accessibility services. Because SRT is a universal format, it works across phones, PCs, TVs, and streaming devices.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Why SRT Is the Most Popular Subtitle Format</h3>
+      <p class="mb-6"><strong>1. Simple and Easy to Edit</strong>: Open in any text editor.<br>
+      <strong>2. Lightweight</strong>: Takes only a few KB.<br>
+      <strong>3. Supported Everywhere</strong>: Works on almost all players and TVs.<br>
+      <strong>4. Easy to Sync and Fix</strong>: Shift timing easily.<br>
+      <strong>5. Perfect for Merging</strong>: Ideal for bilingual subtitles and fixing missing dialogues.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">SRT File Structure Explained</h3>
+      <p class="mb-6">An SRT file is structured as repeated blocks. Each block has an Index Number, Timestamp, Subtitle Text, and a Blank Line separator.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Pros and Cons of SRT Files</h3>
+      <p class="mb-6"><strong>Pros</strong>: Universal compatibility, Easy to edit, Extremely lightweight, Great for merging, Supports multilingual subtitles.<br>
+      <strong>Cons</strong>: No styling (bold, colors) unless upgraded, Doesn’t support advanced positioning, Cannot embed audio cues.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">SRT vs Other Subtitle Formats</h3>
+      <p class="mb-6"><strong>SRT vs VTT</strong>: VTT supports styling for web. SRT is simpler.<br>
+      <strong>SRT vs ASS/SSA</strong>: ASS offers advanced styling for anime. SRT is plain.<br>
+      <strong>SRT vs SUB/IDX</strong>: SUB/IDX is image-based. SRT is text-based.<br>
+      <strong>SRT vs Closed Captions</strong>: CC includes sound descriptions. SRT focuses on dialogue.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">What Can You Do With SRT Files?</h3>
+      <p class="mb-6">You can edit timing, merge multiple subtitles, convert formats, translate text, create dual-language subtitles, fix overlapping subtitles, and add subtitles to videos.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">How to Create and Open an SRT File</h3>
+      <p class="mb-6">Create manually in a text editor or use auto-generate tools. Open with Notepad, TextEdit, VS Code, or any text editor. To use with a video, name the SRT file the same as the video and put both in the same folder.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
+      <p class="mb-6">An SRT file is a simple, universal subtitle file that contains timecoded text. It’s easy to edit, merge, translate, convert, and sync—making it the most widely used subtitle format worldwide. Whether you’re creating subtitles, fixing them, merging versions, or supporting multiple languages, SRT files give you all the flexibility you need with minimal complexity.</p>
+    `
     }
 ];
