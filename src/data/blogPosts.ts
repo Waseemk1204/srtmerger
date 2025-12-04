@@ -1042,5 +1042,70 @@ ES: ¿A dónde vas?</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">Merging subtitles is incredibly useful for multilingual viewers, dual-audio movies, language learners, fixing incomplete subtitles, split CD1/CD2 movies, improving accuracy, making content more accessible, consistent TV series subtitles, and content creators. Whether you’re enhancing clarity, fixing missing lines, or supporting multiple languages, merged subtitles provide a smoother, richer viewing experience.</p>
     `
+    },
+    {
+        id: 'how-to-keep-timing-and-sync-when-merging-subtitles',
+        title: "How to Keep Timing & Sync When Merging Subtitles (Complete Timing Guide)",
+        excerpt: "Merging subtitles is easy—but keeping them perfectly synced is the real challenge. Learn how to maintain perfect synchronization while merging subtitles.",
+        date: "December 4, 2025",
+        readTime: "7 min read",
+        content: `
+      <p class="mb-6">Merging subtitles is easy—but keeping them perfectly synced is the real challenge. If the timing is even slightly off, you’ll see issues like subtitles appearing too early or too late, gradual drifting, overlapping dialogues, or wrong order of lines.</p>
+
+      <p class="mb-6">The good news: There are reliable ways to keep timing and sync when merging subtitles, no matter how many SRT files you are combining. This guide explains exactly how to maintain perfect synchronization while merging subtitles for movies, TV series, anime, dual-audio films, and multilingual subtitle setups.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Why Timing Breaks When Merging Subtitles</h3>
+      <p class="mb-6">Subtitle sync issues happen because different SRT files are created for different video versions. Common causes include: Different video source versions (BluRay vs WEBRip), CD1/CD2 timing reset, Translators using different timebases, Manual edits that shift timestamps, and Bad formatting.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">How to Keep Subtitles in Sync When Merging (Step-by-Step)</h3>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 1: Identify the Type of Merge You’re Doing</h4>
+      <p class="mb-6"><strong>Sequential Merge (Append Merge)</strong>: Used for CD1 + CD2. Requires shifting the second file.<br>
+      <strong>Overlay Merge (Timestamp Merge)</strong>: Used for dual-language subs. Requires aligning timestamps.<br>
+      <strong>Hybrid Merge</strong>: Used when versions differ heavily.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 2: Fix Formatting Before Merging</h4>
+      <p class="mb-6">Bad formatting breaks sync. Check for missing blank lines, incorrect timestamp format, or corrupted SRT blocks. Fix these before merging.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 3: Check If the Video FPS Matches the Subtitle FPS</h4>
+      <p class="mb-6">If your video is 23.976 fps but subtitles are 25 fps, they will drift. Convert timestamps proportionally or use a subtitle FPS adjustment tool.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 4: Adjust the Starting Point Before Merging</h4>
+      <p class="mb-6">Subtitles too early? Shift forward. Too late? Shift backward. Check the first spoken line and align it with the first subtitle line.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 5: Align Multiple Subtitle Versions</h4>
+      <p class="mb-6">If merging two versions, align Version B to Version A using the first major dialogue as an anchor.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 6: Shift CD2 (When Merging Part 1 + Part 2)</h4>
+      <p class="mb-6">For CD1/CD2 merges, shift CD2 by the duration of CD1 (e.g., if CD1 ends at 00:54:32, shift CD2 by that amount).</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 7: Use Proper Merge Mode</h4>
+      <p class="mb-6">Use Overlay Merge for dual-language subs to prevent duplicate timestamps. Use Append Merge for split parts.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 8: Recalculate and Sort Timestamps After Merging</h4>
+      <p class="mb-6">After merging, sort by timestamps, renumber lines, remove duplicate blocks, and fix overlapping timestamps.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 9: Test Across Different Parts of the Video</h4>
+      <p class="mb-6">Test the beginning, middle, fast action scenes, and end. If drift occurs later, fix FPS mismatch or re-sync.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Common Sync Problems When Merging Subtitles</h3>
+      <p class="mb-6"><strong>Subtitles Appear Slowly Later</strong>: FPS mismatch.<br>
+      <strong>Lines Appear Twice</strong>: Remove duplicates before merging.<br>
+      <strong>Drift Later in Movie</strong>: Timebase difference.<br>
+      <strong>CD2 Starts Over CD1</strong>: Shift CD2 forward.<br>
+      <strong>Overlapping Blocks</strong>: Clean overlapping timestamps.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Expert Tips to Maintain Sync</h3>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>Use subtitles from the same release group.</li>
+          <li>Always repair formatting before merging.</li>
+          <li>Shift subtitles using precise milliseconds.</li>
+          <li>Test on multiple video players.</li>
+          <li>Keep only essential lines.</li>
+      </ul>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
+      <p class="mb-6">Keeping subtitles perfectly synced when merging requires correct merge mode, clean formatting, adjusted timestamps, matching FPS, proper shifting, sorting, and thorough testing. Once done right, the resulting subtitle file will be perfectly aligned and fully synchronized.</p>
+    `
     }
 ];
