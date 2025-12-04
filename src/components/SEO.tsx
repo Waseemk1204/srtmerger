@@ -5,9 +5,10 @@ interface SEOProps {
     description: string;
     canonicalUrl?: string;
     image?: string;
+    schema?: object;
 }
 
-export function SEO({ title, description, canonicalUrl, image }: SEOProps) {
+export function SEO({ title, description, canonicalUrl, image, schema }: SEOProps) {
     useEffect(() => {
         // Update title
         document.title = title;
@@ -71,7 +72,24 @@ export function SEO({ title, description, canonicalUrl, image }: SEOProps) {
         if (ogDescription) {
             ogDescription.setAttribute('content', description);
         }
-    }, [title, description, canonicalUrl, image]);
+
+        // Inject Schema.org JSON-LD
+        if (schema) {
+            let scriptSchema = document.querySelector('script[type="application/ld+json"]');
+            if (!scriptSchema) {
+                scriptSchema = document.createElement('script');
+                scriptSchema.setAttribute('type', 'application/ld+json');
+                document.head.appendChild(scriptSchema);
+            }
+            scriptSchema.textContent = JSON.stringify(schema);
+        } else {
+            // Remove schema if not provided (cleanup)
+            const scriptSchema = document.querySelector('script[type="application/ld+json"]');
+            if (scriptSchema) {
+                scriptSchema.remove();
+            }
+        }
+    }, [title, description, canonicalUrl, image, schema]);
 
     return null;
 }

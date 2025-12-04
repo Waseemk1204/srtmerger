@@ -1,10 +1,5 @@
-
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowDownIcon } from 'lucide-react';
-
-interface HeroProps {
-    onNavigate?: (page: string) => void; // Optional for compatibility
-}
 
 import { SEO } from './SEO';
 
@@ -30,6 +25,19 @@ export function Hero() {
             <SEO
                 title="SRT Merger - Merge SRT Files Online Free (No Sign-up)"
                 description="Free online SRT merger. Combine multiple subtitle files (SRT, VTT) into one. Automatic time shifting, drag-and-drop, and 100% private client-side processing."
+                schema={{
+                    "@context": "https://schema.org",
+                    "@type": "SoftwareApplication",
+                    "name": "SRT Merger",
+                    "applicationCategory": "MultimediaApplication",
+                    "operatingSystem": "Any",
+                    "offers": {
+                        "@type": "Offer",
+                        "price": "0",
+                        "priceCurrency": "USD"
+                    },
+                    "description": "Free online tool to merge multiple SRT subtitle files into one. Features automatic time shifting and secure client-side processing."
+                }}
             />
             <div className="max-w-4xl mx-auto">
                 <h1 className="font-mono text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-4 tracking-tight leading-tight">
