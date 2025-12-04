@@ -880,5 +880,112 @@ ES: ¿A dónde vas?</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">Combining multiple subtitle languages into a single SRT file is completely possible with the right merge strategy. To merge 3+ languages effectively, prepare all subtitles correctly, upload and check encoding, use overlay merge mode, choose a clean multilingual layout, fix timing and drift, and export and test. The result is a clear, synchronized, multi-language subtitle file that works across all devices.</p>
     `
+    },
+    {
+        id: 'how-to-fix-missing-dialogues-in-subtitles',
+        title: "How to Fix Missing Dialogues in Subtitles by Merging Multiple SRT Files",
+        excerpt: "One of the most common subtitle problems is missing dialogue. Learn how to fix missing dialogues in subtitles quickly and accurately by merging multiple SRT files.",
+        date: "December 4, 2025",
+        readTime: "5 min read",
+        content: `
+      <p class="mb-6">One of the most common subtitle problems people face—especially with movies, web series, anime, and foreign-language content—is missing dialogue. Sometimes entire scenes or important lines simply don’t appear in the subtitles.</p>
+
+      <p class="mb-6">The good news: You can fix missing dialogues in subtitles quickly and accurately by merging multiple SRT files. Each subtitle version usually contains different strengths—one might have better timing, another might have missing lines filled.</p>
+
+      <p class="mb-6">This guide explains why subtitles lose dialogues, and how to merge two or more SRT files to restore missing text without breaking sync.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Why Subtitles Often Have Missing Dialogues</h3>
+
+      <p class="font-bold mb-2">1. Different Subtitle Creators</p>
+      <p class="mb-6">Two separate translators may create different versions. One might miss certain lines.</p>
+
+      <p class="font-bold mb-2">2. Poor Source or Rushed Translation</p>
+      <p class="mb-6">Some uploaders translate only key scenes.</p>
+
+      <p class="font-bold mb-2">3. Subtitle Designed for a Different Cut</p>
+      <p class="mb-6">Director’s Cut vs Theatrical Cut subtitles will not match.</p>
+
+      <p class="font-bold mb-2">4. Auto-generated or AI subtitles</p>
+      <p class="mb-6">These often skip whispered lines, background dialogues, fast-paced speech, or overlapping conversations.</p>
+
+      <p class="font-bold mb-2">5. Hard-to-hear Scenes</p>
+      <p class="mb-6">If the original sound is unclear, subtitles may omit parts.</p>
+
+      <p class="font-bold mb-2">6. Wrong Video Version</p>
+      <p class="mb-6">Subtitles synced for WEBRip won’t match BluRay or HDRip timing.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">How Merging Subtitle Files Fixes Missing Dialogues</h3>
+      <p class="mb-6">When you merge multiple subtitle versions, you get: More Complete Dialogue Coverage, Better Timing Accuracy, More Accurate Context Interpretation, and Redundancy Removal. This is the fastest and most reliable method to restore missing subtitles.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Step-by-Step: How to Fix Missing Subtitles by Merging SRT Files</h3>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 1: Collect Two or More Subtitle Versions</h4>
+      <p class="mb-6">Download at least two SRT files for the same movie or episode. Example: Movie.v1.srt, Movie.v2.srt. The more versions you have, the more complete the final output will be.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 2: Check Their Encoding and Format</h4>
+      <p class="mb-6">Make sure all files are .srt, use UTF-8 encoding, and follow proper SRT structure. If necessary, repair formatting using a text editor before merging.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 3: Upload All SRT Versions to a Subtitle Merger</h4>
+      <p class="mb-6">Upload Version A (main subtitle file), Version B (alternate subtitle file), and optionally Version C (backup). The tool will load all timestamps side-by-side.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 4: Select “Hybrid Merge” or “Overlay Merge” Mode</h4>
+      
+      <p class="font-bold mb-2">✔️ Overlay Merge (Timestamp Merge)</p>
+      <p class="mb-6">Best when two versions have the same structure but slightly different lines.</p>
+
+      <p class="font-bold mb-2">✔️ Hybrid Merge (Line Reconstruction Mode)</p>
+      <p class="mb-6">Best when versions differ heavily or one is incomplete.</p>
+
+      <p class="mb-6">Both modes compare timestamps, match missing lines, fill gaps, preserve original timing, and remove duplicates.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 5: Resolve Timing Conflicts</h4>
+      <p class="mb-6">If two versions have slightly different timing, fix timing before merging: Shift Version B slightly, Align both based on the first major spoken line, or Stretch/compress timestamps if drift occurs.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 6: Merge the Files and Rebuild Subtitle Blocks</h4>
+      <p class="mb-6">During merging, missing lines are inserted, duplicate blocks are removed, overlapping timestamps are fixed, line numbers are recalculated, and subtitle order is cleaned and sorted. This produces a complete, corrected subtitle file.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 7: Download and Test the Final Subtitle</h4>
+      <p class="mb-6">Load the merged subtitle into a video player like VLC, MX Player, PotPlayer, or Smart TV players. Check if all dialogues are present, long scenes show all lines, and timing is accurate throughout.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Common Issues and How to Fix Them</h3>
+
+      <p class="font-bold mb-2">1. Merged Subtitles Show Repeated Lines</p>
+      <p class="mb-6">Cause: Two versions contain same line. Fix: Enable “remove duplicates” before merging.</p>
+
+      <p class="font-bold mb-2">2. Restored Lines Appear Too Early/Late</p>
+      <p class="mb-6">Cause: Mismatched timestamps. Fix: Shift the subtitle version that contributed the missing lines.</p>
+
+      <p class="font-bold mb-2">3. One Subtitle Version Is Incomplete</p>
+      <p class="mb-6">Solution: Use hybrid merge; the tool prioritizes complete lines from the other file.</p>
+
+      <p class="font-bold mb-2">4. Unicode Characters Not Displaying</p>
+      <p class="mb-6">Fix: Save every file as UTF-8 encoded before merging.</p>
+
+      <p class="font-bold mb-2">5. Merged Block Contains Too Many Lines</p>
+      <p class="mb-6">Fix options: Remove non-essential lines, Use one-line summaries, Choose a cleaner formatting layout.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Tips to Prevent Missing Dialogue Issues in Future</h3>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li><strong>Always download subtitles matching your video’s release version</strong>: WEBRip, BluRay, HDRip, and DVDScr each have different timings.</li>
+          <li><strong>Prefer trusted subtitle creators</strong>: Their work is usually more complete and accurate.</li>
+          <li><strong>Avoid auto-generated subtitles for complex movies</strong>: They skip subtle, fast, or emotional dialogue.</li>
+          <li><strong>Keep multiple subtitle versions</strong>: Having alternatives helps repair incomplete ones.</li>
+          <li><strong>Use overlay/hybrid merge for foreign films</strong>: Especially anime, K-dramas, Turkish shows, or regional films.</li>
+      </ul>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">When Merging Subtitles Works Best</h3>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>Non-English movies with incomplete translations</li>
+          <li>Anime episodes with bad fan subs</li>
+          <li>Web series where some episodes have better subtitles</li>
+          <li>Movies with two subtitle uploaders</li>
+          <li>Director’s Cut movies where one version is missing scenes</li>
+          <li>International films with scattered subtitle accuracy</li>
+      </ul>
+      <p class="mb-6">Merging provides a clean, complete subtitle file across all types of content.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
+      <p class="mb-6">Fixing missing dialogues in subtitles is simple: Just merge multiple SRT versions. By overlaying, comparing, and reconstructing lines from different subtitle files, you can restore missing dialogues, correct timing problems, improve translation accuracy, create a complete subtitle file, and ensure a smooth viewing experience.</p>
+    `
     }
 ];
