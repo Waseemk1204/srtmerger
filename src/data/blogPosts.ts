@@ -1352,5 +1352,62 @@ How are you today?</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">Subtitle formats vary greatly depending on your needs. SRT is universal and best for merging. VTT is web-friendly. ASS is for styling. SUB/IDX is for archival. Knowing the differences helps you choose the right subtitle format for your project.</p>
     `
+  },
+  {
+    id: 'how-online-subtitle-merger-tools-work-technical-breakdown',
+    title: "How Online Subtitle Merger Tools Work Behind the Scenes (Technical Breakdown)",
+    excerpt: "Subtitle merging tools look simple, but behind the scenes is a complex system. This guide explains how they work technically, from parsing to encoding.",
+    date: "December 4, 2025",
+    readTime: "9 min read",
+    content: `
+      <p class="mb-6">Subtitle merging tools look simple on the surface—upload two SRT files, click merge, and download a combined subtitle file. But behind that button is a surprisingly complex system involving timestamp parsing, line alignment, drift correction, duplicate removal, file structure rebuilding, language-layer merging, conflict resolution, and encoding normalization.</p>
+
+      <p class="mb-6">This guide explains how online subtitle merger tools work behind the scenes, step by step, using simple language but with full technical clarity.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">1. Reading & Parsing SRT Files</h3>
+      <p class="mb-6">When you upload SRT files, the tool must parse them. Parsing includes detecting subtitle blocks, reading index numbers, extracting timestamps, extracting subtitle text, and validating formatting.</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">{
+  index: 1,
+  start: "00:00:01,000",
+  end: "00:00:04,000",
+  text: "Hello!"
+}</pre>
+      <p class="mb-6">The tool converts the SRT from plain text into a structured data model.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">2. Converting Timestamps Into Numerical Values</h3>
+      <p class="mb-6">SRT timestamps like <code>00:12:32,200</code> are converted into milliseconds (752200 ms). This conversion allows sorting, comparison, conflict detection, duration calculations, and drift correction.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">3. Detecting Merge Mode (Append, Overlay, or Hybrid)</h3>
+      <p class="mb-6"><strong>Append Merge</strong>: Used for CD1/CD2. Shifts timestamps in the second file.<br>
+      <strong>Overlay Merge</strong>: Used for combining languages. Aligns matching timestamp windows.<br>
+      <strong>Hybrid Merge</strong>: Used for incomplete versions. Chooses best available version.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">4. Timestamp Conflict Resolution</h3>
+      <p class="mb-6">When two subtitles overlap, the tool decides to combine text (for languages), choose the best subtitle (based on quality), or split into separate blocks.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">5. Duplicate Removal Logic</h3>
+      <p class="mb-6">Tools remove duplicates using Hashing (checksums), Timestamp Equality, or Fuzzy Matching.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">6. Sorting All Subtitle Blocks</h3>
+      <p class="mb-6">After merging, the tool sorts all blocks by start time in milliseconds to ensure chronological order.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">7. Handling Missing Lines</h3>
+      <p class="mb-6">If a file has missing lines, the tool inserts the missing block, aligns its timing, and rebuilds surrounding structure using timestamp neighbor comparison.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">8. Synchronization & Drift Correction</h3>
+      <p class="mb-6">To fix drift, tools use Linear Scaling, Elastic Alignment, or Offset Shifting.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">9. Encoding Normalization</h3>
+      <p class="mb-6">Tools automatically convert to UTF-8 encoding to ensure proper display for all languages (Hindi, Arabic, Korean, etc.).</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">10. Rebuilding the Final SRT File</h3>
+      <p class="mb-6">Once all blocks are correct, the tool numbers blocks, converts milliseconds back to SRT format, inserts text, adds blank lines, and ensures structural integrity.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">11. Final Validations Before Download</h3>
+      <p class="mb-6">A good merger performs tests like timestamp consistency, no overlapping blocks, no negative durations, proper blank lines, and Unicode compliance.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
+      <p class="mb-6">Behind every “Merge” button is a complex engine that parses text, converts timestamps, aligns blocks, removes duplicates, fixes drift, resolves conflicts, normalizes encoding, and rebuilds a clean SRT file. Understanding this helps you make better decisions and get perfect subtitle output.</p>
+    `
   }
 ];
