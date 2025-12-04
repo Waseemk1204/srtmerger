@@ -1,21 +1,22 @@
 import { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { MenuIcon, XIcon, UserIcon, CreditCardIcon, LogOutIcon, ChevronDownIcon } from 'lucide-react';
 
-type Page = 'home' | 'how-it-works' | 'blog' | 'privacy' | 'login' | 'dashboard' | 'subscription';
-
 interface NavbarProps {
-    onNavigate: (page: Page) => void;
+    onNavigate?: (page: string) => void; // Optional for backward compatibility if needed, but we'll ignore it
 }
 
-export function Navbar({ onNavigate }: NavbarProps) {
+export function Navbar({ }: NavbarProps) {
     const { isAuthenticated, user, logout } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
 
-    const handleNavigate = (page: Page) => {
-        onNavigate(page);
+    const handleNavigate = (path: string) => {
+        navigate(path);
         setIsMenuOpen(false);
         setIsProfileOpen(false);
     };
@@ -31,15 +32,34 @@ export function Navbar({ onNavigate }: NavbarProps) {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    const scrollToPricing = (): void => {
+        setIsMenuOpen(false);
+        if (location.pathname !== '/') {
+            navigate('/');
+            // Wait for navigation
+            setTimeout(() => {
+                const pricingSection = document.getElementById('pricing');
+                if (pricingSection) {
+                    pricingSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+        } else {
+            const pricingSection = document.getElementById('pricing');
+            if (pricingSection) {
+                pricingSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    };
+
     return (
         <nav className="w-full bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
-                    <a
-                        href="/"
+                    <Link
+                        to="/"
                         className="flex items-center gap-2 cursor-pointer"
-                        onClick={(e) => { e.preventDefault(); handleNavigate('home'); }}
+                        onClick={() => setIsMenuOpen(false)}
                     >
                         <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center shadow-lg shadow-gray-900/20 overflow-hidden">
                             <img src="/favicon.svg" alt="Logo" className="w-5 h-5" />
@@ -47,64 +67,39 @@ export function Navbar({ onNavigate }: NavbarProps) {
                         <span className="font-mono font-bold text-lg tracking-tight text-gray-900">
                             SRT Merger
                         </span>
-                    </a>
+                    </Link>
 
                     {/* Desktop Navigation Links */}
                     <div className="hidden md:flex items-center gap-8">
-                        <a
-                            href="/?view=how-it-works"
-                            onClick={(e) => { e.preventDefault(); handleNavigate('how-it-works'); }}
+                        <Link
+                            to="/how-it-works"
                             className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
                         >
                             How it works
-                        </a>
+                        </Link>
                         <button
-                            onClick={() => {
-                                // Check if we're on home page
-                                const urlParams = new URLSearchParams(window.location.search);
-                                const currentView = urlParams.get('view') || 'home';
-
-                                if (currentView !== 'home') {
-                                    // Navigate to home first, then scroll
-                                    handleNavigate('home');
-                                    // Wait for navigation to complete before scrolling
-                                    setTimeout(() => {
-                                        const pricingSection = document.getElementById('pricing');
-                                        if (pricingSection) {
-                                            pricingSection.scrollIntoView({ behavior: 'smooth' });
-                                        }
-                                    }, 100);
-                                } else {
-                                    // Already on home, just scroll
-                                    const pricingSection = document.getElementById('pricing');
-                                    if (pricingSection) {
-                                        pricingSection.scrollIntoView({ behavior: 'smooth' });
-                                    }
-                                }
-                            }}
+                            onClick={scrollToPricing}
                             className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors cursor-pointer"
                         >
                             Pricing
                         </button>
-                        <a
-                            href="/?view=blog"
-                            onClick={(e) => { e.preventDefault(); handleNavigate('blog'); }}
+                        <Link
+                            to="/blog"
                             className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
                         >
                             Blog
-                        </a>
+                        </Link>
                     </div>
 
                     {/* Right side - Login/Dashboard (Desktop) */}
                     <div className="hidden md:flex items-center gap-4">
                         {!isAuthenticated ? (
-                            <a
-                                href="/?view=login"
-                                onClick={(e) => { e.preventDefault(); handleNavigate('login'); }}
+                            <Link
+                                to="/login"
                                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
                             >
                                 Log In
-                            </a>
+                            </Link>
                         ) : (
                             <div className="relative" ref={profileRef}>
                                 <button
@@ -129,7 +124,7 @@ export function Navbar({ onNavigate }: NavbarProps) {
                                         </div>
 
                                         <button
-                                            onClick={() => handleNavigate('dashboard')}
+                                            onClick={() => handleNavigate('/dashboard')}
                                             className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                                         >
                                             <UserIcon className="w-4 h-4 text-gray-400" />
@@ -137,7 +132,7 @@ export function Navbar({ onNavigate }: NavbarProps) {
                                         </button>
 
                                         <button
-                                            onClick={() => handleNavigate('subscription')}
+                                            onClick={() => handleNavigate('/subscription')}
                                             className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                                         >
                                             <CreditCardIcon className="w-4 h-4 text-gray-400" />
@@ -150,8 +145,7 @@ export function Navbar({ onNavigate }: NavbarProps) {
                                             onClick={() => {
                                                 logout();
                                                 setIsProfileOpen(false);
-                                                // Redirect to home after logout
-                                                onNavigate('home');
+                                                navigate('/');
                                             }}
                                             className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
                                         >
@@ -193,13 +187,13 @@ export function Navbar({ onNavigate }: NavbarProps) {
                                 </div>
                                 <div className="space-y-1">
                                     <button
-                                        onClick={() => handleNavigate('dashboard')}
+                                        onClick={() => handleNavigate('/dashboard')}
                                         className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-white hover:shadow-sm"
                                     >
                                         Dashboard
                                     </button>
                                     <button
-                                        onClick={() => handleNavigate('subscription')}
+                                        onClick={() => handleNavigate('/subscription')}
                                         className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-white hover:shadow-sm"
                                     >
                                         My Subscription
@@ -208,65 +202,42 @@ export function Navbar({ onNavigate }: NavbarProps) {
                             </div>
                         )}
 
-                        <a
-                            href="/?view=how-it-works"
-                            onClick={(e) => { e.preventDefault(); handleNavigate('how-it-works'); }}
+                        <Link
+                            to="/how-it-works"
+                            onClick={() => setIsMenuOpen(false)}
                             className="block px-3 py-3 rounded-lg text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                         >
                             How it works
-                        </a>
+                        </Link>
                         <button
-                            onClick={() => {
-                                // Check if we're on home page
-                                const urlParams = new URLSearchParams(window.location.search);
-                                const currentView = urlParams.get('view') || 'home';
-
-                                setIsMenuOpen(false);
-
-                                if (currentView !== 'home') {
-                                    // Navigate to home first, then scroll
-                                    handleNavigate('home');
-                                    // Wait for navigation to complete before scrolling
-                                    setTimeout(() => {
-                                        const pricingSection = document.getElementById('pricing');
-                                        if (pricingSection) {
-                                            pricingSection.scrollIntoView({ behavior: 'smooth' });
-                                        }
-                                    }, 100);
-                                } else {
-                                    // Already on home, just scroll
-                                    const pricingSection = document.getElementById('pricing');
-                                    if (pricingSection) {
-                                        pricingSection.scrollIntoView({ behavior: 'smooth' });
-                                    }
-                                }
-                            }}
+                            onClick={scrollToPricing}
                             className="block w-full text-left px-3 py-3 rounded-lg text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 cursor-pointer"
                         >
                             Pricing
                         </button>
-                        <a
-                            href="/?view=blog"
-                            onClick={(e) => { e.preventDefault(); handleNavigate('blog'); }}
+                        <Link
+                            to="/blog"
+                            onClick={() => setIsMenuOpen(false)}
                             className="block px-3 py-3 rounded-lg text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                         >
                             Blog
-                        </a>
+                        </Link>
 
                         <div className="pt-4 border-t border-gray-100 mt-2">
                             {!isAuthenticated ? (
-                                <a
-                                    href="/?view=login"
-                                    onClick={(e) => { e.preventDefault(); handleNavigate('login'); }}
+                                <Link
+                                    to="/login"
+                                    onClick={() => setIsMenuOpen(false)}
                                     className="block w-full text-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-base font-medium"
                                 >
                                     Log In
-                                </a>
+                                </Link>
                             ) : (
                                 <button
                                     onClick={() => {
                                         logout();
                                         setIsMenuOpen(false);
+                                        navigate('/');
                                     }}
                                     className="block w-full text-center px-4 py-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-base font-medium"
                                 >

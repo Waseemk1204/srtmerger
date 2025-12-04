@@ -1,24 +1,35 @@
-import React from 'react';
-import { ArrowLeftIcon, UploadCloudIcon, FileTextIcon, ArrowRightIcon, DownloadIcon } from 'lucide-react';
+
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowLeftIcon, UploadCloudIcon, FileTextIcon, ArrowRightIcon } from 'lucide-react';
 
 interface HowItWorksProps {
-    onBack: () => void;
+    onBack?: () => void; // Optional for compatibility
     onStartMerging?: () => void;
 }
 
-export function HowItWorks({ onBack, onStartMerging }: HowItWorksProps) {
+export function HowItWorks({ }: HowItWorksProps) {
+    const navigate = useNavigate();
+
+    const handleStartMerging = () => {
+        navigate('/');
+        setTimeout(() => {
+            const toolElement = document.getElementById('merger-tool');
+            toolElement?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+    };
+
     return (
         <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
             <div className="max-w-4xl mx-auto px-4 py-12 sm:py-20">
                 {/* Header */}
                 <div className="mb-16 text-center">
-                    <button
-                        onClick={onBack}
+                    <Link
+                        to="/"
                         className="inline-flex items-center gap-2 text-sm font-mono text-gray-500 hover:text-gray-900 mb-8 transition-colors"
                     >
                         <ArrowLeftIcon className="w-4 h-4" />
                         Back to Merger
-                    </button>
+                    </Link>
                     <h1 className="font-mono text-4xl sm:text-5xl font-bold text-gray-900 mb-6 tracking-tight">
                         How it works
                     </h1>
@@ -195,8 +206,8 @@ export function HowItWorks({ onBack, onStartMerging }: HowItWorksProps) {
                 {/* CTA */}
                 <div className="mt-24 text-center">
                     <button
-                        onClick={onStartMerging || onBack}
-                        className="px-8 py-4 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 inline-flex items-center gap-2"
+                        onClick={handleStartMerging}
+                        className="px-8 py-4 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 inline-flex items-center gap-2 cursor-pointer"
                     >
                         Start Merging Now
                         <ArrowRightIcon className="w-4 h-4" />

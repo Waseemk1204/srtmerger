@@ -1,14 +1,26 @@
-import React from 'react';
+
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowDownIcon } from 'lucide-react';
 
 interface HeroProps {
-    onNavigate?: (page: 'home' | 'privacy' | 'how-it-works' | 'signup') => void;
+    onNavigate?: (page: string) => void; // Optional for compatibility
 }
 
-export function Hero({ onNavigate }: HeroProps) {
+export function Hero({ }: HeroProps) {
+    const navigate = useNavigate();
+    const location = useLocation();
+
     const scrollToTool = () => {
-        const toolElement = document.getElementById('merger-tool');
-        toolElement?.scrollIntoView({ behavior: 'smooth' });
+        if (location.pathname !== '/') {
+            navigate('/');
+            setTimeout(() => {
+                const toolElement = document.getElementById('merger-tool');
+                toolElement?.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        } else {
+            const toolElement = document.getElementById('merger-tool');
+            toolElement?.scrollIntoView({ behavior: 'smooth' });
+        }
     };
 
     return (
@@ -31,21 +43,19 @@ export function Hero({ onNavigate }: HeroProps) {
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <a
-                        href="#merger-tool"
-                        onClick={(e) => { e.preventDefault(); scrollToTool(); }}
-                        className="w-full sm:w-auto px-8 py-4 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                    <button
+                        onClick={scrollToTool}
+                        className="w-full sm:w-auto px-8 py-4 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
                     >
                         Start Merging
                         <ArrowDownIcon className="w-4 h-4" />
-                    </a>
-                    <a
-                        href="/?view=signup"
-                        onClick={(e) => { e.preventDefault(); onNavigate?.('signup'); }}
+                    </button>
+                    <Link
+                        to="/signup"
                         className="w-full sm:w-auto px-8 py-4 bg-white text-gray-700 border border-gray-200 rounded-xl font-medium hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
                     >
                         Sign Up
-                    </a>
+                    </Link>
                 </div>
 
                 <div className="mt-8 flex items-center justify-center gap-8 text-sm text-gray-400 font-mono">

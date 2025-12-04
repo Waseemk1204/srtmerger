@@ -1,10 +1,11 @@
+import { Link } from 'react-router-dom';
 import { MailIcon, ShieldCheckIcon } from 'lucide-react';
 
 interface FooterProps {
-  onOpenPrivacy: () => void;
+  onOpenPrivacy?: () => void; // Optional for compatibility
 }
 
-export function Footer({ onOpenPrivacy }: FooterProps) {
+export function Footer({ }: FooterProps) {
   return (
     <footer className="mt-16 pt-8 border-t border-gray-200 pb-8 px-4">
       <div className="max-w-4xl mx-auto flex flex-col items-center justify-center gap-4 text-sm text-gray-600">
@@ -18,14 +19,13 @@ export function Footer({ onOpenPrivacy }: FooterProps) {
           </a>
         </div>
 
-        <a
-          href="/?view=privacy"
-          onClick={(e) => { e.preventDefault(); onOpenPrivacy(); }}
+        <Link
+          to="/privacy"
           className="flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-colors"
         >
           <ShieldCheckIcon className="w-4 h-4" />
           Privacy Policy
-        </a>
+        </Link>
 
         <div className="text-xs text-gray-400 mt-2">
           © {new Date().getFullYear()} SRT Merger. All rights reserved.

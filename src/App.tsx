@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
@@ -22,106 +23,78 @@ import { FAQ } from './components/FAQ';
 import { useAuth } from './contexts/AuthContext';
 import { blogPosts } from './data/blogPosts';
 
-type View = 'home' | 'privacy' | 'how-it-works' | 'blog' | 'blog-post' | 'login' | 'signup' | 'dashboard' | 'subscription' | 'forgot-password' | 'reset-password';
-
 function App() {
   const { isAuthenticated, loading: authLoading } = useAuth();
-  const [view, setView] = useState<View>('home');
-  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // Initialize state from URL on mount
+  // Handle legacy query params redirect
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const viewParam = params.get('view') as typeof view;
+    const viewParam = params.get('view');
     const postIdParam = params.get('postId');
 
-    if (viewParam && ['home', 'privacy', 'how-it-works', 'blog', 'blog-post', 'login', 'signup', 'dashboard', 'subscription', 'forgot-password', 'reset-password'].includes(viewParam)) {
-      setView(viewParam);
-      if (viewParam === 'blog-post' && postIdParam) {
-        setSelectedPostId(postIdParam);
+    if (viewParam) {
+      // Clear query params to prevent infinite loops if logic fails, 
+      // but we are navigating so it should be fine.
+      switch (viewParam) {
+        case 'blog-post':
+          if (postIdParam) navigate(`/blog/${postIdParam}`, { replace: true });
+          else navigate('/blog', { replace: true });
+          break;
+        case 'blog':
+          navigate('/blog', { replace: true });
+          break;
+        case 'privacy':
+          navigate('/privacy', { replace: true });
+          break;
+        case 'how-it-works':
+          navigate('/how-it-works', { replace: true });
+          break;
+        case 'login':
+          navigate('/login', { replace: true });
+          break;
+        case 'signup':
+          navigate('/signup', { replace: true });
+          break;
+        case 'dashboard':
+          navigate('/dashboard', { replace: true });
+          break;
+        case 'subscription':
+          navigate('/subscription', { replace: true });
+          break;
+        case 'forgot-password':
+          navigate('/forgot-password', { replace: true });
+          break;
+        case 'reset-password':
+          navigate('/reset-password', { replace: true });
+          break;
+        default:
+          navigate('/', { replace: true });
       }
     }
   }, []);
-
-  // Handle browser back/forward buttons
-  useEffect(() => {
-    const handlePopState = () => {
-      const params = new URLSearchParams(window.location.search);
-      const viewParam = (params.get('view') as typeof view) || 'home';
-      const postIdParam = params.get('postId');
-
-      setView(viewParam);
-      setSelectedPostId(postIdParam);
-      window.scrollTo(0, 0);
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
-
-  // Handle BFCache restoration
-  useEffect(() => {
-    const handlePageShow = (event: PageTransitionEvent) => {
-      if (event.persisted) {
-        const params = new URLSearchParams(window.location.search);
-        const viewParam = (params.get('view') as typeof view) || 'home';
-        setView(viewParam);
-      }
-    };
-
-    window.addEventListener('pageshow', handlePageShow as any);
-    return () => window.removeEventListener('pageshow', handlePageShow as any);
-  }, []);
-
-  // Navigate function that updates URL
-  const navigate = (newView: View, postId?: string) => {
-    const params = new URLSearchParams();
-    if (newView !== 'home') {
-      params.set('view', newView);
-    }
-    if (postId) {
-      params.set('postId', postId);
-    }
-
-    const newUrl = params.toString() ? `?${params.toString()}` : '/';
-
-    if (window.location.search !== (params.toString() ? `?${params.toString()}` : '')) {
-      window.history.pushState({}, '', newUrl);
-    }
-
-    setView(newView);
-    setSelectedPostId(postId || null);
-    window.scrollTo(0, 0);
-  };
 
   // Auto-redirect after login
   useEffect(() => {
-    if (isAuthenticated && (view === 'login' || view === 'signup')) {
+    if (isAuthenticated && (location.pathname === '/login' || location.pathname === '/signup')) {
       const params = new URLSearchParams(window.location.search);
       const redirectTarget = params.get('redirect');
 
-      if (redirectTarget === 'pricing' && view === 'signup') {
+      if (redirectTarget === 'pricing' && location.pathname === '/signup') {
         // We want to go to DASHBOARD view, but keep auto params
-        const newParams = new URLSearchParams();
-        newParams.set('view', 'dashboard'); // Explicitly set view to dashboard
-        newParams.set('trigger_subscription', 'true'); // Explicitly trigger subscription
-        if (params.get('auto_plan')) newParams.set('auto_plan', params.get('auto_plan')!);
-        if (params.get('auto_period')) newParams.set('auto_period', params.get('auto_period')!);
-
-        const newUrl = newParams.toString() ? `?${newParams.toString()}` : '/';
-        window.history.pushState({}, '', newUrl);
-        setView('dashboard');
-
-        // No scrolling needed as we are on dashboard
+        // In React Router, we pass state or keep query params
+        // For now, let's keep query params as they are read by Dashboard
+        navigate(`/dashboard?trigger_subscription=true&${params.toString()}`, { replace: true });
       } else {
-        navigate('dashboard');
+        navigate('/dashboard', { replace: true });
       }
     }
     // Redirect to login if trying to access dashboard while logged out
-    if (!authLoading && !isAuthenticated && view === 'dashboard') {
-      navigate('home');
+    if (!authLoading && !isAuthenticated && (location.pathname === '/dashboard' || location.pathname === '/subscription')) {
+      navigate('/', { replace: true });
     }
-  }, [isAuthenticated, authLoading, view]);
+  }, [isAuthenticated, authLoading, location.pathname, navigate]);
 
   // Show loading while checking auth
   if (authLoading) {
@@ -132,159 +105,95 @@ function App() {
     );
   }
 
-  const renderContent = () => {
-    // Auth views (public)
-    if (view === 'login') {
-      return <Login onSwitchToSignup={() => navigate('signup')} onBackToHome={() => navigate('home')} />;
-    }
-
-    if (view === 'signup') {
-      return <Signup onSwitchToLogin={() => navigate('login')} onBackToHome={() => navigate('home')} />;
-    }
-
-    // Dashboard (authenticated users only)
-    if (view === 'dashboard') {
-      if (!isAuthenticated) {
-        // Redirect to home if not authenticated
-        window.history.replaceState({}, '', '/');
-        return (
-          <main>
-            <Hero onNavigate={(page) => setView(page)} />
-            <MergerTool />
-            <section className="py-8 px-4 sm:px-6 lg:px-8">
-              <div className="max-w-5xl mx-auto">
-                <UsageCard />
-              </div>
-            </section>
-            <PricingSection />
-            <FAQ />
-          </main>
-        );
-      }
-      return <Dashboard />;
-    }
-
-    // Subscription Page (authenticated users only)
-    if (view === 'subscription') {
-      if (!isAuthenticated) {
-        // Redirect to home if not authenticated
-        window.history.replaceState({}, '', '/');
-        return (
-          <main>
-            <Hero onNavigate={(page) => setView(page)} />
-            <MergerTool />
-            <section className="py-8 px-4 sm:px-6 lg:px-8">
-              <div className="max-w-5xl mx-auto">
-                <UsageCard />
-              </div>
-            </section>
-            <PricingSection />
-            <FAQ />
-          </main>
-        );
-      }
-      return <SubscriptionPage />;
-    }
-
-    if (view === 'privacy') {
-      return <PrivacyPolicy onBack={() => navigate('home')} />;
-    }
-
-    if (view === 'how-it-works') {
-      return (
-        <HowItWorks
-          onBack={() => navigate('home')}
-          onStartMerging={() => {
-            navigate('home');
-            // Wait for render then scroll
-            setTimeout(() => {
-              const toolElement = document.getElementById('merger-tool');
-              toolElement?.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-          }}
-        />
-      );
-    }
-
-    if (view === 'blog') {
-      return (
-        <Blog
-          onBack={() => navigate('home')}
-          onReadPost={(id) => navigate('blog-post', id)}
-        />
-      );
-    }
-
-    if (view === 'blog-post' && selectedPostId) {
-      const post = blogPosts.find(p => p.id === selectedPostId);
-      if (post) {
-        return (
-          <BlogPost
-            post={post}
-            onBack={() => navigate('blog')}
-          />
-        );
-      }
-      // Post not found - redirect to blog list
-      return (
-        <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Post Not Found</h1>
-            <p className="text-gray-600 mb-6">The blog post you're looking for doesn't exist.</p>
-            <button
-              onClick={() => navigate('blog')}
-              className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
-            >
-              Back to Blog
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    if (view === 'forgot-password') {
-      return <ForgotPassword />;
-    }
-
-    if (view === 'reset-password') {
-      return <ResetPassword />;
-    }
-
-    // Home View
-    return (
-      <main>
-        <Hero onNavigate={(page) => setView(page)} />
-
-        {/* Merger Tool Section */}
-        <MergerTool />
-
-        {/* Usage Card Section */}
-        <section className="py-8 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-5xl mx-auto">
-            <UsageCard />
-          </div>
-        </section>
-
-        <PricingSection />
-
-        {/* FAQ Section */}
-        <FAQ />
-
-      </main >
-    );
-  };
-
-  const hideNavbar = view === 'dashboard' || view === 'subscription' || view === 'login' || view === 'signup' || view === 'forgot-password' || view === 'reset-password';
+  const hideNavbar = ['/dashboard', '/subscription', '/login', '/signup', '/forgot-password', '/reset-password'].includes(location.pathname);
 
   return (
     <div className="min-h-screen w-full bg-zinc-50 font-sans text-zinc-900 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
-      {!hideNavbar && <Navbar onNavigate={(page) => navigate(page as View)} />}
+      {!hideNavbar && <Navbar onNavigate={(page) => navigate(page === 'home' ? '/' : `/${page}`)} />}
 
-      {renderContent()}
+      <Routes>
+        <Route path="/" element={
+          <main>
+            <Hero onNavigate={(page) => navigate(page === 'home' ? '/' : `/${page}`)} />
+            <MergerTool />
+            <section className="py-8 px-4 sm:px-6 lg:px-8">
+              <div className="max-w-5xl mx-auto">
+                <UsageCard />
+              </div>
+            </section>
+            <PricingSection />
+            <FAQ />
+          </main>
+        } />
 
-      {!hideNavbar && <Footer onOpenPrivacy={() => navigate('privacy')} />}
+        <Route path="/login" element={<Login onSwitchToSignup={() => navigate('/signup')} onBackToHome={() => navigate('/')} />} />
+        <Route path="/signup" element={<Signup onSwitchToLogin={() => navigate('/login')} onBackToHome={() => navigate('/')} />} />
 
+        <Route path="/dashboard" element={
+          isAuthenticated ? <Dashboard /> : <Navigate to="/" replace />
+        } />
 
+        <Route path="/subscription" element={
+          isAuthenticated ? <SubscriptionPage /> : <Navigate to="/" replace />
+        } />
+
+        <Route path="/privacy" element={<PrivacyPolicy onBack={() => navigate('/')} />} />
+
+        <Route path="/how-it-works" element={
+          <HowItWorks
+            onBack={() => navigate('/')}
+            onStartMerging={() => {
+              navigate('/');
+              setTimeout(() => {
+                const toolElement = document.getElementById('merger-tool');
+                toolElement?.scrollIntoView({ behavior: 'smooth' });
+              }, 100);
+            }}
+          />
+        } />
+
+        <Route path="/blog" element={<Blog onBack={() => navigate('/')} onReadPost={(id) => navigate(`/blog/${id}`)} />} />
+
+        <Route path="/blog/:id" element={<BlogPostWrapper />} />
+
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+
+        {/* Catch all - redirect to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+
+      {!hideNavbar && <Footer onOpenPrivacy={() => navigate('/privacy')} />}
+    </div>
+  );
+}
+
+// Wrapper to handle params for BlogPost
+function BlogPostWrapper() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  // We need to extract the ID from the URL path
+  const pathParts = location.pathname.split('/');
+  const id = pathParts[pathParts.length - 1];
+
+  const post = blogPosts.find(p => p.id === id);
+
+  if (post) {
+    return <BlogPost post={post} onBack={() => navigate('/blog')} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">Post Not Found</h1>
+        <p className="text-gray-600 mb-6">The blog post you're looking for doesn't exist.</p>
+        <button
+          onClick={() => navigate('/blog')}
+          className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+        >
+          Back to Blog
+        </button>
+      </div>
     </div>
   );
 }

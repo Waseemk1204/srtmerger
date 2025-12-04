@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { UserPlusIcon, ArrowLeftIcon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { APIError } from '../api/client';
 import { GoogleLogin } from '@react-oauth/google';
 
 interface SignupProps {
-    onSwitchToLogin: () => void;
-    onBackToHome: () => void;
+    onSwitchToLogin?: () => void; // Optional for compatibility
+    onBackToHome?: () => void;
 }
 
-export function Signup({ onSwitchToLogin, onBackToHome }: SignupProps) {
+export function Signup({ }: SignupProps) {
     const { signup, googleLogin } = useAuth();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -51,13 +52,13 @@ export function Signup({ onSwitchToLogin, onBackToHome }: SignupProps) {
         <div className="min-h-screen flex items-center justify-center bg-zinc-50 p-4 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
             <div className="w-full max-w-md">
                 {/* Back button */}
-                <button
-                    onClick={onBackToHome}
+                <Link
+                    to="/"
                     className="mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
                 >
                     <ArrowLeftIcon className="w-4 h-4" />
                     <span>Back to Home</span>
-                </button>
+                </Link>
 
                 {/* Signup Card */}
                 <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
@@ -156,13 +157,12 @@ export function Signup({ onSwitchToLogin, onBackToHome }: SignupProps) {
 
                         <div className="text-center text-sm text-gray-600">
                             Already have an account?{' '}
-                            <button
-                                type="button"
-                                onClick={onSwitchToLogin}
+                            <Link
+                                to="/login"
                                 className="text-blue-600 hover:text-blue-700 font-medium"
                             >
                                 Log in
-                            </button>
+                            </Link>
                         </div>
                         <div className="relative my-6">
                             <div className="absolute inset-0 flex items-center">

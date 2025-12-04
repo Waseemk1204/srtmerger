@@ -1,23 +1,24 @@
-import React from 'react';
+
+import { Link } from 'react-router-dom';
 import { ArrowLeftIcon, CalendarIcon, ClockIcon } from 'lucide-react';
 import { BlogPost as BlogPostType } from '../data/blogPosts';
 
 interface BlogPostProps {
     post: BlogPostType;
-    onBack: () => void;
+    onBack?: () => void;
 }
 
-export function BlogPost({ post, onBack }: BlogPostProps) {
+export function BlogPost({ post }: BlogPostProps) {
     return (
         <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
             <div className="max-w-3xl mx-auto px-4 py-12 sm:py-20">
-                <button
-                    onClick={onBack}
+                <Link
+                    to="/blog"
                     className="inline-flex items-center gap-2 text-sm font-mono text-gray-500 hover:text-gray-900 mb-8 transition-colors"
                 >
                     <ArrowLeftIcon className="w-4 h-4" />
                     Back to Blog
-                </button>
+                </Link>
 
                 <article className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 sm:p-12">
                     <header className="mb-10">

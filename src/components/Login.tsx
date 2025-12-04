@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { LogInIcon, ArrowLeftIcon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { APIError } from '../api/client';
 import { GoogleLogin } from '@react-oauth/google';
 
 interface LoginProps {
-    onSwitchToSignup: () => void;
-    onBackToHome: () => void;
+    onSwitchToSignup?: () => void; // Optional for compatibility
+    onBackToHome?: () => void;
 }
 
-export function Login({ onSwitchToSignup, onBackToHome }: LoginProps) {
+export function Login({ }: LoginProps) {
     const { login, googleLogin } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -38,13 +39,13 @@ export function Login({ onSwitchToSignup, onBackToHome }: LoginProps) {
         <div className="min-h-screen flex items-center justify-center bg-zinc-50 p-4 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
             <div className="w-full max-w-md">
                 {/* Back button */}
-                <button
-                    onClick={onBackToHome}
+                <Link
+                    to="/"
                     className="mb-6 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
                 >
                     <ArrowLeftIcon className="w-4 h-4" />
                     <span>Back to Home</span>
-                </button>
+                </Link>
 
                 {/* Login Card */}
                 <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
@@ -80,9 +81,9 @@ export function Login({ onSwitchToSignup, onBackToHome }: LoginProps) {
                                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                                     Password
                                 </label>
-                                <a href="/?view=forgot-password" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+                                <Link to="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
                                     Forgot Password?
-                                </a>
+                                </Link>
                             </div>
                             <input
                                 id="password"
@@ -116,13 +117,12 @@ export function Login({ onSwitchToSignup, onBackToHome }: LoginProps) {
 
                         <div className="text-center text-sm text-gray-600">
                             Don't have an account?{' '}
-                            <button
-                                type="button"
-                                onClick={onSwitchToSignup}
+                            <Link
+                                to="/signup"
                                 className="text-blue-600 hover:text-blue-700 font-medium"
                             >
                                 Sign up
-                            </button>
+                            </Link>
                         </div>
                         <div className="relative my-6">
                             <div className="absolute inset-0 flex items-center">

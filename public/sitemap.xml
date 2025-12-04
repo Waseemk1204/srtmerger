@@ -2,55 +2,55 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://srtmerger.com/</loc>
-    <lastmod>2024-11-27</lastmod>
-    <changefreq>daily</changefreq>
+    <lastmod>2025-12-04</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://srtmerger.com/how-it-works</loc>
-    <lastmod>2024-11-27</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2025-12-04</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://srtmerger.com/blog</loc>
-    <lastmod>2024-11-27</lastmod>
+    <lastmod>2025-12-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://srtmerger.com/privacy</loc>
-    <lastmod>2024-11-27</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2025-12-04</lastmod>
+    <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://srtmerger.com/?view=blog-post&amp;postId=the-30-minute-limit</loc>
-    <lastmod>2024-11-27</lastmod>
+    <loc>https://srtmerger.com/blog/the-30-minute-limit</loc>
+    <lastmod>2025-12-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://srtmerger.com/?view=blog-post&amp;postId=how-to-merge-srt-files-online</loc>
-    <lastmod>2024-11-28</lastmod>
+    <loc>https://srtmerger.com/blog/how-to-merge-srt-files-online</loc>
+    <lastmod>2025-12-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://srtmerger.com/?view=blog-post&amp;postId=srt-vs-vtt-subtitle-formats</loc>
-    <lastmod>2024-11-29</lastmod>
+    <loc>https://srtmerger.com/blog/srt-vs-vtt-subtitle-formats</loc>
+    <lastmod>2025-12-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://srtmerger.com/?view=blog-post&amp;postId=guide-to-subtitle-time-shifting</loc>
-    <lastmod>2024-11-30</lastmod>
+    <loc>https://srtmerger.com/blog/guide-to-subtitle-time-shifting</loc>
+    <lastmod>2025-12-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://srtmerger.com/?view=blog-post&amp;postId=privacy-matters-online-tools</loc>
-    <lastmod>2024-12-01</lastmod>
+    <loc>https://srtmerger.com/blog/privacy-matters-online-tools</loc>
+    <lastmod>2025-12-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

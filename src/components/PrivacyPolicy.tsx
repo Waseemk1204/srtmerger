@@ -1,21 +1,22 @@
-import React from 'react';
+
+import { Link } from 'react-router-dom';
 import { ArrowLeftIcon, ShieldIcon, LockIcon, EyeOffIcon, ServerIcon } from 'lucide-react';
 
 interface PrivacyPolicyProps {
-    onBack: () => void;
+    onBack?: () => void; // Optional for compatibility
 }
 
-export function PrivacyPolicy({ onBack }: PrivacyPolicyProps) {
+export function PrivacyPolicy({ }: PrivacyPolicyProps) {
     return (
         <div className="min-h-screen bg-gray-50 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto">
-                <button
-                    onClick={onBack}
+                <Link
+                    to="/"
                     className="flex items-center gap-2 text-gray-600 hover:text-blue-600 mb-8 transition-colors font-medium"
                 >
                     <ArrowLeftIcon className="w-4 h-4" />
                     Back to Merger
-                </button>
+                </Link>
 
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                     <div className="bg-blue-600 px-6 py-8 sm:px-10 sm:py-12 text-white">
