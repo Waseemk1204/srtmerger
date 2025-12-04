@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { SEO } from './SEO';
 
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../hooks/useSubscription';
@@ -111,8 +112,14 @@ export function Dashboard() {
         }
     }, [user]);
 
+
+
     return (
         <div className="min-h-screen bg-zinc-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+            <SEO
+                title="My Dashboard - SRT Merger"
+                description="Manage your merged files, view usage stats, and control your subscription."
+            />
             <DashboardNavbar onNavigate={(page) => window.location.href = `/?view=${page}`} activePage="dashboard" />
             <h1 className="sr-only">SRT Merger Dashboard</h1>
 

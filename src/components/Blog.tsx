@@ -1,16 +1,22 @@
 
 import { Link } from 'react-router-dom';
 import { ArrowLeftIcon, CalendarIcon, ClockIcon, ArrowRightIcon } from 'lucide-react';
-import { blogPosts } from '../data/blogPosts';
+import { blogPosts, BlogPost } from '../data/blogPosts';
+
+import { SEO } from './SEO';
 
 interface BlogProps {
+    onReadPost?: (post: BlogPost) => void; // Optional for compatibility
     onBack?: () => void;
-    onReadPost?: (id: string) => void;
 }
 
 export function Blog({ }: BlogProps) {
     return (
         <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+            <SEO
+                title="Subtitle Editing Tips & Guides - SRT Merger Blog"
+                description="Learn how to merge SRT files, fix sync issues, and optimize subtitles for video content."
+            />
             <div className="max-w-3xl mx-auto px-4 py-12 sm:py-20">
                 {/* Header */}
                 <div className="mb-16">
@@ -33,7 +39,7 @@ export function Blog({ }: BlogProps) {
                 <div className="space-y-12">
                     {blogPosts.map((post) => (
                         <article key={post.id} className="group">
-                            <Link to={`/blog/${post.id}`} className="block">
+                            <Link to={`/ blog / ${post.id} `} className="block">
                                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 transition-all hover:shadow-md hover:border-gray-300">
                                     <div className="flex items-center gap-4 text-sm text-gray-500 mb-4 font-mono">
                                         <span className="flex items-center gap-1">

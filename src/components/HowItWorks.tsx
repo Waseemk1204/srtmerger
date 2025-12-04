@@ -7,6 +7,8 @@ interface HowItWorksProps {
     onStartMerging?: () => void;
 }
 
+import { SEO } from './SEO';
+
 export function HowItWorks({ }: HowItWorksProps) {
     const navigate = useNavigate();
 
@@ -20,6 +22,10 @@ export function HowItWorks({ }: HowItWorksProps) {
 
     return (
         <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+            <SEO
+                title="How to Merge SRT Files - Step-by-Step Guide"
+                description="Learn how to combine multiple SRT files into one using our simple drag-and-drop tool. No technical skills required."
+            />
             <div className="max-w-4xl mx-auto px-4 py-12 sm:py-20">
                 {/* Header */}
                 <div className="mb-16 text-center">

@@ -10,6 +10,8 @@ interface LoginProps {
     onBackToHome?: () => void;
 }
 
+import { SEO } from './SEO';
+
 export function Login({ }: LoginProps) {
     const { login, googleLogin } = useAuth();
     const [email, setEmail] = useState('');
@@ -37,6 +39,10 @@ export function Login({ }: LoginProps) {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-zinc-50 p-4 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+            <SEO
+                title="Login to Your Account - SRT Merger"
+                description="Access your SRT Merger dashboard to manage your saved files and subscription."
+            />
             <div className="w-full max-w-md">
                 {/* Back button */}
                 <Link

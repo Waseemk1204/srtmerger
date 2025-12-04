@@ -10,6 +10,8 @@ interface SignupProps {
     onBackToHome?: () => void;
 }
 
+import { SEO } from './SEO';
+
 export function Signup({ }: SignupProps) {
     const { signup, googleLogin } = useAuth();
     const [name, setName] = useState('');
@@ -50,6 +52,10 @@ export function Signup({ }: SignupProps) {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-zinc-50 p-4 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+            <SEO
+                title="Create Free Account - SRT Merger"
+                description="Sign up for SRT Merger to save your merged subtitle files and access premium features."
+            />
             <div className="w-full max-w-md">
                 {/* Back button */}
                 <Link

@@ -3,14 +3,20 @@ import { Link } from 'react-router-dom';
 import { ArrowLeftIcon, CalendarIcon, ClockIcon } from 'lucide-react';
 import { BlogPost as BlogPostType } from '../data/blogPosts';
 
+import { SEO } from './SEO';
+
 interface BlogPostProps {
     post: BlogPostType;
-    onBack?: () => void;
+    onBack?: () => void; // Optional for compatibility
 }
 
 export function BlogPost({ post }: BlogPostProps) {
     return (
-        <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+        <article className="min-h-screen bg-white font-sans text-zinc-900 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+            <SEO
+                title={`${post.title} - SRT Merger`}
+                description={post.excerpt}
+            />
             <div className="max-w-3xl mx-auto px-4 py-12 sm:py-20">
                 <Link
                     to="/blog"
@@ -43,6 +49,6 @@ export function BlogPost({ post }: BlogPostProps) {
                     />
                 </article>
             </div>
-        </div>
+        </article>
     );
 }

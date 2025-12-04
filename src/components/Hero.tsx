@@ -6,7 +6,9 @@ interface HeroProps {
     onNavigate?: (page: string) => void; // Optional for compatibility
 }
 
-export function Hero({ }: HeroProps) {
+import { SEO } from './SEO';
+
+export function Hero() {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -25,6 +27,10 @@ export function Hero({ }: HeroProps) {
 
     return (
         <section className="pt-20 pb-8 sm:pt-28 sm:pb-12 px-4 text-center">
+            <SEO
+                title="SRT Merger - Merge SRT Files Online Free (No Sign-up)"
+                description="Free online SRT merger. Combine multiple subtitle files (SRT, VTT) into one. Automatic time shifting, drag-and-drop, and 100% private client-side processing."
+            />
             <div className="max-w-4xl mx-auto">
                 <h1 className="font-mono text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-4 tracking-tight leading-tight">
                     SRT Merger: Merge Subtitles.
