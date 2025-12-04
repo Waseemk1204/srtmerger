@@ -29,6 +29,11 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   // Handle legacy query params redirect
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
