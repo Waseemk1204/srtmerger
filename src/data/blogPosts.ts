@@ -652,5 +652,120 @@ Don't worry, I'm here.</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">To merge subtitles for dual audio movies properly, upload both subtitle files, select the correct merge mode (overlay/hybrid), fix timing differences, choose a readable bilingual layout, and merge and test for perfect sync. Following these steps ensures your dual audio movie has one clean, synchronized subtitle file that works flawlessly with either audio track.</p>
     `
+    },
+    {
+        id: 'how-to-batch-merge-subtitles-for-tv-series',
+        title: "How to Batch Merge Subtitles for TV Series (Season-Wise Guide)",
+        excerpt: "Merging subtitles for a single movie is easy—but handling an entire season of a TV series is a totally different challenge. Learn how to batch merge subtitles for TV series.",
+        date: "December 4, 2025",
+        readTime: "6 min read",
+        content: `
+      <p class="mb-6">Merging subtitles for a single movie is easy—but handling an entire season of a TV series is a totally different challenge. Many shows come with subtitles that are split into multiple parts per episode, mislabeled or unsynced, coming from different uploaders, missing certain lines, or in different languages for different episodes.</p>
+
+      <p class="mb-6">If you’re watching a full season in one go, you need a clean and consistent subtitle experience. This guide explains how to batch merge subtitles for TV series, keep everything in sync, and organize all subtitles episode-by-episode.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Why You Need Batch Subtitle Merging for TV Series</h3>
+
+      <p class="font-bold mb-2">✔️ Consistency Across All Episodes</p>
+      <p class="mb-6">Every episode should follow the same subtitle style and timing.</p>
+
+      <p class="font-bold mb-2">✔️ Avoid Subtitle Switching</p>
+      <p class="mb-6">Some players don’t auto-load the next subtitle file when the next episode begins.</p>
+
+      <p class="font-bold mb-2">✔️ Fix Missing Lines in Certain Episodes</p>
+      <p class="mb-6">Sometimes one episode has poor subtitles while another source is better.</p>
+
+      <p class="font-bold mb-2">✔️ Combine Multi-Part Subtitles</p>
+      <p class="mb-6">Some shows have “Episode 1 Part A” + “Episode 1 Part B” subtitles.</p>
+
+      <p class="font-bold mb-2">✔️ Create Bilingual Subtitles Across an Entire Season</p>
+      <p class="mb-6">For example, English + Hindi, English + Korean, etc. Batch merging solves all these issues at once.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Types of Subtitle Merging Needed for TV Series</h3>
+      <p class="mb-6">TV series usually require one of these three merges:</p>
+
+      <p class="font-bold mb-2">1. Episode Merge (Part A + Part B)</p>
+      <p class="mb-6">For episodes split into two subtitle files. Example: Episode 1A.srt + Episode 1B.srt. Requires append merge with timing adjustment.</p>
+
+      <p class="font-bold mb-2">2. Version Merge (Two Subtitle Sources for the Same Episode)</p>
+      <p class="mb-6">Used when one subtitle file is incomplete or inaccurate. Requires overlay merge or hybrid merge.</p>
+
+      <p class="font-bold mb-2">3. Language Merge (Two-Language Subtitles for All Episodes)</p>
+      <p class="mb-6">Used to create bilingual subtitles for the whole season. Requires overlay merge with line formatting.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">How to Batch Merge Subtitles for a TV Series (Step-by-Step)</h3>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 1: Organize All Subtitle Files Properly</h4>
+      <p class="mb-6">Before merging, organize everything so it’s easy. Example structure:</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">Season 1
+  Episode 01
+    - E01_English.srt
+    - E01_Hindi.srt
+  Episode 02
+    - E02_English.srt
+    - E02_Hindi.srt
+  ...</pre>
+      <p class="mb-6">Good organization prevents wrong episode merges.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 2: Identify Which Merge Each Episode Needs</h4>
+      <p class="mb-6">For each episode, determine if it needs Part A + Part B merging, Dual-language merging, Fixing missing lines, or Timing alignment. Each episode may require a different merge type.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 3: Upload All Episode Subtitle Pairs in Batches</h4>
+      <p class="mb-6">Use a subtitle tool that supports multiple merges. Batch upload Episode 01 (English + Hindi), Episode 02 (English + Hindi), etc. This ensures consistent processing.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 4: Choose the Correct Merge Mode for the Season</h4>
+      
+      <p class="font-bold mb-2">✔️ For Part A + Part B Episodes:</p>
+      <p class="mb-6">Use Append Merge, then shift Part B timestamps. Example: If Part A ends at 00:24:50, shift Part B by 24 min 50 sec.</p>
+
+      <p class="font-bold mb-2">✔️ For Bilingual Subtitles (Season-Wide):</p>
+      <p class="mb-6">Use Overlay Merge for every episode. Choose a layout (English on top, Hindi below) and keep the style identical for all episodes.</p>
+
+      <p class="font-bold mb-2">✔️ For Combining Two Versions:</p>
+      <p class="mb-6">Use Hybrid Merge to fill missing/superior lines. Useful when episodes have bad subtitles or untranslated lines.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 5: Standardize the Formatting Across the Season</h4>
+      <p class="mb-6">Make sure all episodes follow: Same subtitle numbering, Same timing format, Same language order, and Same line-break structure (two lines max per subtitle block).</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 6: Merge Each Episode and Export the Season Pack</h4>
+      <p class="mb-6">After merging each episode, export the final SRT files as Show_Name_S01E01.srt, Show_Name_S01E02.srt, etc. This standard naming helps auto-load subtitles in media players.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">How to Fix Common Problems During Batch Subtitle Merging</h3>
+
+      <p class="font-bold mb-2">1. Subtitles Drift in One Episode Only</p>
+      <p class="mb-6">Cause: Episode sourced from a different release. Fix: Shift entire episode subtitle by ± seconds or fix FPS mismatch.</p>
+
+      <p class="font-bold mb-2">2. Some Episodes Have Missing Dialogues</p>
+      <p class="mb-6">Cause: Poor subtitle source. Fix: Merge two different versions (hybrid merge).</p>
+
+      <p class="font-bold mb-2">3. Episodes Not Syncing With the Same Audio Track</p>
+      <p class="mb-6">Cause: Different releases across the season. Fix: Match each episode’s subtitle to the correct video version.</p>
+
+      <p class="font-bold mb-2">4. Inconsistent Subtitle Style Across Episodes</p>
+      <p class="mb-6">Fix: Ensure consistent line structure and font size by editing each SRT’s formatting before merging.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Tips for Merging Subtitles for Full Seasons</h3>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li><strong>Use the same subtitle uploader/source for all episodes</strong>: This ensures consistent timing.</li>
+          <li><strong>Stick to one format</strong>: Don’t switch layout between episodes.</li>
+          <li><strong>Don’t exceed two lines per subtitle block</strong>: TV screens are smaller than monitors.</li>
+          <li><strong>Test the merged subtitles on a smart TV</strong>: Smart TVs are stricter with formatting than VLC.</li>
+          <li><strong>Keep backup copies</strong>: If one episode goes wrong, you can re-merge it quickly.</li>
+      </ul>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">When Batch Merging Is Most Useful</h3>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>Netflix/Amazon shows downloaded with external subtitles</li>
+          <li>Anime with multiple audio + subtitle sources</li>
+          <li>K-drama and C-drama seasons with incomplete translations</li>
+          <li>Indian regional shows with Hindi + English subtitles</li>
+          <li>Western shows with multi-part episodes</li>
+          <li>Full-season binge watching</li>
+      </ul>
+      <p class="mb-6">Batch merging gives a consistent, clean subtitle experience across the entire season.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
+      <p class="mb-6">To batch merge subtitles for a TV series, organize season files by episode, identify the merge type needed per episode, upload files in batches, apply the required merge mode, standardize formatting, and export clean, synced SRTs for the entire season. Following these steps ensures every episode in the season has perfectly matched and consistent subtitles.</p>
+    `
     }
 ];
