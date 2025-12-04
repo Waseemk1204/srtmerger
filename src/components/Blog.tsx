@@ -39,7 +39,7 @@ export function Blog({ }: BlogProps) {
                 <div className="space-y-12">
                     {blogPosts.map((post) => (
                         <article key={post.id} className="group">
-                            <Link to={`/ blog / ${post.id} `} className="block">
+                            <Link to={`/blog/${post.id}`} className="block">
                                 <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 transition-all hover:shadow-md hover:border-gray-300">
                                     <div className="flex items-center gap-4 text-sm text-gray-500 mb-4 font-mono">
                                         <span className="flex items-center gap-1">
