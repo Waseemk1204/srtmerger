@@ -66,7 +66,7 @@ export function ResetPassword() {
                     <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Lock className="w-6 h-6 text-blue-600" />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900">Reset Password</h2>
+                    <h1 className="text-2xl font-bold text-gray-900">Reset Password</h1>
                     <p className="text-gray-500 mt-2">
                         Enter your new password below.
                     </p>

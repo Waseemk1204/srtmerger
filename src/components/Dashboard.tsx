@@ -114,6 +114,7 @@ export function Dashboard() {
     return (
         <div className="min-h-screen bg-zinc-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
             <DashboardNavbar onNavigate={(page) => window.location.href = `/?view=${page}`} activePage="dashboard" />
+            <h1 className="sr-only">SRT Merger Dashboard</h1>
 
             {/* Loading Overlay for Subscription */}
             {subscriptionLoading && (
