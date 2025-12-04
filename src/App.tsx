@@ -100,10 +100,11 @@ function App() {
       const params = new URLSearchParams(window.location.search);
       const redirectTarget = params.get('redirect');
 
-      if (redirectTarget === 'pricing') {
+      if (redirectTarget === 'pricing' && view === 'signup') {
         // We want to go to DASHBOARD view, but keep auto params
         const newParams = new URLSearchParams();
         newParams.set('view', 'dashboard'); // Explicitly set view to dashboard
+        newParams.set('trigger_subscription', 'true'); // Explicitly trigger subscription
         if (params.get('auto_plan')) newParams.set('auto_plan', params.get('auto_plan')!);
         if (params.get('auto_period')) newParams.set('auto_period', params.get('auto_period')!);
 

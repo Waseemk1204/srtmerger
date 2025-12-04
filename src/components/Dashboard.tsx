@@ -92,8 +92,9 @@ export function Dashboard() {
         const params = new URLSearchParams(window.location.search);
         const autoPlan = params.get('auto_plan');
         const autoPeriod = params.get('auto_period');
+        const shouldTrigger = params.get('trigger_subscription') === 'true';
 
-        if (user && autoPlan && autoPeriod) {
+        if (user && autoPlan && autoPeriod && shouldTrigger) {
             // Trigger subscription
             // We need a small timeout to allow state update and component mount
             setTimeout(() => {
@@ -105,6 +106,7 @@ export function Dashboard() {
             newParams.delete('auto_plan');
             newParams.delete('auto_period');
             newParams.delete('redirect');
+            newParams.delete('trigger_subscription');
             window.history.replaceState({}, '', `?${newParams.toString()}`);
         }
     }, [user]);
