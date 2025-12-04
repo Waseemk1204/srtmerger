@@ -109,42 +109,60 @@ router.post('/login', loginLimiter, async (req, res) => {
         if (!user) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
+        console.log(`Login: User found ${user._id}`);
 
         // Check for subscription expiry
-        user = await checkSubscriptionExpiry(user);
+        let updatedUser = user;
+        try {
+            updatedUser = await checkSubscriptionExpiry(user);
+            console.log('Login: Subscription check passed');
+        } catch (e) {
+            console.error('Login: Subscription check failed', e);
+            // Continue with original user if check fails, don't block login
+        }
 
         // Verify password
-        const isValid = await bcrypt.compare(password, user.passwordHash);
+        console.log('Login: Verifying password...');
+        const isValid = await bcrypt.compare(password, updatedUser.passwordHash);
         if (!isValid) {
+            console.log('Login: Password mismatch');
             return res.status(401).json({ error: 'Invalid credentials' });
         }
+        console.log('Login: Password verified');
 
         // Initialize missing fields for existing users
         const updates = { lastLogin: new Date() };
 
-        if (!user.subscription) {
+        if (!updatedUser.subscription) {
             updates.subscription = { plan: 'free', status: 'active' };
         }
 
-        if (!user.usage) {
+        if (!updatedUser.usage) {
             const today = new Date().toISOString().split('T')[0];
             updates.usage = { date: today, uploadCount: 0 };
         }
 
         // Update user with last login and any missing fields
         await users.updateOne(
-            { _id: user._id },
+            { _id: updatedUser._id },
             { $set: updates }
         );
+        console.log('Login: User updated');
 
         // Link fingerprint if provided
         if (fingerprint) {
-            await linkFingerprintToUser(user._id.toString(), fingerprint);
+            try {
+                await linkFingerprintToUser(updatedUser._id.toString(), fingerprint);
+                console.log('Login: Fingerprint linked');
+            } catch (e) {
+                console.error('Login: Fingerprint link failed', e);
+                // Don't fail login for this
+            }
         }
 
         // Generate JWT
         const token = jwt.sign(
-            { userId: user._id.toString(), email: user.email },
+            { userId: updatedUser._id.toString(), email: updatedUser.email },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
@@ -152,11 +170,11 @@ router.post('/login', loginLimiter, async (req, res) => {
         res.json({
             token,
             user: {
-                id: user._id,
-                email: user.email,
-                name: user.name,
-                subscription: updates.subscription || user.subscription,
-                usage: updates.usage || user.usage
+                id: updatedUser._id,
+                email: updatedUser.email,
+                name: updatedUser.name,
+                subscription: updates.subscription || updatedUser.subscription,
+                usage: updates.usage || updatedUser.usage
             }
         });
     } catch (error) {
