@@ -415,5 +415,125 @@ Subtitle text here</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">Merging CD1 and CD2 subtitle files into a single SRT is simple, fast, and essential for proper playback when your movie is in a single file. With the correct append merge mode, proper timestamp shifting, and basic validation, you can create a clean, perfectly synchronized subtitle file ready for uninterrupted viewing.</p>
     `
+    },
+    {
+        id: 'best-way-to-merge-srt-files-without-losing-sync',
+        title: "Best Way to Merge SRT Files Without Losing Sync (Complete Guide)",
+        excerpt: "Merging multiple SRT subtitle files is easy—but keeping everything perfectly in sync is the real challenge. Learn how to merge without losing sync.",
+        date: "December 4, 2025",
+        readTime: "5 min read",
+        content: `
+      <p class="mb-6">Merging multiple SRT subtitle files is easy—but keeping everything perfectly in sync is the real challenge. If the timestamps don’t line up correctly, your merged subtitles may appear too early, too late, repeating, overlapping, or missing at certain scenes.</p>
+
+      <p class="mb-6">This guide explains the best way to merge SRT files without losing sync, how to avoid common timing problems, and how to fix subtitle drift for perfectly aligned results.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Why Subtitles Lose Sync When Merged</h3>
+      <p class="mb-6">Before merging, it’s important to understand why SRT files go out of sync:</p>
+
+      <p class="font-bold mb-2">1. Different Source Versions</p>
+      <p class="mb-6">If SRT files come from different video sources, their timing can be slightly or completely mismatched.</p>
+
+      <p class="font-bold mb-2">2. CD1/CD2 Timing Resets</p>
+      <p class="mb-6">Second half of a movie often starts from 00:00:00 again.</p>
+
+      <p class="font-bold mb-2">3. FPS (Frame Rate) Differences</p>
+      <p class="mb-6">Subtitles created for 23.976fps may not sync with videos at 25fps or 30fps.</p>
+
+      <p class="font-bold mb-2">4. Manual Editing Errors</p>
+      <p class="mb-6">Extra spaces, removed lines, or incorrect timestamp formatting can cause drift.</p>
+
+      <p class="font-bold mb-2">5. Overlapping Timestamps</p>
+      <p class="mb-6">When two SRTs cover the same time window without merging correctly.</p>
+
+      <p class="mb-6">Knowing the cause makes fixing the sync easier.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">How to Merge SRT Files Without Losing Sync</h3>
+      <p class="mb-6">Below is the most reliable, step-by-step method.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 1: Identify the Type of Merge You Need</h4>
+      <p class="mb-6">There are two main merge types:</p>
+
+      <p class="font-bold mb-2">1. Sequential Merge (Append Merge)</p>
+      <p class="mb-6">Use this when: CD1 + CD2, Part 1 + Part 2, Episode parts (split into A/B). This requires shifting the second file’s timestamps.</p>
+
+      <p class="font-bold mb-2">2. Overlay Merge (Line-by-Line Merge)</p>
+      <p class="mb-6">Use this when: Combining two languages, Combining incomplete subtitle versions, Fixing missed lines in one subtitle file. This requires aligning timestamps between files.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 2: Upload the Subtitle Files to a Merger Tool</h4>
+      <p class="mb-6">Upload File A (first part or main subtitle) and File B (second part or secondary subtitle). The tool reads timestamps and prepares to merge.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 3: Fix Structural Issues Before Merging</h4>
+      <p class="mb-6">Check for:</p>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li><strong>Formatting errors</strong>: Each block should follow the standard SRT format.</li>
+          <li><strong>Missing line breaks</strong>: Missing breaks cause timestamps to merge incorrectly.</li>
+          <li><strong>Duplicate timestamps</strong>: Both files may share timestamps if they cover the same video portion.</li>
+      </ul>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 4: Adjust Timestamps for Perfect Sync</h4>
+      
+      <p class="font-bold mb-2">For sequential (CD1 + CD2) merges:</p>
+      <p class="mb-6">Shift the second file by the exact duration of the first. Example: CD1 ends at 00:51:40,000 → Shift CD2 forward by 51 min 40 sec. This ensures File B starts immediately after File A.</p>
+
+      <p class="font-bold mb-2">For overlay (dual-language) merges:</p>
+      <p class="mb-6">Align the first significant line of File A and File B. If File B starts late/early, shift B forward or backward. Example: File B starts 0.8 seconds late → Shift it by –0.8 sec.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 5: Merge and Recalculate Subtitle Numbers</h4>
+      <p class="mb-6">When you merge, subtitle numbers are automatically recalculated, overlapping blocks get cleaned, and timestamps are ordered correctly. This prevents incorrect or conflicting numbering.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 6: Test the Merged File on a Video Player</h4>
+      <p class="mb-6">Use VLC Media Player, MX Player, PotPlayer, or a Smart TV player. Check the start of video, middle scenes, fast dialogue sections, and end of video. If subtitles drift later in the movie, it means the original files were out of sync and require additional timing correction.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">How to Fix Subtitle Drift After Merging</h3>
+      <p class="mb-6">Subtitle “drift” means the subtitle is correct at the beginning but slowly becomes incorrect over time.</p>
+
+      <p class="font-bold mb-2">✔️ Fix 1: Use a Constant Shift</p>
+      <p class="mb-6">For small consistent offsets (e.g., subtitles always 1.5 seconds late): Shift the entire file.</p>
+
+      <p class="font-bold mb-2">✔️ Fix 2: Fix FPS Mismatch</p>
+      <p class="mb-6">If the video is 23.976 fps, 24 fps, 25 fps, or 30 fps, but the subtitles were created for a different framerate, you must resync by converting timestamps proportionally.</p>
+
+      <p class="font-bold mb-2">✔️ Fix 3: Realign Key Scenes</p>
+      <p class="mb-6">Find two points in the movie (one near the beginning, one in the middle or end) and align both. The tool will stretch or compress the timing proportionally to match the whole file.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Common Problems & Solutions When Merging SRT Files</h3>
+
+      <p class="font-bold mb-2">1. Overlapping Subtitles</p>
+      <p class="mb-6">Cause: Two files cover the same time window. Fix: Remove duplicate timestamps before merging.</p>
+
+      <p class="font-bold mb-2">2. Repeated Subtitle Blocks</p>
+      <p class="mb-6">Cause: Append merge used instead of overlay. Fix: Use the correct merge mode.</p>
+
+      <p class="font-bold mb-2">3. One Subtitle Appears Too Early/Late</p>
+      <p class="mb-6">Fix: Shift entire file by ± seconds or ± milliseconds.</p>
+
+      <p class="font-bold mb-2">4. Missing Lines After Merge</p>
+      <p class="mb-6">Cause: Incorrect formatting or broken numbering. Fix: Validate and repair formatting before merging.</p>
+
+      <p class="font-bold mb-2">5. Wrong Ordering After Merge</p>
+      <p class="mb-6">Fix: Sort by timestamps after merging.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Tips to Keep SRT Files Perfectly Synced When Merged</h3>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li><strong>Use subtitles from the same source/video version</strong>: Avoid mixing BluRay, WEBRip, HDRip, and DVD subtitle timings.</li>
+          <li><strong>Clean formatting before merging</strong>: Small errors cause big sync issues.</li>
+          <li><strong>Always shift the second part in CD1/CD2 merges</strong>: Never merge raw CD2 timestamps without adjustment.</li>
+          <li><strong>For dual-language merges, align first major line</strong>: This ensures both languages appear together throughout the movie.</li>
+          <li><strong>Test multiple spots in the video</strong>: Not just the beginning.</li>
+      </ul>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">When Merging Without Sync Loss Is Most Important</h3>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>Bollywood/Hollywood movies split into two parts</li>
+          <li>Foreign films with two subtitle sources</li>
+          <li>Creating bilingual subtitles</li>
+          <li>Fixing incomplete subtitles by merging two versions</li>
+          <li>Rebuilding subtitles for long, multi-part movies</li>
+      </ul>
+      <p class="mb-6">Proper sync ensures a clean, professional subtitle experience.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
+      <p class="mb-6">The best way to merge SRT files without losing sync is to choose the correct merge mode, fix formatting issues, adjust timestamps precisely, merge in the right order, and test across different scenes. With careful alignment and proper timing shift, you can produce a perfectly synchronized merged SRT file that works with any movie or video.</p>
+    `
     }
 ];
