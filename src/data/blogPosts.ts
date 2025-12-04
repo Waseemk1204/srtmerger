@@ -767,5 +767,118 @@ Don't worry, I'm here.</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">To batch merge subtitles for a TV series, organize season files by episode, identify the merge type needed per episode, upload files in batches, apply the required merge mode, standardize formatting, and export clean, synced SRTs for the entire season. Following these steps ensures every episode in the season has perfectly matched and consistent subtitles.</p>
     `
+    },
+    {
+        id: 'how-to-combine-multiple-language-subtitles',
+        title: "How to Combine Multiple Language Subtitles (3+ Languages) Into One SRT File",
+        excerpt: "Most guides explain how to merge two subtitle languages—but what if you want three or more? Learn how to combine multiple language subtitles into one SRT file.",
+        date: "December 4, 2025",
+        readTime: "6 min read",
+        content: `
+      <p class="mb-6">Most guides explain how to merge two subtitle languages—but what if you want three or more languages in one subtitle file? For example: English + Hindi + Spanish, Korean + English + Arabic, Japanese + English + French, or Tamil + English + Malayalam.</p>
+
+      <p class="mb-6">Multilingual subtitles are extremely useful for global audiences, language learners, international content creators, and multilingual friend groups watching together. This guide explains how to combine multiple language subtitles into one SRT file, how to format them cleanly, and how to avoid overcrowding or sync issues when merging 3+ subtitle files.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Why Combine More Than Two Subtitle Languages?</h3>
+
+      <p class="font-bold mb-2">1. Multilingual Viewing Experience</p>
+      <p class="mb-6">Useful when friends, family, or viewers speak different languages.</p>
+
+      <p class="font-bold mb-2">2. Language Learning</p>
+      <p class="mb-6">Learners can compare translations across 2–3 languages.</p>
+
+      <p class="font-bold mb-2">3. International Movie Audiences</p>
+      <p class="mb-6">Some films are watched by people from multiple regions.</p>
+
+      <p class="font-bold mb-2">4. Global Content Releases</p>
+      <p class="mb-6">Perfect for fan-made subtitles or communities supporting multiple languages.</p>
+
+      <p class="font-bold mb-2">5. Cultural/Linguistic Accessibility</p>
+      <p class="mb-6">You can support diverse viewers with a single subtitle file.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Challenges in Merging 3+ Subtitle Languages</h3>
+      <p class="mb-6">Merging more than two subtitles creates challenges: Too many lines per subtitle block, Overlapping timestamps, Missing translations in some languages, Different formatting styles, Different timing sources, and Encoding issues for non-Latin scripts. This guide solves all of these.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Step-by-Step: How to Combine Multiple Language Subtitles</h3>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 1: Prepare All Subtitle Files</h4>
+      <p class="mb-6">You need at least 3 SRT files, one for each language. Example: Movie.EN.srt, Movie.HI.srt, Movie.ES.srt. Make sure all files are in UTF-8 encoding, belong to the same version of the video, and are not corrupted.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 2: Upload All Subtitle Files to a Multilingual Merger Tool</h4>
+      <p class="mb-6">Upload English, Hindi, Spanish (or any other combination). The merger will load all timestamps side-by-side.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 3: Choose “Overlay Merge” (Timestamp Merge)</h4>
+      <p class="mb-6">This mode is essential for multilingual merges. Overlay Merge will match lines from all subtitle files using timestamps, combine them into one block, keep translation order consistent, remove duplicate timecodes, and fix overlapping subtitle blocks.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 4: Choose a Multilingual Subtitle Format</h4>
+      
+      <p class="font-bold mb-2">✔️ Format A: Language Label Tags (Recommended)</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">[EN] Where are you going?
+[HI] आप कहाँ जा रहे हैं?
+[ES] ¿A dónde vas?</pre>
+
+      <p class="font-bold mb-2">✔️ Format B: Stacked Language Lines (Simple)</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">Where are you going?
+आप कहाँ जा रहे हैं?
+¿A dónde vas?</pre>
+
+      <p class="font-bold mb-2">✔️ Format C: Compact Label Format</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">EN: Where are you going?
+HI: आप कहाँ जा रहे हैं?
+ES: ¿A dónde vas?</pre>
+
+      <p class="font-bold mb-2">✔️ Format D: Two Lines Max + Summary Language</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">Where are you going? / ¿A dónde vas?
+आप कहाँ जा रहे हैं?</pre>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 5: Handle Missing Lines in One or More Languages</h4>
+      <p class="mb-6">In multilingual merges, it’s common for one subtitle to miss certain dialogues. A good multilingual merger will leave empty placeholders, skip null translations, or insert only available languages.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 6: Fix Timing Differences Before Final Merge</h4>
+      <p class="mb-6">Problems to fix: One subtitle starts too early, Another is delayed, Subtitles drift, Different FPS versions. Solutions: Shift entire file, Align the first major dialogue, Use timing stretch/compress tools, Re-sync subtitles.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 7: Merge and Download the Final Multilingual SRT</h4>
+      <p class="mb-6">Once timing and formatting are correct, merge all subtitle files, recalculate numbering, order all blocks by timestamp, and ensure consistent spacing. Download the final SRT and test it on VLC, MX Player, PotPlayer, or Smart TVs.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Common Problems When Combining 3+ Subtitle Languages</h3>
+
+      <p class="font-bold mb-2">1. Text Overcrowding</p>
+      <p class="mb-6">Too many lines fill half the screen. Fix: Use compact tagging formats or merge 2 languages into one line.</p>
+
+      <p class="font-bold mb-2">2. Overlapping Timestamps</p>
+      <p class="mb-6">Different languages may overlap in timing. Fix: Use overlay merge and clean duplicates.</p>
+
+      <p class="font-bold mb-2">3. One Language Appears Out of Sync</p>
+      <p class="mb-6">Fix: Shift that specific subtitle file.</p>
+
+      <p class="font-bold mb-2">4. Non-English Letters Not Displaying</p>
+      <p class="mb-6">Affects Hindi, Arabic, Korean, Japanese, Tamil, Telugu, etc. Fix: Convert files to UTF-8 encoding.</p>
+
+      <p class="font-bold mb-2">5. Incorrect Line Order</p>
+      <p class="mb-6">Fix: Use language tags like [EN], [HI], [ES].</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Tips for Clean Multilingual Subtitles</h3>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li><strong>Limit lines to 2–3 per subtitle block</strong>: Beyond 3, readability drops.</li>
+          <li><strong>Use language tags always</strong>: Avoid confusion in multilingual merging.</li>
+          <li><strong>Keep English lines short</strong>: English tends to be longer; shorten if needed.</li>
+          <li><strong>Use consistent formatting across languages</strong>: Same punctuation style, spacing, and capitalization.</li>
+          <li><strong>Test on mobile + TV</strong>: TVs display subtitles differently than computers.</li>
+      </ul>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">When Multilingual Subtitles Are Most Useful</h3>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>Global movie releases</li>
+          <li>Anime with English + Japanese + Spanish subs</li>
+          <li>International documentaries</li>
+          <li>Learning multiple languages at once</li>
+          <li>Family viewing with multilingual members</li>
+          <li>Regional movies released worldwide</li>
+      </ul>
+      <p class="mb-6">Multi-language SRT files help diverse viewers understand the content effortlessly.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
+      <p class="mb-6">Combining multiple subtitle languages into a single SRT file is completely possible with the right merge strategy. To merge 3+ languages effectively, prepare all subtitles correctly, upload and check encoding, use overlay merge mode, choose a clean multilingual layout, fix timing and drift, and export and test. The result is a clear, synchronized, multi-language subtitle file that works across all devices.</p>
+    `
     }
 ];
