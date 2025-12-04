@@ -25,7 +25,7 @@ export const sendResetPasswordEmail = async (email, resetUrl) => {
     if (resend) {
         try {
             const { data, error } = await resend.emails.send({
-                from: 'SRT Merger <onboarding@resend.dev>', // Default Resend testing domain
+                from: 'SRT Merger <noreply@srtmerger.com>',
                 to: email,
                 subject: 'Reset Your Password - SRT Merger',
                 html: `
