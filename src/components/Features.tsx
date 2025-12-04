@@ -1,4 +1,5 @@
-import { ZapIcon, ShieldCheckIcon, ClockIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ZapIcon, ShieldCheckIcon, ClockIcon, ArrowRightIcon } from 'lucide-react';
 
 export function Features() {
     return (
@@ -13,9 +14,12 @@ export function Features() {
                         <h2 className="text-xl font-bold text-gray-900 mb-3">
                             Easy SRT Merging
                         </h2>
-                        <p className="text-gray-600 leading-relaxed">
+                        <p className="text-gray-600 leading-relaxed mb-4">
                             Combine multiple subtitle files in seconds. Our intuitive drag-and-drop interface makes merging SRT files simple and efficient for everyone.
                         </p>
+                        <Link to="/how-it-works" className="text-blue-600 font-medium hover:underline inline-flex items-center gap-1">
+                            See how it works <ArrowRightIcon className="w-4 h-4" />
+                        </Link>
                     </div>
 
                     {/* Feature 2 */}

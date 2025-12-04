@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { ChevronDownIcon } from 'lucide-react';
 
+import { Link } from 'react-router-dom';
+
 interface FAQItem {
     question: string;
-    answer: string;
+    answer: React.ReactNode;
 }
 
 const faqs: FAQItem[] = [
     {
         question: "What file formats are supported?",
-        answer: "Our tool is optimized for SRT (SubRip) files, which are the most common subtitle format. We also provide basic support for other text-based subtitle formats like VTT and TXT files."
+        answer: <span>Our tool is optimized for <a href="https://en.wikipedia.org/wiki/SubRip" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">SRT (SubRip)</a> files, which are the most common subtitle format. We also provide basic support for other text-based subtitle formats like VTT and TXT files.</span>
     },
     {
         question: "How many files can I merge at once?",
@@ -17,7 +19,7 @@ const faqs: FAQItem[] = [
     },
     {
         question: "Do I need to create an account to use the tool?",
-        answer: "No! You can use the basic merging features without an account. However, creating a free account gives you access to additional features like cloud storage and merge history."
+        answer: <span>No! You can use the basic merging features without an account. However, creating a <Link to="/signup" className="text-blue-600 hover:underline">free account</Link> gives you access to additional features like cloud storage and merge history.</span>
     },
     {
         question: "How does the 24-hour rolling window work?",
@@ -29,7 +31,7 @@ const faqs: FAQItem[] = [
     },
     {
         question: "Can I cancel my subscription anytime?",
-        answer: "Yes! You can cancel your subscription at any time from your dashboard. Your access to premium features will continue until the end of your current billing period, and you won't be charged again."
+        answer: <span>Yes! You can cancel your subscription at any time from your <Link to="/dashboard" className="text-blue-600 hover:underline">dashboard</Link>. Your access to premium features will continue until the end of your current billing period, and you won't be charged again.</span>
     },
     {
         question: "What if I encounter issues or need support?",
