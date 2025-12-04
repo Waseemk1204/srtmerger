@@ -1483,5 +1483,58 @@ How are you today?</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">Subtitle timing errors are common but easy to fix using shifting, scaling, drift correction, duplicate removal, and proper merging. With the right approach, you can achieve perfect subtitle sync for any movie or episode.</p>
     `
+  },
+  {
+    id: 'how-to-edit-an-srt-file-beginner-to-advanced-guide',
+    title: "How to Edit an SRT File (Beginner to Advanced Guide)",
+    excerpt: "An SRT file is simple and flexible. This guide explains how to edit it easily, fix timing issues, improve translations, or create subtitles from scratch.",
+    date: "December 4, 2025",
+    readTime: "10 min read",
+    content: `
+      <p class="mb-6">An SRT file is one of the simplest and most flexible subtitle formats — meaning you can edit it easily, fix timing issues, improve translations, or even create subtitles from scratch. Whether you want to adjust delays, correct typos, merge subtitle versions, or modify entire blocks, this guide explains how to edit an SRT file from beginner to advanced level.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">What You Need to Edit an SRT File</h3>
+      <p class="mb-6"><strong>Basic Tools</strong>: Notepad (Windows), TextEdit (Mac), or any plain text editor.<br>
+      <strong>Advanced Tools</strong>: Subtitle Edit, Aegisub, SubWorkshop, VLC (for previewing).</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Understanding SRT Structure</h3>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">1
+00:00:02,000 --> 00:00:05,000
+Hello there!</pre>
+      <p class="mb-6">It contains: Subtitle number, Timestamp, Text, and Blank line.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">PART 1: Basic SRT Editing (Text Editing)</h3>
+      <p class="mb-6"><strong>1. Fixing Typos & Grammar</strong>: Just open the file and edit the text.<br>
+      <strong>2. Rewriting Translations</strong>: Improve low-quality translations.<br>
+      <strong>3. Removing Unwanted Lines</strong>: Delete captions like [Door closes].<br>
+      <strong>4. Changing Subtitle Style</strong>: Use &lt;b&gt;, &lt;i&gt;, &lt;u&gt; tags.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">PART 2: Editing Subtitle Timing (Intermediate Level)</h3>
+      <p class="mb-6"><strong>5. Fixing Early/Late Subtitles</strong>: Shift timestamps forward or backward.<br>
+      <strong>6. Fixing Drift</strong>: Adjust timestamps proportionally.<br>
+      <strong>7. Fixing Only a Segment</strong>: Shift only specific blocks.<br>
+      <strong>8. Fixing Overlapping Subtitles</strong>: Adjust or merge overlapping blocks.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">PART 3: Advanced SRT Editing</h3>
+      <p class="mb-6"><strong>9. Merging Two SRT Files</strong>: Combine text, align timestamps, remove duplicates.<br>
+      <strong>10. Editing Encoding</strong>: Save as UTF-8 for non-English characters.<br>
+      <strong>11. Renumbering Blocks</strong>: Fix broken sequences.<br>
+      <strong>12. Editing Position</strong>: Use tags like {\\an8} for top placement.<br>
+      <strong>13. Adding Multiple Languages</strong>: Format as [EN] Text [HI] Text.<br>
+      <strong>14. Creating from Scratch</strong>: Write blocks manually.<br>
+      <strong>15. Repairing Corrupted Files</strong>: Fix formatting errors.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Tips for Smooth SRT Editing</h3>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>Always keep a backup.</li>
+          <li>Use UTF-8 encoding.</li>
+          <li>Don’t touch arrow format (-->).</li>
+          <li>Leave one blank line between blocks.</li>
+          <li>Use a text editor with line numbering.</li>
+      </ul>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
+      <p class="mb-6">Editing an SRT file is simple once you understand the structure. From fixing timing errors to merging versions and creating bilingual subtitles, SRT editing gives you full control without needing advanced tools. Mastering SRT editing ensures better sync, cleaner formatting, and accurate translations.</p>
+    `
   }
 ];
