@@ -24,4 +24,34 @@
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
+  <url>
+    <loc>https://srtmerger.com/?view=blog-post&amp;postId=the-30-minute-limit</loc>
+    <lastmod>2024-11-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://srtmerger.com/?view=blog-post&amp;postId=how-to-merge-srt-files-online</loc>
+    <lastmod>2024-11-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://srtmerger.com/?view=blog-post&amp;postId=srt-vs-vtt-subtitle-formats</loc>
+    <lastmod>2024-11-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://srtmerger.com/?view=blog-post&amp;postId=guide-to-subtitle-time-shifting</loc>
+    <lastmod>2024-11-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://srtmerger.com/?view=blog-post&amp;postId=privacy-matters-online-tools</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
