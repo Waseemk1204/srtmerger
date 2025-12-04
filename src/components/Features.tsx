@@ -31,7 +31,7 @@ export function Features() {
                             Secure Subtitle Processing
                         </h2>
                         <p className="text-gray-600 leading-relaxed">
-                            Your files never leave your browser. We process everything locally on your device, ensuring 100% privacy and security for your content.
+                            We prioritize your privacy. Guest users enjoy 100% local processing, while signed-in users benefit from secure cloud storage to access their history anywhere.
                         </p>
                     </div>
 
