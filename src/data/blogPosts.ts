@@ -535,5 +535,122 @@ Subtitle text here</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">The best way to merge SRT files without losing sync is to choose the correct merge mode, fix formatting issues, adjust timestamps precisely, merge in the right order, and test across different scenes. With careful alignment and proper timing shift, you can produce a perfectly synchronized merged SRT file that works with any movie or video.</p>
     `
+    },
+    {
+        id: 'how-to-merge-subtitles-for-dual-audio-movies',
+        title: "How to Merge Subtitles for Dual Audio Movies (Complete Guide)",
+        excerpt: "Dual audio movies are incredibly popular. Learn how to merge subtitles for dual audio movies, sync them properly, and avoid timing problems.",
+        date: "December 4, 2025",
+        readTime: "5 min read",
+        content: `
+      <p class="mb-6">Dual audio movies are incredibly popular—especially when a film is available in two languages such as English + Hindi, English + Tamil, Hindi + Telugu, Japanese + English (anime), or Korean + English (K-drama).</p>
+
+      <p class="mb-6">But a common problem arises: The subtitles are available only in one language, incomplete, or divided into separate parts. To fix this, you can merge multiple subtitle files into one, creating a single SRT that works perfectly regardless of which audio track you choose.</p>
+
+      <p class="mb-6">This guide explains how to merge subtitles for dual audio movies, how to sync them properly, and how to avoid timing problems.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Why Dual Audio Movies Need Merged Subtitles</h3>
+
+      <p class="font-bold mb-2">1. Switching Audio Tracks Doesn’t Switch Subtitles</p>
+      <p class="mb-6">If the movie has two audio languages, you need a subtitle file that supports both at once.</p>
+
+      <p class="font-bold mb-2">2. Better Understanding of Dialogues</p>
+      <p class="mb-6">Combining English + Hindi (or other languages) helps viewers understand accents, fast speech, or unfamiliar vocabulary.</p>
+
+      <p class="font-bold mb-2">3. Incomplete or Inaccurate Subtitles</p>
+      <p class="mb-6">One subtitle version may miss lines or lack accuracy. Merging solves that.</p>
+
+      <p class="font-bold mb-2">4. Single Subtitle File for All Devices</p>
+      <p class="mb-6">Smart TVs, projectors, and mobile apps usually support only one external subtitle track. A merged file gives full compatibility.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Types of Subtitle Merges Used for Dual Audio Movies</h3>
+      <p class="mb-6">There are two primary types:</p>
+
+      <p class="font-bold mb-2">1. Language Merge (Two-Language Subtitles)</p>
+      <p class="mb-6">Used when you want: English + Hindi, Telugu + English, Japanese + English, Korean + English. This produces bilingual subtitles.</p>
+
+      <p class="font-bold mb-2">2. Version Merge (Two Different Subtitle Files of Same Language)</p>
+      <p class="mb-6">Used when: One file is incomplete, Another file is accurate but missing scenes, One file has better timing, The movie has two different cuts (theatrical/director’s cut). This produces the best combined subtitle version.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Step-by-Step: How to Merge Subtitles for Dual Audio Movies</h3>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 1: Gather All Subtitle Files</h4>
+      <p class="mb-6">You will need: Subtitle file for Audio Track 1, Subtitle file for Audio Track 2, Optional: improved subtitle version (if available). Make sure all files are in .srt format.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 2: Upload the Subtitle Files to a Merger Tool</h4>
+      <p class="mb-6">Upload the primary subtitle file and the secondary subtitle file. The tool will load their timestamps.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 3: Choose the Correct Merge Mode</h4>
+      
+      <p class="font-bold mb-2">✔️ Option A: Overlay Merge (Recommended)</p>
+      <p class="mb-6">Use this when merging two languages. It will align timestamps, combine both languages into one subtitle block, prevent duplicate timings, and keep both lines readable.</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">Where are you going?
+आप कहाँ जा रहे हैं?</pre>
+
+      <p class="font-bold mb-2">✔️ Option B: Hybrid Merge</p>
+      <p class="mb-6">Use this when merging two different versions of the same language. It will fill missing lines, replace inaccurate lines, and combine both versions into the best possible subtitle file.</p>
+
+      <p class="font-bold mb-2">✔️ Option C: Append Merge</p>
+      <p class="mb-6">Use this only when the movie was originally split into parts (CD1/CD2).</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 4: Fix Timing Differences Before Merging</h4>
+      <p class="mb-6">Dual audio movies often come from different sources (BluRay, WEBRip, HDRip, etc.), so timings may differ. Adjustments you may need to apply: Shift subtitles forward/backward, Offset milliseconds, Align the first or second dialogue, Auto-correct drift.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 5: Choose a Subtitle Layout for Bilingual Merges</h4>
+      
+      <p class="font-bold mb-2">Format A: English Above, Other Language Below</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">Don't worry, I'm here.
+चिंता मत करो, मैं यहाँ हूँ।</pre>
+
+      <p class="font-bold mb-2">Format B: Other Language Above, English Below</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">चिंता मत करो, मैं यहाँ हूँ।
+Don't worry, I'm here.</pre>
+
+      <p class="font-bold mb-2">Format C: Tag Format</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">[EN] Don't worry, I'm here.
+[HI] चिंता मत करो, मैं यहाँ हूँ।</pre>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 6: Merge and Download the Final SRT File</h4>
+      <p class="mb-6">Click Merge. The tool will recalculate subtitle numbering, remove duplicate timestamps, order all entries correctly, format both languages in one block, and create one clean, synced subtitle file. Download the final SRT and test it in VLC, MX Player, PotPlayer, or Smart TV video players.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Common Problems & How to Fix Them</h3>
+
+      <p class="font-bold mb-2">1. Subtitles Don’t Match One of the Audio Tracks</p>
+      <p class="mb-6">Cause: Wrong subtitle version. Fix: Use subtitles that match the exact release version of your movie.</p>
+
+      <p class="font-bold mb-2">2. One Subtitle Appears Early or Late</p>
+      <p class="mb-6">Fix: Shift entire file by + or – seconds.</p>
+
+      <p class="font-bold mb-2">3. Overlapping Subtitles After Merge</p>
+      <p class="mb-6">Cause: Two lines share the same timestamp. Fix: Remove duplicate timestamps before merging.</p>
+
+      <p class="font-bold mb-2">4. Hindi/Tamil/Telugu Characters Not Displaying</p>
+      <p class="mb-6">Cause: Wrong encoding. Fix: Save file in UTF-8 encoding.</p>
+
+      <p class="font-bold mb-2">5. Both Languages Show as a Messy Block</p>
+      <p class="mb-6">Cause: Improper formatting or no line breaks. Fix: Reformat each block correctly before merging.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Tips for Clean Dual Audio Subtitle Merging</h3>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li><strong>Don’t mix subtitles from BluRay with WEBRip timing</strong>: They will drift.</li>
+          <li><strong>Keep both languages concise</strong>: Avoid long, multi-line blocks that cover half the screen.</li>
+          <li><strong>Match timings to the audio you will use</strong>: Subtitles should sync with spoken dialogue.</li>
+          <li><strong>Test at multiple scenes</strong>: Some issues appear only during action or fast dialogue.</li>
+      </ul>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">When Merged Subtitles Help the Most</h3>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>Bollywood/Hollywood dual audio movies</li>
+          <li>Anime with English dub + Japanese audio</li>
+          <li>Korean dramas with English/Korean subs</li>
+          <li>Indian regional cinema with English subtitles</li>
+          <li>Movies with unclear accents</li>
+          <li>International films with fast dialogue</li>
+      </ul>
+      <p class="mb-6">Merged subtitles provide clarity, accessibility, and a better viewing experience.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
+      <p class="mb-6">To merge subtitles for dual audio movies properly, upload both subtitle files, select the correct merge mode (overlay/hybrid), fix timing differences, choose a readable bilingual layout, and merge and test for perfect sync. Following these steps ensures your dual audio movie has one clean, synchronized subtitle file that works flawlessly with either audio track.</p>
+    `
     }
 ];
