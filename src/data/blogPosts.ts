@@ -1409,5 +1409,79 @@ How are you today?</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">Behind every “Merge” button is a complex engine that parses text, converts timestamps, aligns blocks, removes duplicates, fixes drift, resolves conflicts, normalizes encoding, and rebuilds a clean SRT file. Understanding this helps you make better decisions and get perfect subtitle output.</p>
     `
+  },
+  {
+    id: 'common-subtitle-timing-errors-and-how-to-fix-them',
+    title: "Common Subtitle Timing Errors & How to Fix Them (Early, Late, Drift, Overlap)",
+    excerpt: "Subtitle timing errors are common. This guide breaks down issues like early/late subtitles, drift, and overlap, and shows exactly how to fix each one.",
+    date: "December 4, 2025",
+    readTime: "8 min read",
+    content: `
+      <p class="mb-6">Subtitle timing errors are extremely common—especially when downloading external subtitles, merging multiple SRT files, or working with different versions of a movie or TV show. These issues can ruin the viewing experience, making subtitles appear too early, too late, out of order, gradually drifting, overlapping, or missing entirely.</p>
+
+      <p class="mb-6">This complete guide breaks down the most common subtitle timing errors and shows you exactly how to fix each one.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">1. Subtitles Appear Too Early</h3>
+      <p class="mb-6"><strong>Symptoms</strong>: Text shows up before dialogue starts.<br>
+      <strong>Causes</strong>: Different release version, wrong subtitle file, frame rate mismatch.<br>
+      <strong>Fix</strong>: Shift the entire subtitle forward (delay it). Example: Shift +2.5 seconds.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">2. Subtitles Appear Too Late</h3>
+      <p class="mb-6"><strong>Symptoms</strong>: Text appears after dialogue.<br>
+      <strong>Causes</strong>: Subtitles synced for another version, incorrect timing base.<br>
+      <strong>Fix</strong>: Shift the entire SRT backward (make it earlier). Example: Shift -1.8 seconds.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">3. Subtitle Drift (Gradually Becoming Incorrect)</h3>
+      <p class="mb-6"><strong>Symptoms</strong>: Starts in sync, slowly drifts out.<br>
+      <strong>Causes</strong>: FPS mismatch (e.g., 23.976fps vs 25fps).<br>
+      <strong>Fix</strong>: Stretch or compress subtitle timing using proportional adjustment.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">4. Overlapping Subtitles</h3>
+      <p class="mb-6"><strong>Symptoms</strong>: Two lines appear at the same time.<br>
+      <strong>Causes</strong>: Merged without removing duplicates, identical timestamps.<br>
+      <strong>Fix</strong>: Remove duplicate timestamps, auto-correct overlapping blocks.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">5. Subtitles Out of Order</h3>
+      <p class="mb-6"><strong>Symptoms</strong>: Sequence jumps randomly.<br>
+      <strong>Causes</strong>: Manual edits, incorrect merges.<br>
+      <strong>Fix</strong>: Sort files by start time, rebuild numbering.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">6. Missing Subtitles During Certain Scenes</h3>
+      <p class="mb-6"><strong>Symptoms</strong>: Some scenes show no subtitles.<br>
+      <strong>Causes</strong>: Missing lines, file mismatch.<br>
+      <strong>Fix</strong>: Merge multiple subtitle versions to restore missing lines.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">7. Subtitles Only Wrong in Middle Part</h3>
+      <p class="mb-6"><strong>Symptoms</strong>: Wrong only in a segment.<br>
+      <strong>Causes</strong>: Scene removed or added in source.<br>
+      <strong>Fix</strong>: Adjust timestamps only for that specific block.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">8. Subtitles Completely Out of Sync</h3>
+      <p class="mb-6"><strong>Symptoms</strong>: Nothing matches.<br>
+      <strong>Causes</strong>: Wrong version entirely.<br>
+      <strong>Fix</strong>: Try a different subtitle version.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">9. Random Subtitle Blocks With Wrong Timing</h3>
+      <p class="mb-6"><strong>Symptoms</strong>: Few lines early/late.<br>
+      <strong>Causes</strong>: Errors inside SRT file.<br>
+      <strong>Fix</strong>: Manually correct wrong blocks.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">10. Double Subtitles</h3>
+      <p class="mb-6"><strong>Symptoms</strong>: Same line appears twice.<br>
+      <strong>Causes</strong>: Merging without cleaning duplicates.<br>
+      <strong>Fix</strong>: Remove duplicate blocks, use overlay merge.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">How to Prevent Timing Errors</h3>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>Always use subtitles from the same release version.</li>
+          <li>Fix formatting before merging.</li>
+          <li>Convert timestamps into milliseconds for complex fixes.</li>
+          <li>Use proper merging modes.</li>
+          <li>Test at multiple parts of the movie.</li>
+      </ul>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
+      <p class="mb-6">Subtitle timing errors are common but easy to fix using shifting, scaling, drift correction, duplicate removal, and proper merging. With the right approach, you can achieve perfect subtitle sync for any movie or episode.</p>
+    `
   }
 ];
