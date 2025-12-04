@@ -12,7 +12,8 @@
     "preview": "vite preview",
     "start": "node server/index.js",
     "test": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "generate:sitemap": "node scripts/generate-sitemap.js"
   },
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^5.0.1",
