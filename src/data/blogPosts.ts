@@ -284,5 +284,136 @@ Hello, how are you?</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">Merging English and Hindi subtitles into one synchronized SRT file is simple, practical, and extremely useful for multilingual viewing. With the right merge mode, correct encoding, and well-aligned timestamps, you can create a clean, easy-to-read bilingual subtitle file that works perfectly with any video.</p>
     `
+    },
+    {
+        id: 'how-to-merge-cd1-and-cd2-subtitles',
+        title: "How to Merge CD1 and CD2 Subtitles Into One SRT File (Full Movie Guide)",
+        excerpt: "Many older movies come with subtitles split into two parts. Learn how to merge CD1 and CD2 subtitles into one continuous SRT file.",
+        date: "December 4, 2025",
+        readTime: "4 min read",
+        content: `
+      <p class="mb-6">Many older movies—and even some modern releases—come with subtitles split into two parts labeled CD1 and CD2. This is common when the movie was originally released on two discs or shared online as separate parts. When you watch the complete movie file, you need to merge CD1 and CD2 subtitles into one continuous SRT file for smooth, uninterrupted viewing.</p>
+
+      <p class="mb-6">This guide walks you through how to combine CD1 and CD2 subtitles properly while keeping correct timing, preventing overlaps, and ensuring everything syncs perfectly with your video.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Why Subtitles Come as CD1 and CD2</h3>
+      <p class="mb-6">Back in the DVD era, movies were often split into two discs (CD1/CD2). Today, these subtitle files still circulate online, usually in this format:</p>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>MovieName.CD1.srt</li>
+          <li>MovieName.CD2.srt</li>
+      </ul>
+      <p class="mb-6">Each file covers half the movie, which becomes a problem if you have the full movie as one single video file. Without merging, the second half of the subtitles won’t show automatically.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Why You Should Merge CD1 and CD2 Subtitles</h3>
+
+      <p class="font-bold mb-2">1. Seamless Playback</p>
+      <p class="mb-6">You don’t want to manually switch subtitle files halfway through the movie.</p>
+
+      <p class="font-bold mb-2">2. Perfect Timing Sync</p>
+      <p class="mb-6">Merging lets the second part automatically start at the exact timestamp it should.</p>
+
+      <p class="font-bold mb-2">3. Clean, Continuous Subtitle File</p>
+      <p class="mb-6">No interruptions, no switching tracks, no pausing to load CD2.</p>
+
+      <p class="font-bold mb-2">4. Better for Mobile and TV Playback</p>
+      <p class="mb-6">Most smart TVs and mobile players support only one subtitle file per video.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Before You Merge: Important Checks</h3>
+      <p class="mb-6">Before merging CD1 and CD2 subtitles, make sure:</p>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>Both files are in SRT format</li>
+          <li>They belong to the same movie version (director’s cut vs theatrical cut can differ)</li>
+          <li>The end time of CD1 aligns with the start time of CD2</li>
+          <li>Both files are correctly formatted and not corrupted</li>
+      </ul>
+      <p class="mb-6">You can open them in a text editor to confirm the timestamps look normal.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Step-by-Step Guide: How to Merge CD1 and CD2 Subtitles</h3>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 1: Upload Both Files (CD1 and CD2)</h4>
+      <p class="mb-6">Open any online subtitle merging tool and upload:</p>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>MovieName.CD1.srt</li>
+          <li>MovieName.CD2.srt</li>
+      </ul>
+      <p class="mb-6">Most tools automatically detect which file starts first.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 2: Choose “Append Merge” Mode (Sequential Merge)</h4>
+      <p class="mb-6">This is the correct mode for CD1/CD2 merging.</p>
+      <p class="mb-6">Append Merge Ensures:</p>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>CD1 subtitles stay untouched</li>
+          <li>CD2 subtitles begin right after CD1 ends</li>
+          <li>No overlapping timestamps</li>
+          <li>Smooth transition between parts</li>
+      </ul>
+      <p class="mb-6">This creates a single subtitle file for the full movie.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 3: Automatically Adjust CD2 Timing (If Needed)</h4>
+      <p class="mb-6">Sometimes CD2 starts at 00:00:00, which causes both parts to overlap.</p>
+      <p class="mb-6">Example:</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">CD1 ends at 00:52:10,000
+CD2 begins at 00:00:01,000 ❌ (wrong)</pre>
+      <p class="mb-6">In this case, the tool should automatically:</p>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>Detect the end time of CD1</li>
+          <li>Shift CD2 by that exact duration</li>
+          <li>Recalculate all timestamps in CD2</li>
+      </ul>
+      <p class="mb-6">The CD2 file should look like this after shifting:</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">CD1 ends → 00:52:10,000  
+CD2 begins → 00:52:11,000</pre>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 4: Merge the Files</h4>
+      <p class="mb-6">After adjusting timestamps and confirming the order, click Merge. The tool combines both files, and any numbering issues (1, 2, 3…) are automatically fixed. You’ll get a single SRT file containing all subtitles from CD1 and CD2.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 5: Download and Test the Final File</h4>
+      <p class="mb-6">Open the merged file in a video player (VLC, PotPlayer, MX Player, Smart TV). Check for proper sync, smooth transition at the halfway mark, no overlapping lines, and no missing dialogues.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Common Issues When Merging CD1/CD2 Subtitles</h3>
+
+      <p class="font-bold mb-2">1. CD2 Starts Too Early</p>
+      <p class="mb-6">Cause: CD2 timestamps start at zero. Fix: Shift CD2 by the full runtime of CD1.</p>
+
+      <p class="font-bold mb-2">2. Overlapping Subtitles</p>
+      <p class="mb-6">Cause: Incorrect timing adjustment. Fix: Recalculate CD2 start time using “shift subtitles” option.</p>
+
+      <p class="font-bold mb-2">3. Missing Sections in CD1 or CD2</p>
+      <p class="mb-6">Cause: Partially downloaded or corrupted subtitle files. Fix: Redownload the subtitle pair from the same source.</p>
+
+      <p class="font-bold mb-2">4. Different Subtitle Versions</p>
+      <p class="mb-6">Cause: CD1 and CD2 come from different movie releases. Fix: Use matching subtitle pairs (same uploader/source).</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Tips for Cleaner CD1/CD2 Subtitle Merging</h3>
+
+      <p class="font-bold mb-2">✔️ Rename Files Clearly</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">MovieName.CD1.srt  
+MovieName.CD2.srt</pre>
+
+      <p class="font-bold mb-2">✔️ Avoid Mixing Languages</p>
+      <p class="mb-6">Unless you intentionally want bilingual subtitles, avoid pairing different languages.</p>
+
+      <p class="font-bold mb-2">✔️ Keep Backup Copies</p>
+      <p class="mb-6">If something goes wrong, you can quickly re-merge.</p>
+
+      <p class="font-bold mb-2">✔️ Use a Text Editor to Verify Formatting</p>
+      <p class="mb-6">A clean SRT file follows this structure:</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">1
+00:00:01,000 --> 00:00:03,500
+Subtitle text here</pre>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">When Do CD1/CD2 Subtitles Work Best?</h3>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>Older movie releases</li>
+          <li>Combined movie files from DVD rips</li>
+          <li>Low-quality subtitles where you need to recombine parts</li>
+          <li>Foreign films that originally came in two discs</li>
+          <li>Long movies split into two halves (3–4 hours)</li>
+      </ul>
+      <p class="mb-6">Merging ensures a smooth viewing experience for these long-form films.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
+      <p class="mb-6">Merging CD1 and CD2 subtitle files into a single SRT is simple, fast, and essential for proper playback when your movie is in a single file. With the correct append merge mode, proper timestamp shifting, and basic validation, you can create a clean, perfectly synchronized subtitle file ready for uninterrupted viewing.</p>
+    `
     }
 ];
