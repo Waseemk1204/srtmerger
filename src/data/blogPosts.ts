@@ -1,20 +1,20 @@
 export interface BlogPost {
-    id: string;
-    title: string;
-    excerpt: string;
-    date: string;
-    content: string;
-    readTime: string;
+  id: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  content: string;
+  readTime: string;
 }
 
 export const blogPosts: BlogPost[] = [
-    {
-        id: 'how-to-merge-two-srt-files-online',
-        title: "How to Merge Two SRT Files Online (Step-by-Step Guide)",
-        excerpt: "A simple tutorial for combining multiple subtitle files into one. Learn how to merge SRT files for movies, dual-language setups, and more.",
-        date: "December 4, 2025",
-        readTime: "3 min read",
-        content: `
+  {
+    id: 'how-to-merge-two-srt-files-online',
+    title: "How to Merge Two SRT Files Online (Step-by-Step Guide)",
+    excerpt: "A simple tutorial for combining multiple subtitle files into one. Learn how to merge SRT files for movies, dual-language setups, and more.",
+    date: "December 4, 2025",
+    readTime: "3 min read",
+    content: `
       <p class="mb-6">Subtitles are essential for accessibility, language learning, and enhancing the viewing experience. But what if you have two separate SRT files—for example:</p>
 
       <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
@@ -156,14 +156,14 @@ Welcome back.</pre>
       </ul>
       <p class="mb-6">You now have everything you need to merge SRT files quickly and accurately.</p>
     `
-    },
-    {
-        id: 'how-to-merge-english-and-hindi-subtitles',
-        title: "How to Merge English and Hindi Subtitles Into One SRT File (Complete Guide)",
-        excerpt: "Merging English and Hindi subtitles into a single SRT file is extremely useful for multilingual viewers. Learn how to create dual-language subtitles.",
-        date: "December 4, 2025",
-        readTime: "4 min read",
-        content: `
+  },
+  {
+    id: 'how-to-merge-english-and-hindi-subtitles',
+    title: "How to Merge English and Hindi Subtitles Into One SRT File (Complete Guide)",
+    excerpt: "Merging English and Hindi subtitles into a single SRT file is extremely useful for multilingual viewers. Learn how to create dual-language subtitles.",
+    date: "December 4, 2025",
+    readTime: "4 min read",
+    content: `
       <p class="mb-6">Merging English and Hindi subtitles into a single SRT file is extremely useful for multilingual viewers, language learners, and anyone watching dual-audio movies or shows. A merged subtitle makes it easier to understand dialogues, learn new vocabulary, and follow fast-paced scenes—all without switching subtitle tracks.</p>
 
       <p class="mb-6">This guide explains step-by-step how to merge English and Hindi subtitles, keep them synchronised, and avoid common issues like overlapping timestamps and messy formatting.</p>
@@ -284,14 +284,14 @@ Hello, how are you?</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">Merging English and Hindi subtitles into one synchronized SRT file is simple, practical, and extremely useful for multilingual viewing. With the right merge mode, correct encoding, and well-aligned timestamps, you can create a clean, easy-to-read bilingual subtitle file that works perfectly with any video.</p>
     `
-    },
-    {
-        id: 'how-to-merge-cd1-and-cd2-subtitles',
-        title: "How to Merge CD1 and CD2 Subtitles Into One SRT File (Full Movie Guide)",
-        excerpt: "Many older movies come with subtitles split into two parts. Learn how to merge CD1 and CD2 subtitles into one continuous SRT file.",
-        date: "December 4, 2025",
-        readTime: "4 min read",
-        content: `
+  },
+  {
+    id: 'how-to-merge-cd1-and-cd2-subtitles',
+    title: "How to Merge CD1 and CD2 Subtitles Into One SRT File (Full Movie Guide)",
+    excerpt: "Many older movies come with subtitles split into two parts. Learn how to merge CD1 and CD2 subtitles into one continuous SRT file.",
+    date: "December 4, 2025",
+    readTime: "4 min read",
+    content: `
       <p class="mb-6">Many older movies—and even some modern releases—come with subtitles split into two parts labeled CD1 and CD2. This is common when the movie was originally released on two discs or shared online as separate parts. When you watch the complete movie file, you need to merge CD1 and CD2 subtitles into one continuous SRT file for smooth, uninterrupted viewing.</p>
 
       <p class="mb-6">This guide walks you through how to combine CD1 and CD2 subtitles properly while keeping correct timing, preventing overlaps, and ensuring everything syncs perfectly with your video.</p>
@@ -415,14 +415,14 @@ Subtitle text here</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">Merging CD1 and CD2 subtitle files into a single SRT is simple, fast, and essential for proper playback when your movie is in a single file. With the correct append merge mode, proper timestamp shifting, and basic validation, you can create a clean, perfectly synchronized subtitle file ready for uninterrupted viewing.</p>
     `
-    },
-    {
-        id: 'best-way-to-merge-srt-files-without-losing-sync',
-        title: "Best Way to Merge SRT Files Without Losing Sync (Complete Guide)",
-        excerpt: "Merging multiple SRT subtitle files is easy—but keeping everything perfectly in sync is the real challenge. Learn how to merge without losing sync.",
-        date: "December 4, 2025",
-        readTime: "5 min read",
-        content: `
+  },
+  {
+    id: 'best-way-to-merge-srt-files-without-losing-sync',
+    title: "Best Way to Merge SRT Files Without Losing Sync (Complete Guide)",
+    excerpt: "Merging multiple SRT subtitle files is easy—but keeping everything perfectly in sync is the real challenge. Learn how to merge without losing sync.",
+    date: "December 4, 2025",
+    readTime: "5 min read",
+    content: `
       <p class="mb-6">Merging multiple SRT subtitle files is easy—but keeping everything perfectly in sync is the real challenge. If the timestamps don’t line up correctly, your merged subtitles may appear too early, too late, repeating, overlapping, or missing at certain scenes.</p>
 
       <p class="mb-6">This guide explains the best way to merge SRT files without losing sync, how to avoid common timing problems, and how to fix subtitle drift for perfectly aligned results.</p>
@@ -535,14 +535,14 @@ Subtitle text here</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">The best way to merge SRT files without losing sync is to choose the correct merge mode, fix formatting issues, adjust timestamps precisely, merge in the right order, and test across different scenes. With careful alignment and proper timing shift, you can produce a perfectly synchronized merged SRT file that works with any movie or video.</p>
     `
-    },
-    {
-        id: 'how-to-merge-subtitles-for-dual-audio-movies',
-        title: "How to Merge Subtitles for Dual Audio Movies (Complete Guide)",
-        excerpt: "Dual audio movies are incredibly popular. Learn how to merge subtitles for dual audio movies, sync them properly, and avoid timing problems.",
-        date: "December 4, 2025",
-        readTime: "5 min read",
-        content: `
+  },
+  {
+    id: 'how-to-merge-subtitles-for-dual-audio-movies',
+    title: "How to Merge Subtitles for Dual Audio Movies (Complete Guide)",
+    excerpt: "Dual audio movies are incredibly popular. Learn how to merge subtitles for dual audio movies, sync them properly, and avoid timing problems.",
+    date: "December 4, 2025",
+    readTime: "5 min read",
+    content: `
       <p class="mb-6">Dual audio movies are incredibly popular—especially when a film is available in two languages such as English + Hindi, English + Tamil, Hindi + Telugu, Japanese + English (anime), or Korean + English (K-drama).</p>
 
       <p class="mb-6">But a common problem arises: The subtitles are available only in one language, incomplete, or divided into separate parts. To fix this, you can merge multiple subtitle files into one, creating a single SRT that works perfectly regardless of which audio track you choose.</p>
@@ -652,14 +652,14 @@ Don't worry, I'm here.</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">To merge subtitles for dual audio movies properly, upload both subtitle files, select the correct merge mode (overlay/hybrid), fix timing differences, choose a readable bilingual layout, and merge and test for perfect sync. Following these steps ensures your dual audio movie has one clean, synchronized subtitle file that works flawlessly with either audio track.</p>
     `
-    },
-    {
-        id: 'how-to-batch-merge-subtitles-for-tv-series',
-        title: "How to Batch Merge Subtitles for TV Series (Season-Wise Guide)",
-        excerpt: "Merging subtitles for a single movie is easy—but handling an entire season of a TV series is a totally different challenge. Learn how to batch merge subtitles for TV series.",
-        date: "December 4, 2025",
-        readTime: "6 min read",
-        content: `
+  },
+  {
+    id: 'how-to-batch-merge-subtitles-for-tv-series',
+    title: "How to Batch Merge Subtitles for TV Series (Season-Wise Guide)",
+    excerpt: "Merging subtitles for a single movie is easy—but handling an entire season of a TV series is a totally different challenge. Learn how to batch merge subtitles for TV series.",
+    date: "December 4, 2025",
+    readTime: "6 min read",
+    content: `
       <p class="mb-6">Merging subtitles for a single movie is easy—but handling an entire season of a TV series is a totally different challenge. Many shows come with subtitles that are split into multiple parts per episode, mislabeled or unsynced, coming from different uploaders, missing certain lines, or in different languages for different episodes.</p>
 
       <p class="mb-6">If you’re watching a full season in one go, you need a clean and consistent subtitle experience. This guide explains how to batch merge subtitles for TV series, keep everything in sync, and organize all subtitles episode-by-episode.</p>
@@ -767,14 +767,14 @@ Don't worry, I'm here.</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">To batch merge subtitles for a TV series, organize season files by episode, identify the merge type needed per episode, upload files in batches, apply the required merge mode, standardize formatting, and export clean, synced SRTs for the entire season. Following these steps ensures every episode in the season has perfectly matched and consistent subtitles.</p>
     `
-    },
-    {
-        id: 'how-to-combine-multiple-language-subtitles',
-        title: "How to Combine Multiple Language Subtitles (3+ Languages) Into One SRT File",
-        excerpt: "Most guides explain how to merge two subtitle languages—but what if you want three or more? Learn how to combine multiple language subtitles into one SRT file.",
-        date: "December 4, 2025",
-        readTime: "6 min read",
-        content: `
+  },
+  {
+    id: 'how-to-combine-multiple-language-subtitles',
+    title: "How to Combine Multiple Language Subtitles (3+ Languages) Into One SRT File",
+    excerpt: "Most guides explain how to merge two subtitle languages—but what if you want three or more? Learn how to combine multiple language subtitles into one SRT file.",
+    date: "December 4, 2025",
+    readTime: "6 min read",
+    content: `
       <p class="mb-6">Most guides explain how to merge two subtitle languages—but what if you want three or more languages in one subtitle file? For example: English + Hindi + Spanish, Korean + English + Arabic, Japanese + English + French, or Tamil + English + Malayalam.</p>
 
       <p class="mb-6">Multilingual subtitles are extremely useful for global audiences, language learners, international content creators, and multilingual friend groups watching together. This guide explains how to combine multiple language subtitles into one SRT file, how to format them cleanly, and how to avoid overcrowding or sync issues when merging 3+ subtitle files.</p>
@@ -880,14 +880,14 @@ ES: ¿A dónde vas?</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">Combining multiple subtitle languages into a single SRT file is completely possible with the right merge strategy. To merge 3+ languages effectively, prepare all subtitles correctly, upload and check encoding, use overlay merge mode, choose a clean multilingual layout, fix timing and drift, and export and test. The result is a clear, synchronized, multi-language subtitle file that works across all devices.</p>
     `
-    },
-    {
-        id: 'how-to-fix-missing-dialogues-in-subtitles',
-        title: "How to Fix Missing Dialogues in Subtitles by Merging Multiple SRT Files",
-        excerpt: "One of the most common subtitle problems is missing dialogue. Learn how to fix missing dialogues in subtitles quickly and accurately by merging multiple SRT files.",
-        date: "December 4, 2025",
-        readTime: "5 min read",
-        content: `
+  },
+  {
+    id: 'how-to-fix-missing-dialogues-in-subtitles',
+    title: "How to Fix Missing Dialogues in Subtitles by Merging Multiple SRT Files",
+    excerpt: "One of the most common subtitle problems is missing dialogue. Learn how to fix missing dialogues in subtitles quickly and accurately by merging multiple SRT files.",
+    date: "December 4, 2025",
+    readTime: "5 min read",
+    content: `
       <p class="mb-6">One of the most common subtitle problems people face—especially with movies, web series, anime, and foreign-language content—is missing dialogue. Sometimes entire scenes or important lines simply don’t appear in the subtitles.</p>
 
       <p class="mb-6">The good news: You can fix missing dialogues in subtitles quickly and accurately by merging multiple SRT files. Each subtitle version usually contains different strengths—one might have better timing, another might have missing lines filled.</p>
@@ -987,14 +987,14 @@ ES: ¿A dónde vas?</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">Fixing missing dialogues in subtitles is simple: Just merge multiple SRT versions. By overlaying, comparing, and reconstructing lines from different subtitle files, you can restore missing dialogues, correct timing problems, improve translation accuracy, create a complete subtitle file, and ensure a smooth viewing experience.</p>
     `
-    },
-    {
-        id: 'why-you-need-to-merge-subtitles',
-        title: "Why You Need to Merge Subtitles: Multilingual Viewers & Dual-Audio Benefits",
-        excerpt: "Subtitles are more than just text on a screen. Learn why merging subtitles is essential for multilingual viewers, dual-audio movies, and language learners.",
-        date: "December 4, 2025",
-        readTime: "6 min read",
-        content: `
+  },
+  {
+    id: 'why-you-need-to-merge-subtitles',
+    title: "Why You Need to Merge Subtitles: Multilingual Viewers & Dual-Audio Benefits",
+    excerpt: "Subtitles are more than just text on a screen. Learn why merging subtitles is essential for multilingual viewers, dual-audio movies, and language learners.",
+    date: "December 4, 2025",
+    readTime: "6 min read",
+    content: `
       <p class="mb-6">Subtitles are more than just text on a screen—they bridge language gaps, improve comprehension, and make content accessible to millions of people. But in many cases, a single subtitle file isn’t enough. That’s where subtitle merging becomes incredibly useful.</p>
 
       <p class="mb-6">Whether you’re watching dual-audio movies, learning a new language, consuming foreign films, or dealing with incomplete subtitles, merging subtitles can significantly enhance your viewing experience.</p>
@@ -1042,14 +1042,14 @@ ES: ¿A dónde vas?</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">Merging subtitles is incredibly useful for multilingual viewers, dual-audio movies, language learners, fixing incomplete subtitles, split CD1/CD2 movies, improving accuracy, making content more accessible, consistent TV series subtitles, and content creators. Whether you’re enhancing clarity, fixing missing lines, or supporting multiple languages, merged subtitles provide a smoother, richer viewing experience.</p>
     `
-    },
-    {
-        id: 'how-to-keep-timing-and-sync-when-merging-subtitles',
-        title: "How to Keep Timing & Sync When Merging Subtitles (Complete Timing Guide)",
-        excerpt: "Merging subtitles is easy—but keeping them perfectly synced is the real challenge. Learn how to maintain perfect synchronization while merging subtitles.",
-        date: "December 4, 2025",
-        readTime: "7 min read",
-        content: `
+  },
+  {
+    id: 'how-to-keep-timing-and-sync-when-merging-subtitles',
+    title: "How to Keep Timing & Sync When Merging Subtitles (Complete Timing Guide)",
+    excerpt: "Merging subtitles is easy—but keeping them perfectly synced is the real challenge. Learn how to maintain perfect synchronization while merging subtitles.",
+    date: "December 4, 2025",
+    readTime: "7 min read",
+    content: `
       <p class="mb-6">Merging subtitles is easy—but keeping them perfectly synced is the real challenge. If the timing is even slightly off, you’ll see issues like subtitles appearing too early or too late, gradual drifting, overlapping dialogues, or wrong order of lines.</p>
 
       <p class="mb-6">The good news: There are reliable ways to keep timing and sync when merging subtitles, no matter how many SRT files you are combining. This guide explains exactly how to maintain perfect synchronization while merging subtitles for movies, TV series, anime, dual-audio films, and multilingual subtitle setups.</p>
@@ -1107,14 +1107,14 @@ ES: ¿A dónde vas?</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">Keeping subtitles perfectly synced when merging requires correct merge mode, clean formatting, adjusted timestamps, matching FPS, proper shifting, sorting, and thorough testing. Once done right, the resulting subtitle file will be perfectly aligned and fully synchronized.</p>
     `
-    },
-    {
-        id: 'merging-vs-hardcoding-subtitles-pros-and-cons',
-        title: "Merging vs Hardcoding Subtitles — Pros & Cons (Complete Guide)",
-        excerpt: "When working with subtitles, you have two main options: merging or hardcoding. This guide breaks down the pros and cons of each method to help you choose.",
-        date: "December 4, 2025",
-        readTime: "6 min read",
-        content: `
+  },
+  {
+    id: 'merging-vs-hardcoding-subtitles-pros-and-cons',
+    title: "Merging vs Hardcoding Subtitles — Pros & Cons (Complete Guide)",
+    excerpt: "When working with subtitles, you have two main options: merging or hardcoding. This guide breaks down the pros and cons of each method to help you choose.",
+    date: "December 4, 2025",
+    readTime: "6 min read",
+    content: `
       <p class="mb-6">When working with subtitles, you have two main options: merging subtitles (combine multiple SRT files into one) or hardcoding subtitles (burn text directly into the video). Both methods serve different purposes. But which one should you choose?</p>
 
       <p class="mb-6">This guide breaks down the pros and cons of merging vs hardcoding subtitles, when to use each method, and how they impact quality, flexibility, and file compatibility.</p>
@@ -1186,14 +1186,14 @@ ES: ¿A dónde vas?</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">Merging subtitles is best for movies, multilingual viewers, and flexible editing. Hardcoding subtitles is best for short content, branding, and guaranteed visibility. Choose merge for flexibility, and hardcode for control and permanence.</p>
     `
-    },
-    {
-        id: 'what-is-an-srt-file-beginner-guide',
-        title: "What Is an SRT File? Complete Beginner’s Guide",
-        excerpt: "If you’ve ever downloaded subtitles, you’ve seen .srt files. This beginner-friendly guide covers everything you need to know about SRT files, their structure, and usage.",
-        date: "December 4, 2025",
-        readTime: "5 min read",
-        content: `
+  },
+  {
+    id: 'what-is-an-srt-file-beginner-guide',
+    title: "What Is an SRT File? Complete Beginner’s Guide",
+    excerpt: "If you’ve ever downloaded subtitles, you’ve seen .srt files. This beginner-friendly guide covers everything you need to know about SRT files, their structure, and usage.",
+    date: "December 4, 2025",
+    readTime: "5 min read",
+    content: `
       <p class="mb-6">If you’ve ever downloaded subtitles, watched a foreign movie, or worked with video captions, you’ve probably seen files ending in .srt. But what exactly is an SRT file, how does it work, and why is it the most popular subtitle format in the world?</p>
 
       <p class="mb-6">This beginner-friendly guide covers everything you need to know about SRT files, including structure, examples, usage, pros/cons, and how SRTs compare to other subtitle formats.</p>
@@ -1246,5 +1246,111 @@ How are you today?</pre>
       <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
       <p class="mb-6">An SRT file is a simple, universal subtitle file that contains timecoded text. It’s easy to edit, merge, translate, convert, and sync—making it the most widely used subtitle format worldwide. Whether you’re creating subtitles, fixing them, merging versions, or supporting multiple languages, SRT files give you all the flexibility you need with minimal complexity.</p>
     `
-    }
+  },
+  {
+    id: 'srt-vs-vtt-vs-ass-subtitle-formats-comparison',
+    title: "SRT vs VTT vs ASS vs Other Subtitle Formats — Complete Comparison Guide",
+    excerpt: "Subtitles come in many formats. This complete guide breaks down the differences between SRT, VTT, ASS, SSA, SUB/IDX, and more to help you choose the right one.",
+    date: "December 4, 2025",
+    readTime: "8 min read",
+    content: `
+      <p class="mb-6">Subtitles come in many formats, each designed for different platforms, devices, and use cases. If you’ve ever wondered which subtitle format is best for videos, movies, TV shows, or online platforms, this complete guide breaks down the differences between SRT, VTT, ASS, SSA, SUB/IDX, and more.</p>
+
+      <p class="mb-6">This is the most detailed comparison you’ll need to understand how each subtitle format works and when to use them.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">What Are Subtitle Formats?</h3>
+      <p class="mb-6">Subtitle formats are file types that store time-coded text or graphics corresponding to the audio in a video. They vary by features, styling capabilities, compatibility, complexity, and use cases.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">1. SRT (SubRip Subtitle) – The Most Popular Format</h3>
+      <p class="mb-6"><strong>What It Is</strong>: The simplest and most widely-used subtitle format. Plain text + timestamps.<br>
+      <strong>Pros</strong>: Extremely simple, supported everywhere, easy to edit, small file size, ideal for merging.<br>
+      <strong>Cons</strong>: No styling, limited formatting, no position control.<br>
+      <strong>Best For</strong>: Movies, TV shows, merging subtitles, language learning, universal compatibility.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">2. VTT (WebVTT) – Modern Web Subtitle Format</h3>
+      <p class="mb-6"><strong>What It Is</strong>: The subtitle format used by HTML5 and streaming platforms.<br>
+      <strong>Pros</strong>: Favored by web players, supports CSS-like styling, can include descriptions.<br>
+      <strong>Cons</strong>: Slightly more complex than SRT.<br>
+      <strong>Best For</strong>: Web videos, online courses, embedded players, HTML5 video.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">3. ASS (Advanced SubStation Alpha) – The Styling King</h3>
+      <p class="mb-6"><strong>What It Is</strong>: A powerful subtitle format supporting advanced styling and animations. Common in anime.<br>
+      <strong>Pros</strong>: Most visually appealing, perfect for creative effects, full control over appearance.<br>
+      <strong>Cons</strong>: Not widely supported, higher learning curve.<br>
+      <strong>Best For</strong>: Anime, K-dramas, stylized subtitles, fan subs.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">4. SSA (SubStation Alpha) – Older Version of ASS</h3>
+      <p class="mb-6"><strong>What It Is</strong>: The predecessor to ASS, with fewer features.<br>
+      <strong>Pros</strong>: More style options than SRT, lighter than ASS.<br>
+      <strong>Cons</strong>: Outdated, limited compared to ASS.<br>
+      <strong>Best For</strong>: Older fansub projects, simple styling.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">5. SUB/IDX – Image-Based Subtitles</h3>
+      <p class="mb-6"><strong>What It Is</strong>: A pair of files (.sub + .idx) where subtitles are rendered as images.<br>
+      <strong>Pros</strong>: Preserves original styling exactly, good for complex character sets.<br>
+      <strong>Cons</strong>: Hard to edit, large file size, cannot merge easily.<br>
+      <strong>Best For</strong>: DVD/Blu-ray backups, exact visual reproduction.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Detailed Comparison Table</h3>
+      <div class="overflow-x-auto mb-6">
+        <table class="min-w-full text-sm text-left text-gray-500">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th class="px-6 py-3">Feature</th>
+              <th class="px-6 py-3">SRT</th>
+              <th class="px-6 py-3">VTT</th>
+              <th class="px-6 py-3">ASS</th>
+              <th class="px-6 py-3">SUB/IDX</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-white border-b">
+              <td class="px-6 py-4 font-medium text-gray-900">Text-based</td>
+              <td class="px-6 py-4">✔️</td>
+              <td class="px-6 py-4">✔️</td>
+              <td class="px-6 py-4">✔️</td>
+              <td class="px-6 py-4">❌</td>
+            </tr>
+            <tr class="bg-white border-b">
+              <td class="px-6 py-4 font-medium text-gray-900">Styling</td>
+              <td class="px-6 py-4">❌</td>
+              <td class="px-6 py-4">Limited</td>
+              <td class="px-6 py-4">✔️ Full</td>
+              <td class="px-6 py-4">✔️ (Image)</td>
+            </tr>
+            <tr class="bg-white border-b">
+              <td class="px-6 py-4 font-medium text-gray-900">Editable</td>
+              <td class="px-6 py-4">✔️</td>
+              <td class="px-6 py-4">✔️</td>
+              <td class="px-6 py-4">✔️</td>
+              <td class="px-6 py-4">❌</td>
+            </tr>
+            <tr class="bg-white border-b">
+              <td class="px-6 py-4 font-medium text-gray-900">Merging Friendly</td>
+              <td class="px-6 py-4">✔️ Excellent</td>
+              <td class="px-6 py-4">✔️</td>
+              <td class="px-6 py-4">⚠️ Harder</td>
+              <td class="px-6 py-4">❌ Impossible</td>
+            </tr>
+            <tr class="bg-white border-b">
+              <td class="px-6 py-4 font-medium text-gray-900">Universal Playback</td>
+              <td class="px-6 py-4">✔️</td>
+              <td class="px-6 py-4">✔️</td>
+              <td class="px-6 py-4">Partial</td>
+              <td class="px-6 py-4">Partial</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Which Subtitle Format Should You Choose?</h3>
+      <p class="mb-6"><strong>Choose SRT for</strong>: General use, compatibility, merging, editing, translation.<br>
+      <strong>Choose VTT for</strong>: Web publishing, online platforms, accessibility notes.<br>
+      <strong>Choose ASS for</strong>: Advanced stylistic effects, custom fonts, animations.<br>
+      <strong>Choose SUB/IDX for</strong>: DVD/Blu-ray rips that require exact subtitle reproduction.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
+      <p class="mb-6">Subtitle formats vary greatly depending on your needs. SRT is universal and best for merging. VTT is web-friendly. ASS is for styling. SUB/IDX is for archival. Knowing the differences helps you choose the right subtitle format for your project.</p>
+    `
+  }
 ];
