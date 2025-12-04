@@ -1,20 +1,20 @@
 export interface BlogPost {
-  id: string;
-  title: string;
-  excerpt: string;
-  date: string;
-  content: string;
-  readTime: string;
+    id: string;
+    title: string;
+    excerpt: string;
+    date: string;
+    content: string;
+    readTime: string;
 }
 
 export const blogPosts: BlogPost[] = [
-  {
-    id: 'how-to-merge-two-srt-files-online',
-    title: "How to Merge Two SRT Files Online (Step-by-Step Guide)",
-    excerpt: "A simple tutorial for combining multiple subtitle files into one. Learn how to merge SRT files for movies, dual-language setups, and more.",
-    date: "December 4, 2025",
-    readTime: "3 min read",
-    content: `
+    {
+        id: 'how-to-merge-two-srt-files-online',
+        title: "How to Merge Two SRT Files Online (Step-by-Step Guide)",
+        excerpt: "A simple tutorial for combining multiple subtitle files into one. Learn how to merge SRT files for movies, dual-language setups, and more.",
+        date: "December 4, 2025",
+        readTime: "3 min read",
+        content: `
       <p class="mb-6">Subtitles are essential for accessibility, language learning, and enhancing the viewing experience. But what if you have two separate SRT files—for example:</p>
 
       <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
@@ -156,5 +156,133 @@ Welcome back.</pre>
       </ul>
       <p class="mb-6">You now have everything you need to merge SRT files quickly and accurately.</p>
     `
-  }
+    },
+    {
+        id: 'how-to-merge-english-and-hindi-subtitles',
+        title: "How to Merge English and Hindi Subtitles Into One SRT File (Complete Guide)",
+        excerpt: "Merging English and Hindi subtitles into a single SRT file is extremely useful for multilingual viewers. Learn how to create dual-language subtitles.",
+        date: "December 4, 2025",
+        readTime: "4 min read",
+        content: `
+      <p class="mb-6">Merging English and Hindi subtitles into a single SRT file is extremely useful for multilingual viewers, language learners, and anyone watching dual-audio movies or shows. A merged subtitle makes it easier to understand dialogues, learn new vocabulary, and follow fast-paced scenes—all without switching subtitle tracks.</p>
+
+      <p class="mb-6">This guide explains step-by-step how to merge English and Hindi subtitles, keep them synchronised, and avoid common issues like overlapping timestamps and messy formatting.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Why Merge English and Hindi Subtitles?</h3>
+      <p class="mb-6">Here are the most common reasons people combine two subtitle languages:</p>
+
+      <p class="font-bold mb-2">1. Dual-Language Learning</p>
+      <p class="mb-6">You can read the English line and the Hindi translation together—great for improving vocabulary and comprehension.</p>
+
+      <p class="font-bold mb-2">2. Dual-Audio Movies</p>
+      <p class="mb-6">Many movies have English audio with Hindi dubbed track or vice-versa. A merged subtitle file makes watching smoother across both audio tracks.</p>
+
+      <p class="font-bold mb-2">3. Better Accuracy</p>
+      <p class="mb-6">Sometimes one subtitle file is more accurate than the other. Merging helps combine the best parts of both.</p>
+
+      <p class="font-bold mb-2">4. Understanding Complex Scenes</p>
+      <p class="mb-6">Certain scenes (especially in action or thriller movies) become easier to follow when two languages are shown together.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">What You Need Before Merging</h3>
+      <p class="mb-6">Before starting, make sure:</p>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>Both subtitles are in .srt format</li>
+          <li>The timing of both files roughly aligns with the same version of the video</li>
+          <li>The Hindi subtitle file supports UTF-8 encoding (important for correct display of Devanagari characters)</li>
+      </ul>
+      <p class="mb-6">If Hindi characters appear as boxes or question marks, encoding is the reason.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Step-by-Step: How to Merge English and Hindi Subtitles</h3>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 1: Upload Both SRT Files to an Online Subtitle Merger</h4>
+      <p class="mb-6">Open any online subtitle merging tool and upload:</p>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>The English SRT file</li>
+          <li>The Hindi SRT file</li>
+      </ul>
+      <p class="mb-6">The tool will scan both files and load their timestamps.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 2: Select the “Overlay Merge” or “Combine Line by Line” Mode</h4>
+      <p class="mb-6">When merging two languages, avoid using the simple append mode.</p>
+      <p class="mb-2">Choose: <strong>Overlay Merge / Timestamp Merge</strong></p>
+      <p class="mb-6">This mode:</p>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>Matches subtitle lines based on timestamps</li>
+          <li>Places English and Hindi lines together within the same time window</li>
+          <li>Prevents duplication of timestamps</li>
+          <li>Creates smooth bilingual subtitles</li>
+      </ul>
+      <p class="mb-6">This is ideal for creating dual-language subtitles.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 3: Choose the Line Format (Recommended Layouts)</h4>
+      <p class="mb-6">For bilingual subtitles, you can choose any of these formats:</p>
+
+      <p class="font-bold mb-2">Format A: English on Top, Hindi Below</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">Hello, how are you?
+नमस्ते, आप कैसे हैं?</pre>
+
+      <p class="font-bold mb-2">Format B: Hindi on Top, English Below</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">नमस्ते, आप कैसे हैं?
+Hello, how are you?</pre>
+
+      <p class="font-bold mb-2">Format C: Bracketed Language Tags</p>
+      <pre class="bg-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">[EN] Hello, how are you?
+[HI] नमस्ते, आप कैसे हैं?</pre>
+
+      <p class="mb-6">Language tags make it clear which line belongs to which subtitle.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 4: Fix Timing Differences (If Needed)</h4>
+      <p class="mb-6">Sometimes English and Hindi subtitles don’t perfectly sync because they’re created from different video sources.</p>
+      <p class="mb-6">You may need to:</p>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>Shift one subtitle forward or backward</li>
+          <li>Adjust milliseconds</li>
+          <li>Fix lines that drift over longer scenes</li>
+      </ul>
+      <p class="mb-6">Most subtitle tools include an option like: “Shift entire file by X seconds”, “Adjust timestamps”, or “Align based on first dialogue”. A small adjustment (0.5–2 seconds) can fix most issues.</p>
+
+      <h4 class="text-lg font-bold text-gray-900 mt-6 mb-3">Step 5: Merge and Download the Final Dual-Language SRT File</h4>
+      <p class="mb-6">After confirming timestamps are aligned, encoding is correct, and duplicate lines are removed, click Merge, then download the final combined subtitle file.</p>
+      <p class="mb-6">Test it in a video player like VLC to ensure everything displays correctly.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Common Problems & How to Fix Them</h3>
+
+      <p class="font-bold mb-2">1. Hindi Characters Not Displaying Correctly</p>
+      <p class="mb-6">This happens when the file is not saved in UTF-8. Fix: Open the Hindi SRT file → Save As → Select UTF-8 encoding → Save.</p>
+
+      <p class="font-bold mb-2">2. English and Hindi Lines Not Aligning</p>
+      <p class="mb-6">Cause: Mismatched timestamps. Fix: Shift one file slightly (e.g., +1.2 seconds).</p>
+
+      <p class="font-bold mb-2">3. Overlapping Subtitles</p>
+      <p class="mb-6">Cause: Both files have separate lines for the same minute. Fix: Use a merger tool that automatically removes duplicate timestamps.</p>
+
+      <p class="font-bold mb-2">4. Subtitles Appear Twice at the Same Time</p>
+      <p class="mb-6">Cause: Append merge used instead of overlay merge. Fix: Choose overlay or parallel merge mode.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Tips for Cleaner Dual-Language Subtitles</h3>
+
+      <p class="font-bold mb-2">✔️ Use Simple English Instead of Closed Captions</p>
+      <p class="mb-6">Avoid English subtitles with descriptions like [Door opening], [Laughing], [Gunshot]. They clutter bilingual subtitles.</p>
+
+      <p class="font-bold mb-2">✔️ Avoid Too Many Lines</p>
+      <p class="mb-6">If both subtitles have long sentences, keep only the main meaning from one language, use alternating lines, or combine short lines into one.</p>
+
+      <p class="font-bold mb-2">✔️ Test on Multiple Players</p>
+      <p class="mb-6">Some players render multilingual subtitles better than others. Best options: VLC Media Player, MX Player, PotPlayer.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">When Bilingual Subtitles Are Most Helpful</h3>
+      <ul class="list-disc list-inside space-y-2 mb-6 text-gray-700">
+          <li>Learning English using Hindi as support</li>
+          <li>Learning Hindi using English as support</li>
+          <li>Watching dubbed international films</li>
+          <li>Watching Indian movies with English audio</li>
+          <li>Improving comprehension during fast scenes</li>
+          <li>Sharing content with multilingual audiences</li>
+      </ul>
+      <p class="mb-6">Dual-language subtitles provide clarity across cultures and languages.</p>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4 font-mono">Conclusion</h3>
+      <p class="mb-6">Merging English and Hindi subtitles into one synchronized SRT file is simple, practical, and extremely useful for multilingual viewing. With the right merge mode, correct encoding, and well-aligned timestamps, you can create a clean, easy-to-read bilingual subtitle file that works perfectly with any video.</p>
+    `
+    }
 ];
