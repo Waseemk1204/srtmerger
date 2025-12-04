@@ -57,7 +57,7 @@ export function FAQ() {
                 {/* Header */}
                 <div className="text-center mb-12">
                     <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-                        Frequently Asked Questions
+                        Frequently Asked Questions about SRT Merging
                     </h2>
                     <p className="text-lg text-gray-600">
                         Everything you need to know about our SRT merger tool

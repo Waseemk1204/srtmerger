@@ -8,6 +8,7 @@ import { MergerTool } from './components/MergerTool';
 import { UsageCard } from './components/UsageCard';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { Features } from './components/Features';
 import { Footer } from './components/Footer';
 import { PrivacyPolicy } from './components/PrivacyPolicy';
 import { HowItWorks } from './components/HowItWorks';
@@ -114,13 +115,14 @@ function App() {
       <Routes>
         <Route path="/" element={
           <main>
-            <Hero onNavigate={(page) => navigate(page === 'home' ? '/' : `/${page}`)} />
+            <Hero />
             <MergerTool />
             <section className="py-8 px-4 sm:px-6 lg:px-8">
               <div className="max-w-5xl mx-auto">
                 <UsageCard />
               </div>
             </section>
+            <Features />
             <PricingSection />
             <FAQ />
           </main>

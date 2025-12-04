@@ -179,7 +179,7 @@ export function PricingSection({ compact = false, hideHeader = false }: { compac
                 {!hideHeader && (
                     <div className="text-center mb-12">
                         <h2 className={`font-bold text-gray-900 mb-4 ${compact ? 'text-2xl' : 'text-2xl sm:text-3xl sm:text-4xl'}`}>
-                            Simple, Transparent Pricing
+                            Simple Pricing for SRT Merging
                         </h2>
                         <p className={`text-gray-600 mb-8 ${compact ? 'text-base' : 'text-lg'}`}>
                             Choose the plan that fits your workflow.
