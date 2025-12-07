@@ -75,7 +75,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
 
     // Feature Access Helpers
     const currentPlan = user?.subscription?.plan || 'free';
-    const canRename = ['tier1', 'tier2', 'tier3'].includes(currentPlan);
+    // const canRename = ['tier1', 'tier2', 'tier3'].includes(currentPlan);
     const canAlign = ['tier1', 'tier2', 'tier3'].includes(currentPlan);
     const canPreview = ['tier2', 'tier3'].includes(currentPlan);
     const canEdit = currentPlan === 'tier3';
@@ -222,8 +222,20 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
                 willBlock: effectiveCount >= limit
             });
 
-            // Check if user has exceeded upload limit (each upload action counts, not file count)
-            if (effectiveCount >= limit) {
+            // Check if user has exceeded upload limit (including current files and new selection)
+            // We check if the TOTAL number of files processed today + files currently in staging + new files > limit
+            // Actually, we should just check if (usage + new_files) > limit, assuming 'usage' tracks processed files.
+            // But wait, 'files' in the UI haven't been processed yet.
+            // The limit is on "Files Merged".
+            // So if I have 0 usage, and I put 10 files in the UI, I haven't used my limit yet.
+            // But if I try to MERGE them, I should be blocked.
+            // However, the user says "it should not allow me to upload".
+            // This implies they want to be prevented from even staging more files than they can merge.
+            // So: (effectiveCount + files.length + selectedFiles.length) > limit
+
+            const totalProjectedFiles = effectiveCount + files.length + selectedFiles.length;
+
+            if (totalProjectedFiles > limit) {
                 setUpgradeReason('limit');
                 setUpgradeLimit(limit);
                 setShowUpgradeModal(true);
@@ -420,7 +432,10 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             willBlock: effectiveCount >= limit
         });
 
-        if (effectiveCount >= limit) {
+        // Check if this specific merge operation would exceed the limit
+        const totalProjectedUsage = effectiveCount + files.length;
+
+        if (totalProjectedUsage > limit) {
             setUpgradeReason('limit');
             setUpgradeLimit(limit);
             setShowUpgradeModal(true);
@@ -542,7 +557,7 @@ export function MergerTool({ onFileSaved, showDiagnostics = true, initialFiles =
             }
 
             // Save file as plain text
-            const saveResult = await api.saveFile(
+            await api.saveFile(
                 filename,
                 result.mergedSrt,
                 filesize
