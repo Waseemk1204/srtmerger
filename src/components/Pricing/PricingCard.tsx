@@ -56,6 +56,9 @@ export function PricingCard({
                     <span className="text-3xl font-bold text-gray-900">{price}</span>
                     {price !== 'Free' && <span className="text-gray-500">/{period}</span>}
                 </div>
+                {!isFree && (
+                    <p className="text-xs text-gray-500 mt-2">Cancel at any time</p>
+                )}
             </div>
 
             <ul className="space-y-4 mb-8">
