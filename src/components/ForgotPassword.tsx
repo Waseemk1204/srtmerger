@@ -40,8 +40,11 @@ export function ForgotPassword() {
                 {success ? (
                     <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
                         <h3 className="text-green-800 font-medium mb-2">Check your email</h3>
-                        <p className="text-green-600 text-sm">
+                        <p className="text-green-600 text-sm mb-2">
                             If an account exists for <strong>{email}</strong>, we have sent a password reset link.
+                        </p>
+                        <p className="text-green-600 text-xs">
+                            Please check your spam or junk folder if you don't see the email in your inbox.
                         </p>
                         <button
                             onClick={() => window.location.href = '/?view=login'}
