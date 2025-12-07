@@ -38,7 +38,7 @@ export function useSubscription({ onSuccess, onError }: UseSubscriptionProps = {
 
         try {
             const subscription = await api.createSubscription(planId) as any;
-            console.log('Subscription created:', subscription.id);
+            // console.log('Subscription created:', subscription.id); // Removed as per instruction
 
             const options = {
                 key: import.meta.env.VITE_RAZORPAY_KEY_ID,

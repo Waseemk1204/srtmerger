@@ -24,16 +24,14 @@ export async function getBrowserFingerprint(): Promise<string> {
         const result = await fp.get();
 
         cachedFingerprint = result.visitorId;
-        console.log('Browser fingerprint generated:', cachedFingerprint);
         return cachedFingerprint;
     } catch (error) {
         console.error('Fingerprint generation failed:', error);
 
         // Fallback: use a combination of available browser info
         const fallback = `fallback-${navigator.userAgent}-${screen.width}x${screen.height}-${navigator.language}`;
-        const hash = await simpleHash(fallback);
-        cachedFingerprint = hash;
-        console.log('Using fallback fingerprint:', cachedFingerprint);
+        // Fallback: use a combination of user agent and timestamp
+        cachedFingerprint = btoa(`${navigator.userAgent}-${Date.now()}`);
         return cachedFingerprint;
     }
 }
