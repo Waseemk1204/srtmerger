@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { api } from '../api/client';
 import { User } from '../types';
 import { getBrowserFingerprint } from '../utils/fingerprint';
+import { SessionInvalidatedModal } from '../components/SessionInvalidatedModal';
 
 interface AuthContextType {
     user: User | null;
@@ -22,6 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
     const [loading, setLoading] = useState(true);
+    const [showSessionInvalidated, setShowSessionInvalidated] = useState(false);
 
     useEffect(() => {
         // Check if user is logged in on mount
@@ -52,6 +54,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         initAuth();
     }, []);
+
+    // Periodic session validation for tier3 users (every 30 seconds)
+    useEffect(() => {
+        if (!user || user.subscription?.plan !== 'tier3') return;
+
+        const validateSession = async () => {
+            try {
+                await api.getMe();
+            } catch (error: any) {
+                // Check for SESSION_INVALIDATED error code
+                if (error?.code === 'SESSION_INVALIDATED') {
+                    handleSessionInvalidated();
+                }
+            }
+        };
+
+        const interval = setInterval(validateSession, 30000); // 30 seconds
+        return () => clearInterval(interval);
+    }, [user]);
+
+    const handleSessionInvalidated = () => {
+        localStorage.removeItem('token');
+        setToken(null);
+        setUser(null);
+        setShowSessionInvalidated(true);
+    };
 
     const login = async (email: string, password: string) => {
         try {
@@ -112,22 +140,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider
-            value={{
-                user,
-                token,
-                loading,
-                login,
-                signup,
-                googleLogin,
-                logout,
-                refreshUser,
-                updateUser,
-                isAuthenticated: !!user,
-            }}
-        >
-            {children}
-        </AuthContext.Provider>
+        <>
+            <AuthContext.Provider
+                value={{
+                    user,
+                    token,
+                    loading,
+                    login,
+                    signup,
+                    googleLogin,
+                    logout,
+                    refreshUser,
+                    updateUser,
+                    isAuthenticated: !!user,
+                }}
+            >
+                {children}
+            </AuthContext.Provider>
+            {showSessionInvalidated && (
+                <SessionInvalidatedModal onClose={() => setShowSessionInvalidated(false)} />
+            )}
+        </>
     );
 }
 

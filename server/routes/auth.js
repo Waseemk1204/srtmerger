@@ -70,9 +70,14 @@ router.post('/signup', signupLimiter, async (req, res) => {
             await linkFingerprintToUser(result.insertedId.toString(), fingerprint);
         }
 
-        // Generate JWT
+        // Generate session ID and JWT
+        const sessionId = crypto.randomUUID();
         const token = jwt.sign(
-            { userId: result.insertedId.toString(), email: email.toLowerCase() },
+            {
+                userId: result.insertedId.toString(),
+                email: email.toLowerCase(),
+                sessionId: sessionId
+            },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
@@ -142,6 +147,16 @@ router.post('/login', loginLimiter, async (req, res) => {
             updates.usage = { date: today, uploadCount: 0 };
         }
 
+        // Generate session ID (for tier3 single-session enforcement)
+        const sessionId = crypto.randomUUID();
+
+        // Store session ID only for tier3 (unlimited) users
+        const userPlan = updatedUser.subscription?.plan || 'free';
+        if (userPlan === 'tier3') {
+            updates.activeSessionId = sessionId;
+            updates.lastSessionUpdate = new Date();
+        }
+
         // Update user with last login and any missing fields
         await users.updateOne(
             { _id: updatedUser._id },
@@ -160,9 +175,13 @@ router.post('/login', loginLimiter, async (req, res) => {
             }
         }
 
-        // Generate JWT
+        // Generate JWT with sessionId
         const token = jwt.sign(
-            { userId: updatedUser._id.toString(), email: updatedUser.email },
+            {
+                userId: updatedUser._id.toString(),
+                email: updatedUser.email,
+                sessionId: sessionId  // Include for all users
+            },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
@@ -291,6 +310,16 @@ router.post('/google', async (req, res) => {
                 updates.usage = { date: today, uploadCount: 0 };
             }
 
+            // Generate session ID (for tier3 single-session enforcement)
+            const sessionId = crypto.randomUUID();
+
+            // Store session ID only for tier3 (unlimited) users
+            const userPlan = user.subscription?.plan || 'free';
+            if (userPlan === 'tier3') {
+                updates.activeSessionId = sessionId;
+                updates.lastSessionUpdate = new Date();
+            }
+
             // Update user with last login and any missing fields
             await users.updateOne(
                 { _id: user._id },
@@ -311,9 +340,14 @@ router.post('/google', async (req, res) => {
             await linkFingerprintToUser(user._id.toString(), fingerprint);
         }
 
-        // Generate JWT
+        // Generate JWT with sessionId
+        const sessionId = crypto.randomUUID();
         const token = jwt.sign(
-            { userId: user._id.toString(), email: user.email },
+            {
+                userId: user._id.toString(),
+                email: user.email,
+                sessionId: sessionId
+            },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );

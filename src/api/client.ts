@@ -9,9 +9,13 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 
 class APIError extends Error {
     status: number;
-    constructor(message: string, status: number) {
+    code?: string;
+    response?: any;
+    constructor(message: string, status: number, code?: string, response?: any) {
         super(message);
         this.status = status;
+        this.code = code;
+        this.response = response;
         this.name = 'APIError';
     }
 }
@@ -39,7 +43,12 @@ async function request<T>(
 
     if (!response.ok) {
         console.error('API Error Details:', data);
-        throw new APIError(data.error || data.message || 'Something went wrong', response.status);
+        throw new APIError(
+            data.error || data.message || 'Something went wrong',
+            response.status,
+            data.code,
+            data
+        );
     }
 
     return data;
