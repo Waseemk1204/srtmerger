@@ -5,7 +5,7 @@ export function NotFound() {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen bg-zinc-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-zinc-50 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] flex items-center justify-center p-4 overflow-hidden">
             <div className="text-center max-w-2xl">
                 {/* 404 Text */}
                 <div className="mb-8">
